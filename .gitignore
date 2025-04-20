@@ -1,0 +1,10 @@
+dist
+node_modules
+package-lock.json
+yarn.lock
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.DS_Store
+note.md

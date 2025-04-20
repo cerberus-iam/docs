@@ -1,0 +1,31 @@
+# top-most EditorConfig file
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# JavaScript / TypeScript
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2
+
+# JSON and package files
+[*.{json,md}]
+indent_style = space
+indent_size = 2
+# don’t trim trailing whitespace in markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# YAML
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Makefiles use tabs
+[Makefile]
+indent_style = tab
