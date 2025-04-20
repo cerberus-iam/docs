@@ -1,0 +1,33 @@
+name: Scheduled Maintenance
+
+on:
+  schedule:
+    - cron: '0 5 * * SUN'   # every Sunday at 05:00 UTC
+  workflow_dispatch:       # manual trigger
+
+jobs:
+  cleanup-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Clean npm cache
+        run: npm cache clean --force
+
+      - name: Prune extraneous dependencies
+        run: npm prune
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-audit-report
+          path: npm-audit*.json
