@@ -212,3 +212,7 @@ Cerberus IAM is open source and welcomes contributions:
 - **Pull Requests**: Contribute code and documentation
 
 See the [Contributing Guide](https://github.com/cerberus-iam/api/blob/main/CONTRIBUTING.md) for more information.
+
+## Documentation
+
+The complete documentation is available at [docs.cerberus-iam.com](https://docs.cerberus-iam.com).
