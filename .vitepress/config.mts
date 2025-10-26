@@ -5,6 +5,7 @@ export default defineConfig({
   title: 'Cerberus IAM',
   description:
     'Enterprise-grade Identity and Access Management API built with Express.js and TypeScript',
+  base: '/',
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   ignoreDeadLinks: [
     // Localhost URLs are expected in development guides
