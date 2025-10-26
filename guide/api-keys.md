@@ -296,7 +296,7 @@ Grant minimum scopes needed:
 ### Request
 
 ```typescript
-// DELETE /v1/admin/api-keys/:id
+// POST /v1/admin/api-keys/:id/revoke
 ```
 
 ### Response
