@@ -126,10 +126,10 @@ The tenant middleware extracts organization context from the request:
 ```typescript
 import { tenantMiddleware } from '@/middleware/tenant';
 
-router.use('/api/v1/admin', tenantMiddleware);
+router.use('/v1/admin', tenantMiddleware);
 
 // Now req.tenant is available
-router.get('/api/v1/admin/users', (req, res) => {
+router.get('/v1/admin/users', (req, res) => {
   const { tenant } = req;
   console.log(tenant.id); // Organization ID
   console.log(tenant.slug); // Organization slug
@@ -262,12 +262,12 @@ await prisma.client.delete({
 ```typescript
 // Require tenant context for admin routes
 router.use(
-  '/api/v1/admin',
+  '/v1/admin',
   tenantMiddleware, // Extract tenant
   authenticateSession, // Verify authentication
 );
 
-router.get('/api/v1/admin/users', async (req, res) => {
+router.get('/v1/admin/users', async (req, res) => {
   // req.tenant automatically available
   const users = await prisma.user.findMany({
     where: { organisationId: req.tenant.id },
@@ -361,7 +361,7 @@ const user = await prisma.user.findFirst({
 ### Create Organization
 
 ```typescript
-// POST /api/v1/organisations
+// POST /v1/organisations
 {
   "name": "Acme Corporation",
   "slug": "acme",
@@ -381,7 +381,7 @@ const user = await prisma.user.findFirst({
 ### Update Organization
 
 ```typescript
-// PATCH /api/v1/admin/organisation
+// PATCH /v1/admin/organisation
 {
   "name": "New Name",
   "sessionLifetime": 7200,
@@ -394,7 +394,7 @@ const user = await prisma.user.findFirst({
 ### Suspend Organization
 
 ```typescript
-// PATCH /api/v1/system/organisations/:id/suspend
+// PATCH /v1/system/organisations/:id/suspend
 {
   "reason": "Payment failure"
 }
@@ -410,7 +410,7 @@ const user = await prisma.user.findFirst({
 ### Delete Organization (Soft)
 
 ```typescript
-// DELETE /api/v1/system/organisations/:id
+// DELETE /v1/system/organisations/:id
 ```
 
 **Process:**
@@ -427,7 +427,7 @@ const user = await prisma.user.findFirst({
 ### Request Headers
 
 ```http
-GET /api/v1/admin/users HTTP/1.1
+GET /v1/admin/users HTTP/1.1
 Host: api.cerberus.local
 X-Org-Slug: acme
 Cookie: cerb_sid=...

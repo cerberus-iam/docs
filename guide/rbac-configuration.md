@@ -208,7 +208,7 @@ This ensures:
 When a new organization is created, all default roles are automatically provisioned:
 
 ```typescript
-// src/routes/api/v1/auth/register.ts
+// src/routes/v1/auth/register.ts
 import { createDefaultRolesForOrganisation } from './services/roles-permissions-sync.service';
 
 // After creating organization

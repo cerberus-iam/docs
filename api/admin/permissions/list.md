@@ -5,7 +5,7 @@ Retrieve a list of all available permissions in the system.
 ## Endpoint
 
 ```
-GET /api/v1/admin/permissions
+GET /v1/admin/permissions
 ```
 
 ## Authentication
@@ -113,7 +113,7 @@ None
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/permissions"
+  "instance": "/v1/admin/permissions"
 }
 ```
 
@@ -125,7 +125,7 @@ None
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:read",
-  "instance": "/api/v1/admin/permissions"
+  "instance": "/v1/admin/permissions"
 }
 ```
 
@@ -134,7 +134,7 @@ None
 ### cURL
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/permissions \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/permissions \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -142,7 +142,7 @@ curl -X GET https://api.cerberus-iam.dev/api/v1/admin/permissions \
 ### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/admin/permissions', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/admin/permissions', {
   method: 'GET',
   credentials: 'include',
   headers: {
@@ -167,7 +167,7 @@ const byCategory = permissions.reduce((acc, perm) => {
 import requests
 
 response = requests.get(
-    'https://api.cerberus-iam.dev/api/v1/admin/permissions',
+    'https://api.cerberus-iam.dev/v1/admin/permissions',
     cookies={'cerberus_session': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )

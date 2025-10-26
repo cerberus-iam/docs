@@ -17,7 +17,7 @@ Retrieve the current user's organisation details.
 ### Endpoint
 
 ```
-GET /api/v1/admin/organisation
+GET /v1/admin/organisation
 ```
 
 ### Authentication
@@ -68,7 +68,7 @@ GET /api/v1/admin/organisation
 ### Example
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/organisation \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/organisation \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -82,7 +82,7 @@ Update organisation settings.
 ### Endpoint
 
 ```
-PATCH /api/v1/admin/organisation
+PATCH /v1/admin/organisation
 ```
 
 ### Authentication
@@ -151,7 +151,7 @@ Returns the updated organisation object.
 ### Example
 
 ```bash
-curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/organisation \
+curl -X PATCH https://api.cerberus-iam.dev/v1/admin/organisation \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -167,7 +167,7 @@ Soft-delete the organisation (owner only).
 ### Endpoint
 
 ```
-DELETE /api/v1/admin/organisation
+DELETE /v1/admin/organisation
 ```
 
 ### Authentication
@@ -190,14 +190,14 @@ Empty response on success.
   "title": "Forbidden",
   "status": 403,
   "detail": "Only the organisation owner can delete the organisation",
-  "instance": "/api/v1/admin/organisation"
+  "instance": "/v1/admin/organisation"
 }
 ```
 
 ### Example
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/organisation \
+curl -X DELETE https://api.cerberus-iam.dev/v1/admin/organisation \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```

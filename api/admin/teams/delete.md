@@ -5,7 +5,7 @@ Delete a team from the organisation.
 ## Endpoint
 
 ```
-DELETE /api/v1/admin/teams/:id
+DELETE /v1/admin/teams/:id
 ```
 
 ## Authentication
@@ -20,7 +20,7 @@ Empty response on success.
 ## Example
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/teams/tem_01h2xz9k3m4n5p6q7r8s9t0v2z \
+curl -X DELETE https://api.cerberus-iam.dev/v1/admin/teams/tem_01h2xz9k3m4n5p6q7r8s9t0v2z \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```

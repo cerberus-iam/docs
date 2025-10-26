@@ -21,7 +21,7 @@ Retrieve all webhooks configured for the organisation.
 ### Endpoint
 
 ```
-GET /api/v1/admin/webhooks
+GET /v1/admin/webhooks
 ```
 
 ### Authentication
@@ -59,7 +59,7 @@ Retrieve details of a specific webhook.
 ### Endpoint
 
 ```
-GET /api/v1/admin/webhooks/:id
+GET /v1/admin/webhooks/:id
 ```
 
 ### Authentication
@@ -76,7 +76,7 @@ Create a new webhook endpoint.
 ### Endpoint
 
 ```
-POST /api/v1/admin/webhooks
+POST /v1/admin/webhooks
 ```
 
 ### Authentication
@@ -136,7 +136,7 @@ Update webhook configuration.
 ### Endpoint
 
 ```
-PATCH /api/v1/admin/webhooks/:id
+PATCH /v1/admin/webhooks/:id
 ```
 
 ### Authentication
@@ -163,7 +163,7 @@ Delete a webhook endpoint.
 ### Endpoint
 
 ```
-DELETE /api/v1/admin/webhooks/:id
+DELETE /v1/admin/webhooks/:id
 ```
 
 ### Authentication
@@ -182,7 +182,7 @@ Generate a new signing secret for the webhook.
 ### Endpoint
 
 ```
-POST /api/v1/admin/webhooks/:id/rotate-secret
+POST /v1/admin/webhooks/:id/rotate-secret
 ```
 
 ### Authentication
@@ -216,7 +216,7 @@ Send a test event to verify webhook configuration.
 ### Endpoint
 
 ```
-POST /api/v1/admin/webhooks/:id/test
+POST /v1/admin/webhooks/:id/test
 ```
 
 ### Authentication

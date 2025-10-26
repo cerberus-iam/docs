@@ -5,7 +5,7 @@ Create a new team in the organisation.
 ## Endpoint
 
 ```
-POST /api/v1/admin/teams
+POST /v1/admin/teams
 ```
 
 ## Authentication
@@ -50,7 +50,7 @@ POST /api/v1/admin/teams
 ## Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/teams \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/teams \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \

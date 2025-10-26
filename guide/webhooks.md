@@ -42,7 +42,7 @@ model WebhookEndpoint {
 ### Request
 
 ```typescript
-// POST /api/v1/admin/webhooks
+// POST /v1/admin/webhooks
 {
   "url": "https://api.yourapp.com/webhooks/cerberus",
   "events": [
@@ -323,7 +323,7 @@ Webhooks are NOT retried on:
 ### Re-enable Webhook
 
 ```typescript
-// PATCH /api/v1/admin/webhooks/:id
+// PATCH /v1/admin/webhooks/:id
 {
   "isActive": true
 }
@@ -336,7 +336,7 @@ This resets `failureCount` to 0.
 ### List Webhooks
 
 ```typescript
-// GET /api/v1/admin/webhooks
+// GET /v1/admin/webhooks
 ```
 
 **Response:**
@@ -360,7 +360,7 @@ This resets `failureCount` to 0.
 ### Update Webhook
 
 ```typescript
-// PATCH /api/v1/admin/webhooks/:id
+// PATCH /v1/admin/webhooks/:id
 {
   "url": "https://new-url.com/webhooks",
   "events": ["user.created", "auth.login"],
@@ -371,13 +371,13 @@ This resets `failureCount` to 0.
 ### Delete Webhook
 
 ```typescript
-// DELETE /api/v1/admin/webhooks/:id
+// DELETE /v1/admin/webhooks/:id
 ```
 
 ### Rotate Secret
 
 ```typescript
-// POST /api/v1/admin/webhooks/:id/rotate-secret
+// POST /v1/admin/webhooks/:id/rotate-secret
 ```
 
 **Response:**
@@ -511,7 +511,7 @@ https://abc123.ngrok.io/webhooks/cerberus
 
 ```bash
 # Trigger test event
-curl -X POST https://api.cerberus.local/api/v1/admin/webhooks/test \
+curl -X POST https://api.cerberus.local/v1/admin/webhooks/test \
   -H "Authorization: Bearer $SESSION_TOKEN" \
   -H "X-Org-Slug: acme" \
   -H "Content-Type: application/json" \

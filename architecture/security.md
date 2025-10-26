@@ -105,13 +105,13 @@ sequenceDiagram
     participant API
     participant DB
 
-    Client->>API: POST /api/v1/auth/login
+    Client->>API: POST /v1/auth/login
     API->>DB: Verify credentials
     DB-->>API: User data
     API->>DB: Create session (hashed token)
     API-->>Client: Set-Cookie: cerb_sid=<token>
 
-    Client->>API: GET /api/v1/me/profile (with cookie)
+    Client->>API: GET /v1/me/profile (with cookie)
     API->>DB: Lookup session by hash
     DB-->>API: Session + User data
     API-->>Client: User profile
@@ -422,7 +422,7 @@ When reuse detected, revoke:
 
 - 30 requests per 60 seconds
 - Key: IP address
-- Routes: `/api/v1/auth/*`
+- Routes: `/v1/auth/*`
 - Prevents brute force attacks
 
 **Token Endpoint Rate Limit:**

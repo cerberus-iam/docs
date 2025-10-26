@@ -497,10 +497,10 @@ AUTH_RATE_MAX=30
 
 **Protected Endpoints:**
 
-- `/api/v1/auth/login`
-- `/api/v1/auth/register`
-- `/api/v1/auth/forgot-password`
-- `/api/v1/auth/reset-password`
+- `/v1/auth/login`
+- `/v1/auth/register`
+- `/v1/auth/forgot-password`
+- `/v1/auth/reset-password`
 
 #### `TOKEN_RATE_WINDOW_SEC`
 

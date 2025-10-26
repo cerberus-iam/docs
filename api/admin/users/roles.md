@@ -16,7 +16,7 @@ Assign a role to a user.
 ### Endpoint
 
 ```
-POST /api/v1/admin/users/:id/roles
+POST /v1/admin/users/:id/roles
 ```
 
 ### Authentication
@@ -77,7 +77,7 @@ POST /api/v1/admin/users/:id/roles
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
 }
 ```
 
@@ -89,7 +89,7 @@ POST /api/v1/admin/users/:id/roles
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
 }
 ```
 
@@ -101,7 +101,7 @@ POST /api/v1/admin/users/:id/roles
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:update",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
 }
 ```
 
@@ -110,7 +110,7 @@ POST /api/v1/admin/users/:id/roles
 #### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -125,7 +125,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6
 const userId = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w';
 const roleId = 'rol_01h2xz9k3m4n5p6q7r8s9t0v1y';
 
-const response = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/users/${userId}/roles`, {
+const response = await fetch(`https://api.cerberus-iam.dev/v1/admin/users/${userId}/roles`, {
   method: 'POST',
   credentials: 'include',
   headers: {
@@ -148,7 +148,7 @@ user_id = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w'
 role_id = 'rol_01h2xz9k3m4n5p6q7r8s9t0v1y'
 
 response = requests.post(
-    f'https://api.cerberus-iam.dev/api/v1/admin/users/{user_id}/roles',
+    f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}/roles',
     cookies={'cerberus_session': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
@@ -170,7 +170,7 @@ Remove a role from a user.
 ### Endpoint
 
 ```
-DELETE /api/v1/admin/users/:id/roles
+DELETE /v1/admin/users/:id/roles
 ```
 
 ### Authentication
@@ -230,7 +230,7 @@ DELETE /api/v1/admin/users/:id/roles
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
 }
 ```
 
@@ -242,7 +242,7 @@ DELETE /api/v1/admin/users/:id/roles
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
 }
 ```
 
@@ -254,7 +254,7 @@ DELETE /api/v1/admin/users/:id/roles
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:update",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles"
 }
 ```
 
@@ -263,7 +263,7 @@ DELETE /api/v1/admin/users/:id/roles
 #### cURL
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles \
+curl -X DELETE https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -278,7 +278,7 @@ curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5
 const userId = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w';
 const roleId = 'rol_01h2xz9k3m4n5p6q7r8s9t0v1y';
 
-const response = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/users/${userId}/roles`, {
+const response = await fetch(`https://api.cerberus-iam.dev/v1/admin/users/${userId}/roles`, {
   method: 'DELETE',
   credentials: 'include',
   headers: {
@@ -301,7 +301,7 @@ user_id = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w'
 role_id = 'rol_01h2xz9k3m4n5p6q7r8s9t0v1y'
 
 response = requests.delete(
-    f'https://api.cerberus-iam.dev/api/v1/admin/users/{user_id}/roles',
+    f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}/roles',
     cookies={'cerberus_session': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',

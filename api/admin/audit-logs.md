@@ -7,13 +7,13 @@ Query and retrieve audit logs for security and compliance monitoring.
 ### Query Audit Logs
 
 ```
-GET /api/v1/admin/audit-logs
+GET /v1/admin/audit-logs
 ```
 
 ### Get Single Audit Log
 
 ```
-GET /api/v1/admin/audit-logs/:id
+GET /v1/admin/audit-logs/:id
 ```
 
 ## Authentication
@@ -57,7 +57,7 @@ GET /api/v1/admin/audit-logs/:id
 ### Example Request
 
 ```bash
-GET /api/v1/admin/audit-logs?eventCategory=auth&action=login&startDate=2025-10-01T00:00:00Z&limit=50
+GET /v1/admin/audit-logs?eventCategory=auth&action=login&startDate=2025-10-01T00:00:00Z&limit=50
 ```
 
 ### Success Response (200 OK)
@@ -166,7 +166,7 @@ GET /api/v1/admin/audit-logs?eventCategory=auth&action=login&startDate=2025-10-0
 ### Example Request
 
 ```bash
-GET /api/v1/admin/audit-logs/aud_01h2xz9k3m4n5p6q7r8s9t0v1w
+GET /v1/admin/audit-logs/aud_01h2xz9k3m4n5p6q7r8s9t0v1w
 ```
 
 ### Success Response (200 OK)
@@ -251,7 +251,7 @@ User is not authenticated.
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/audit-logs"
+  "instance": "/v1/admin/audit-logs"
 }
 ```
 
@@ -265,7 +265,7 @@ User lacks the required permission.
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: audit:read",
-  "instance": "/api/v1/admin/audit-logs"
+  "instance": "/v1/admin/audit-logs"
 }
 ```
 
@@ -279,7 +279,7 @@ Audit log with specified ID not found.
   "title": "Not Found",
   "status": 404,
   "detail": "Audit log not found",
-  "instance": "/api/v1/admin/audit-logs/aud_invalid"
+  "instance": "/v1/admin/audit-logs/aud_invalid"
 }
 ```
 
@@ -299,7 +299,7 @@ Invalid query parameters.
       "message": "Invalid datetime format"
     }
   ],
-  "instance": "/api/v1/admin/audit-logs"
+  "instance": "/v1/admin/audit-logs"
 }
 ```
 
@@ -308,7 +308,7 @@ Invalid query parameters.
 ### cURL (Query with Filters)
 
 ```bash
-curl -X GET "https://api.cerberus-iam.dev/api/v1/admin/audit-logs?eventCategory=auth&success=true&limit=20" \
+curl -X GET "https://api.cerberus-iam.dev/v1/admin/audit-logs?eventCategory=auth&success=true&limit=20" \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -319,7 +319,7 @@ curl -X GET "https://api.cerberus-iam.dev/api/v1/admin/audit-logs?eventCategory=
 async function queryAuditLogs(filters) {
   const params = new URLSearchParams(filters);
 
-  const response = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/audit-logs?${params}`, {
+  const response = await fetch(`https://api.cerberus-iam.dev/v1/admin/audit-logs?${params}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -387,7 +387,7 @@ async function getAuditLogs(
     });
   }
 
-  const response = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/audit-logs?${params}`, {
+  const response = await fetch(`https://api.cerberus-iam.dev/v1/admin/audit-logs?${params}`, {
     method: 'GET',
     credentials: 'include',
     headers: {
@@ -452,7 +452,7 @@ class AuditLogClient:
             params['endDate'] = end_date.isoformat()
 
         response = requests.get(
-            f'{self.base_url}/api/v1/admin/audit-logs',
+            f'{self.base_url}/v1/admin/audit-logs',
             params=params,
             cookies={'cerberus_session': self.session_cookie},
             headers={'X-CSRF-Token': self.csrf_token}
@@ -464,7 +464,7 @@ class AuditLogClient:
     def get_audit_log(self, log_id: str) -> Dict[str, Any]:
         """Get a single audit log by ID."""
         response = requests.get(
-            f'{self.base_url}/api/v1/admin/audit-logs/{log_id}',
+            f'{self.base_url}/v1/admin/audit-logs/{log_id}',
             cookies={'cerberus_session': self.session_cookie},
             headers={'X-CSRF-Token': self.csrf_token}
         )

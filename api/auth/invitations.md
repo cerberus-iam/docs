@@ -5,7 +5,7 @@ Accept an invitation to join an organisation.
 ## Endpoint
 
 ```
-POST /api/v1/auth/invitations/accept
+POST /v1/auth/invitations/accept
 ```
 
 ## Description
@@ -167,7 +167,7 @@ This is similar to registration, but the user is joining an existing organisatio
 
 Invitations are created by organisation administrators through the admin API:
 
-- **POST /api/v1/admin/invitations** - Create invitation (admin only)
+- **POST /v1/admin/invitations** - Create invitation (admin only)
 
 ## Side Effects
 
@@ -207,7 +207,7 @@ On successful invitation acceptance:
 ### cURL
 
 ```bash
-curl -X POST http://localhost:4000/api/v1/auth/invitations/accept \
+curl -X POST http://localhost:4000/v1/auth/invitations/accept \
   -H "Content-Type: application/json" \
   -d '{
     "token": "inv_a1b2c3d4e5f6g7h8",
@@ -221,7 +221,7 @@ curl -X POST http://localhost:4000/api/v1/auth/invitations/accept \
 
 ```javascript
 async function acceptInvitation(token, userData) {
-  const response = await fetch('http://localhost:4000/api/v1/auth/invitations/accept', {
+  const response = await fetch('http://localhost:4000/v1/auth/invitations/accept', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -310,7 +310,7 @@ export function AcceptInvitationPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/api/v1/auth/invitations/accept', {
+      const response = await fetch('http://localhost:4000/v1/auth/invitations/accept', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -412,7 +412,7 @@ export function AcceptInvitationPage() {
 ## Invitation Flow
 
 ```
-1. Admin creates invitation via POST /api/v1/admin/invitations
+1. Admin creates invitation via POST /v1/admin/invitations
    ↓
 2. Server sends invitation email with token link
    ↓
@@ -422,7 +422,7 @@ export function AcceptInvitationPage() {
    ↓
 5. Invitee enters their name and password
    ↓
-6. Client calls POST /api/v1/auth/invitations/accept
+6. Client calls POST /v1/auth/invitations/accept
    ↓
 7. Server validates token, creates user account
    ↓
@@ -517,6 +517,6 @@ After successful invitation acceptance:
 
 ## Related Endpoints
 
-- [POST /api/v1/auth/login](./login.md) - Login after accepting invitation
-- POST /api/v1/admin/invitations - Create invitation (admin only)
-- GET /api/v1/admin/invitations - List invitations (admin only)
+- [POST /v1/auth/login](./login.md) - Login after accepting invitation
+- POST /v1/admin/invitations - Create invitation (admin only)
+- GET /v1/admin/invitations - List invitations (admin only)

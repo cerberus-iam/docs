@@ -5,7 +5,7 @@ Retrieve a list of all teams in the organisation.
 ## Endpoint
 
 ```
-GET /api/v1/admin/teams
+GET /v1/admin/teams
 ```
 
 ## Authentication
@@ -41,7 +41,7 @@ GET /api/v1/admin/teams
 ## Example
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/teams \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/teams \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```

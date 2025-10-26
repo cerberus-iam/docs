@@ -16,7 +16,7 @@ Retrieve all active sessions for the authenticated user.
 ### Endpoint
 
 ```
-GET /api/v1/me/sessions
+GET /v1/me/sessions
 ```
 
 ### Authentication
@@ -94,7 +94,7 @@ None
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/me/sessions"
+  "instance": "/v1/me/sessions"
 }
 ```
 
@@ -106,7 +106,7 @@ None
   "title": "Forbidden",
   "status": 403,
   "detail": "Invalid CSRF token",
-  "instance": "/api/v1/me/sessions"
+  "instance": "/v1/me/sessions"
 }
 ```
 
@@ -115,7 +115,7 @@ None
 #### cURL
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/me/sessions \
+curl -X GET https://api.cerberus-iam.dev/v1/me/sessions \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -123,7 +123,7 @@ curl -X GET https://api.cerberus-iam.dev/api/v1/me/sessions \
 #### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/sessions', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/sessions', {
   method: 'GET',
   credentials: 'include',
   headers: {
@@ -144,7 +144,7 @@ Revoke a specific session for the authenticated user. This will immediately inva
 ### Endpoint
 
 ```
-DELETE /api/v1/me/sessions/:id
+DELETE /v1/me/sessions/:id
 ```
 
 ### Authentication
@@ -196,7 +196,7 @@ Empty response body. Session has been successfully revoked.
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -208,7 +208,7 @@ Empty response body. Session has been successfully revoked.
   "title": "Forbidden",
   "status": 403,
   "detail": "Invalid CSRF token",
-  "instance": "/api/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -217,7 +217,7 @@ Empty response body. Session has been successfully revoked.
 #### cURL
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w \
+curl -X DELETE https://api.cerberus-iam.dev/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -227,7 +227,7 @@ curl -X DELETE https://api.cerberus-iam.dev/api/v1/me/sessions/ses_01h2xz9k3m4n5
 ```javascript
 const sessionId = 'ses_01h2xz9k3m4n5p6q7r8s9t0v1w';
 
-const response = await fetch(`https://api.cerberus-iam.dev/api/v1/me/sessions/${sessionId}`, {
+const response = await fetch(`https://api.cerberus-iam.dev/v1/me/sessions/${sessionId}`, {
   method: 'DELETE',
   credentials: 'include',
   headers: {
@@ -248,7 +248,7 @@ import requests
 session_id = 'ses_01h2xz9k3m4n5p6q7r8s9t0v1w'
 
 response = requests.delete(
-    f'https://api.cerberus-iam.dev/api/v1/me/sessions/{session_id}',
+    f'https://api.cerberus-iam.dev/v1/me/sessions/{session_id}',
     cookies={'cerberus_session': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )

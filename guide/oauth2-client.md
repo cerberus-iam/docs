@@ -22,7 +22,7 @@ This guide shows you how to integrate your application with Cerberus IAM as an O
 ### Using the Admin API
 
 ```bash
-curl -X POST https://auth.example.com/api/v1/admin/clients \
+curl -X POST https://auth.example.com/v1/admin/clients \
   -H "Content-Type: application/json" \
   -H "X-Org-Slug: your-org" \
   -H "Cookie: cerb_sid=..." \
@@ -426,7 +426,7 @@ class ApiClient {
 const api = new ApiClient('https://api.example.com');
 
 // Usage
-const response = await api.fetch('/api/v1/me/profile');
+const response = await api.fetch('/v1/me/profile');
 const profile = await response.json();
 ```
 

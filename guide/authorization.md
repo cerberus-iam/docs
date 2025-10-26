@@ -139,7 +139,7 @@ model Role {
 ### Create Role
 
 ```typescript
-// POST /api/v1/admin/roles
+// POST /v1/admin/roles
 {
   "name": "User Manager",
   "slug": "user-manager",
@@ -182,7 +182,7 @@ model Role {
 ### Assign Role to User
 
 ```typescript
-// POST /api/v1/admin/users/{userId}/roles
+// POST /v1/admin/users/{userId}/roles
 {
   "roleId": "role_abc123"
 }
@@ -191,7 +191,7 @@ model Role {
 **Alternative (Batch):**
 
 ```typescript
-// PATCH /api/v1/admin/users/{userId}
+// PATCH /v1/admin/users/{userId}
 {
   "roleIds": ["role_abc123", "role_def456"]
 }
@@ -392,7 +392,7 @@ model Team {
 ### Create Team
 
 ```typescript
-// POST /api/v1/admin/teams
+// POST /v1/admin/teams
 {
   "name": "Engineering",
   "slug": "engineering",
@@ -403,7 +403,7 @@ model Team {
 ### Add Users to Team
 
 ```typescript
-// POST /api/v1/admin/teams/{teamId}/members
+// POST /v1/admin/teams/{teamId}/members
 {
   "userIds": ["user_abc123", "user_def456"]
 }
@@ -473,7 +473,7 @@ router.patch('/admin/organisation/settings', updateSettings);
 
 ```typescript
 // Check ownership before allowing action
-router.delete('/api/v1/me/sessions/:id', authenticateSession, async (req, res) => {
+router.delete('/v1/me/sessions/:id', authenticateSession, async (req, res) => {
   const session = await prisma.session.findUnique({
     where: { id: req.params.id },
   });

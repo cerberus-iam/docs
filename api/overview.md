@@ -12,7 +12,7 @@ The Cerberus IAM API base URL is configured via the `ISSUER_URL` environment var
 
 Authentication endpoints are versioned:
 
-- **Current version:** `/api/v1`
+- **Current version:** `/v1`
 - **OAuth2/OIDC endpoints:** `/oauth2` (spec-compliant, no version prefix)
 - **Well-known endpoints:** `/.well-known` (spec-compliant)
 
@@ -26,7 +26,7 @@ Used for web applications and admin interfaces.
 
 **How to authenticate:**
 
-1. Call `POST /api/v1/auth/login` with credentials
+1. Call `POST /v1/auth/login` with credentials
 2. Server sets HttpOnly session cookie
 3. Include cookie in subsequent requests
 
@@ -217,7 +217,7 @@ Collection endpoints that support pagination use the following query parameters:
 **Example:**
 
 ```
-GET /api/v1/admin/users?page=2&limit=25&sort=-createdAt
+GET /v1/admin/users?page=2&limit=25&sort=-createdAt
 ```
 
 **Response:**
@@ -270,7 +270,7 @@ This ID is included in all log entries and can be used to trace a request throug
 ### JavaScript/TypeScript
 
 ```typescript
-const response = await fetch('http://localhost:4000/api/v1/auth/login', {
+const response = await fetch('http://localhost:4000/v1/auth/login', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -289,7 +289,7 @@ const data = await response.json();
 ### cURL
 
 ```bash
-curl -X POST http://localhost:4000/api/v1/auth/login \
+curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
   -H "X-Org-Slug: acme-corp" \
   -d '{

@@ -5,7 +5,7 @@ Create a new role in the organisation.
 ## Endpoint
 
 ```
-POST /api/v1/admin/roles
+POST /v1/admin/roles
 ```
 
 ## Authentication
@@ -72,7 +72,7 @@ POST /api/v1/admin/roles
 ## Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/roles \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/roles \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \

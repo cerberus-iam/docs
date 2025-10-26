@@ -18,7 +18,7 @@ Retrieve all API keys in the organisation.
 ### Endpoint
 
 ```
-GET /api/v1/admin/api-keys
+GET /v1/admin/api-keys
 ```
 
 ### Authentication
@@ -52,7 +52,7 @@ GET /api/v1/admin/api-keys
 ### Example
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/api-keys \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/api-keys \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -66,7 +66,7 @@ Retrieve details of a specific API key.
 ### Endpoint
 
 ```
-GET /api/v1/admin/api-keys/:id
+GET /v1/admin/api-keys/:id
 ```
 
 ### Authentication
@@ -81,7 +81,7 @@ Returns a single API key object (same structure as list items).
 ### Example
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/api-keys/key_01h2xz9k3m4n5p6q7r8s9t0v2f \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/api-keys/key_01h2xz9k3m4n5p6q7r8s9t0v2f \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -95,7 +95,7 @@ Generate a new API key for programmatic access.
 ### Endpoint
 
 ```
-POST /api/v1/admin/api-keys
+POST /v1/admin/api-keys
 ```
 
 ### Authentication
@@ -142,7 +142,7 @@ POST /api/v1/admin/api-keys
 ### Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/api-keys \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/api-keys \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -162,7 +162,7 @@ Revoke an API key, immediately invalidating it.
 ### Endpoint
 
 ```
-POST /api/v1/admin/api-keys/:id/revoke
+POST /v1/admin/api-keys/:id/revoke
 ```
 
 ### Authentication
@@ -181,7 +181,7 @@ POST /api/v1/admin/api-keys/:id/revoke
 ### Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/api-keys/key_01h2xz9k3m4n5p6q7r8s9t0v2g/revoke \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/api-keys/key_01h2xz9k3m4n5p6q7r8s9t0v2g/revoke \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -193,7 +193,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/admin/api-keys/key_01h2xz9k3m4n
 Include the API key in the `Authorization` header:
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/users \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/users \
   -H "Authorization: Bearer ck_live_xyz789_abcdef123456..."
 ```
 

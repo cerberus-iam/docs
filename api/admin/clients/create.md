@@ -5,7 +5,7 @@ Create a new OAuth 2.0 client application.
 ## Endpoint
 
 ```
-POST /api/v1/admin/clients
+POST /v1/admin/clients
 ```
 
 ## Authentication
@@ -77,7 +77,7 @@ POST /api/v1/admin/clients
 ## Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/clients \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/clients \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \

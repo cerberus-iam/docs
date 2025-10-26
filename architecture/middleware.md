@@ -208,7 +208,7 @@ const sessionToken = req.cookies[config.SESSION_COOKIE_NAME];
 
 **Purpose:** Establishes multi-tenant context from `X-Org-Slug` header.
 
-**Applied To:** Most API routes under `/api/v1`
+**Applied To:** Most API routes under `/v1`
 
 **Flow:**
 
@@ -277,7 +277,7 @@ declare global {
 
 **Function:** `authenticateSession`
 
-**Applied To:** Admin UI routes (`/api/v1/me`, `/api/v1/admin`)
+**Applied To:** Admin UI routes (`/v1/me`, `/v1/admin`)
 
 **Flow:**
 
@@ -717,7 +717,7 @@ app.use(cors(buildCorsOptions()));
 Applied to specific route groups:
 
 ```typescript
-// src/routes/api/v1/admin/index.ts
+// src/routes/v1/admin/index.ts
 const router = Router();
 
 router.use(tenantMiddleware);

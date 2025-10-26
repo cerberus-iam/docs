@@ -5,7 +5,7 @@ Soft-delete a user from the organisation. The user's data is retained but marked
 ## Endpoint
 
 ```
-DELETE /api/v1/admin/users/:id
+DELETE /v1/admin/users/:id
 ```
 
 ## Authentication
@@ -61,7 +61,7 @@ User is not authenticated.
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -75,7 +75,7 @@ User lacks the required permission or CSRF token is invalid.
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:delete",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -89,7 +89,7 @@ User does not exist or does not belong to the same organisation.
   "title": "Not Found",
   "status": 404,
   "detail": "User not found",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -98,7 +98,7 @@ User does not exist or does not belong to the same organisation.
 ### cURL
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
+curl -X DELETE https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -108,7 +108,7 @@ curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5
 ```javascript
 const userId = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w';
 
-const response = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/users/${userId}`, {
+const response = await fetch(`https://api.cerberus-iam.dev/v1/admin/users/${userId}`, {
   method: 'DELETE',
   credentials: 'include',
   headers: {
@@ -132,7 +132,7 @@ import requests
 user_id = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w'
 
 response = requests.delete(
-    f'https://api.cerberus-iam.dev/api/v1/admin/users/{user_id}',
+    f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}',
     cookies={'cerberus_session': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )

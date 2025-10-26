@@ -18,7 +18,7 @@ sequenceDiagram
     participant Database
 
     User->>Browser: Enter credentials
-    Browser->>API: POST /api/v1/auth/login
+    Browser->>API: POST /v1/auth/login
     API->>Database: Verify credentials
     Database-->>API: User valid
     API->>Database: Create session
@@ -27,7 +27,7 @@ sequenceDiagram
     Browser-->>User: Logged in
 
     User->>Browser: Access protected page
-    Browser->>API: GET /api/v1/me/profile (Cookie: cerb_sid=TOKEN)
+    Browser->>API: GET /v1/me/profile (Cookie: cerb_sid=TOKEN)
     API->>Database: Validate session
     Database-->>API: Session valid, user data
     API-->>Browser: User profile
@@ -93,7 +93,7 @@ Per-organization session policies:
 Update via Admin API:
 
 ```bash
-curl -X PATCH https://auth.example.com/api/v1/admin/organisation \
+curl -X PATCH https://auth.example.com/v1/admin/organisation \
   -H "Content-Type: application/json" \
   -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
@@ -136,13 +136,13 @@ Session-based requests require CSRF token validation for state-changing operatio
 
 ```javascript
 // Get CSRF token
-const response = await fetch('https://api.example.com/api/v1/me/profile', {
+const response = await fetch('https://api.example.com/v1/me/profile', {
   credentials: 'include',
 });
 const csrfToken = response.headers.get('X-CSRF-Token');
 
 // Use token in POST request
-await fetch('https://api.example.com/api/v1/me/profile', {
+await fetch('https://api.example.com/v1/me/profile', {
   method: 'PATCH',
   credentials: 'include',
   headers: {
@@ -180,10 +180,10 @@ This enables:
 
 ### List Active Sessions
 
-**Endpoint:** `GET /api/v1/me/sessions`
+**Endpoint:** `GET /v1/me/sessions`
 
 ```bash
-curl https://auth.example.com/api/v1/me/sessions \
+curl https://auth.example.com/v1/me/sessions \
   -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..."
 ```
@@ -215,10 +215,10 @@ curl https://auth.example.com/api/v1/me/sessions \
 
 ### Revoke a Session
 
-**Endpoint:** `DELETE /api/v1/me/sessions/:id`
+**Endpoint:** `DELETE /v1/me/sessions/:id`
 
 ```bash
-curl -X DELETE https://auth.example.com/api/v1/me/sessions/session-uuid-2 \
+curl -X DELETE https://auth.example.com/v1/me/sessions/session-uuid-2 \
   -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -H "X-CSRF-Token: csrf-token-here"
@@ -228,10 +228,10 @@ This logs the user out from that specific device/browser.
 
 ### Logout (Current Session)
 
-**Endpoint:** `POST /api/v1/auth/logout`
+**Endpoint:** `POST /v1/auth/logout`
 
 ```bash
-curl -X POST https://auth.example.com/api/v1/auth/logout \
+curl -X POST https://auth.example.com/v1/auth/logout \
   -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -H "X-CSRF-Token: csrf-token-here"
@@ -245,7 +245,7 @@ To revoke all user sessions (e.g., password change, security breach):
 
 ```bash
 # Admin API (future feature)
-curl -X DELETE https://auth.example.com/api/v1/admin/users/:userId/sessions \
+curl -X DELETE https://auth.example.com/v1/admin/users/:userId/sessions \
   -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -H "X-CSRF-Token: csrf-token-here"
@@ -313,7 +313,7 @@ export function SessionManager() {
   }, []);
 
   async function fetchSessions() {
-    const response = await fetch('/api/v1/me/sessions', {
+    const response = await fetch('/v1/me/sessions', {
       credentials: 'include',
       headers: {
         'X-Org-Slug': 'acme-corp'
@@ -329,7 +329,7 @@ export function SessionManager() {
     // Get CSRF token
     const csrfToken = await getCSRFToken();
 
-    await fetch(`/api/v1/me/sessions/${sessionId}`, {
+    await fetch(`/v1/me/sessions/${sessionId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {
@@ -367,7 +367,7 @@ export function SessionManager() {
 }
 
 async function getCSRFToken(): Promise<string> {
-  const response = await fetch('/api/v1/me/profile', {
+  const response = await fetch('/v1/me/profile', {
     credentials: 'include',
     headers: { 'X-Org-Slug': 'acme-corp' }
   });

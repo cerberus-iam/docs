@@ -5,7 +5,7 @@ Retrieve the authenticated user's profile information including roles, permissio
 ## Endpoint
 
 ```
-GET /api/v1/me/profile
+GET /v1/me/profile
 ```
 
 ## Authentication
@@ -107,7 +107,7 @@ User is not authenticated or session is invalid.
   "title": "Unauthorized",
   "status": 401,
   "detail": "User not found",
-  "instance": "/api/v1/me/profile"
+  "instance": "/v1/me/profile"
 }
 ```
 
@@ -121,7 +121,7 @@ CSRF token is missing or invalid.
   "title": "Forbidden",
   "status": 403,
   "detail": "Invalid CSRF token",
-  "instance": "/api/v1/me/profile"
+  "instance": "/v1/me/profile"
 }
 ```
 
@@ -130,7 +130,7 @@ CSRF token is missing or invalid.
 ### cURL
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/me/profile \
+curl -X GET https://api.cerberus-iam.dev/v1/me/profile \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -138,7 +138,7 @@ curl -X GET https://api.cerberus-iam.dev/api/v1/me/profile \
 ### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/profile', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/profile', {
   method: 'GET',
   credentials: 'include',
   headers: {
@@ -156,7 +156,7 @@ console.log(profile);
 import requests
 
 response = requests.get(
-    'https://api.cerberus-iam.dev/api/v1/me/profile',
+    'https://api.cerberus-iam.dev/v1/me/profile',
     cookies={'cerberus_session': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )

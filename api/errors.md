@@ -12,7 +12,7 @@ All errors return a JSON object with the following structure:
   "title": "Human-Readable Error Title",
   "status": 400,
   "detail": "Detailed description of what went wrong",
-  "instance": "/api/v1/resource/id"
+  "instance": "/v1/resource/id"
 }
 ```
 

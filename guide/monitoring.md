@@ -23,7 +23,7 @@ Cerberus IAM uses **Pino** for high-performance, structured JSON logging.
   "reqId": "req-abc123",
   "req": {
     "method": "POST",
-    "url": "/api/v1/auth/login",
+    "url": "/v1/auth/login",
     "headers": {
       "user-agent": "Mozilla/5.0...",
       "x-org-slug": "acme-corp"
@@ -63,7 +63,7 @@ All HTTP requests are logged with:
   "req": {
     "id": "req-abc123",
     "method": "GET",
-    "url": "/api/v1/me/profile",
+    "url": "/v1/me/profile",
     "headers": { ... },
     "remoteAddress": "192.168.1.100",
     "remotePort": 54321
@@ -209,10 +209,10 @@ role.permission.added
 
 ### Query Audit Logs
 
-**Endpoint:** `GET /api/v1/admin/audit-logs`
+**Endpoint:** `GET /v1/admin/audit-logs`
 
 ```bash
-curl "https://auth.example.com/api/v1/admin/audit-logs?eventType=user.login&startDate=2024-01-01&limit=100" \
+curl "https://auth.example.com/v1/admin/audit-logs?eventType=user.login&startDate=2024-01-01&limit=100" \
   -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..."
 ```

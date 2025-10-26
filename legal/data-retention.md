@@ -23,7 +23,7 @@ This document establishes baseline retention periods and disposal processes to s
 
 ### 2.1 User Hard Delete (GDPR Right to Erasure)
 
-1. Run `POST /api/v1/me/export` to provide data portability to the data subject.
+1. Run `POST /v1/me/export` to provide data portability to the data subject.
 2. Use forthcoming erasure tooling (see compliance backlog) to anonymize/remove user records from `users`, `sessions`, `tokens`, `audit_logs`, and linked tables.
 3. Trigger background job to scrub data from backups (if feasible) or note in response that backups expire within 30 days.
 4. Document request, actions taken, and confirmation provided to the requester.

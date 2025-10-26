@@ -158,7 +158,7 @@ app.use('/.well-known', wellKnownRouter);
 app.use('/oauth2', oauth2Router);
 
 // REST API
-app.use('/api/v1', apiRouter);
+app.use('/v1', apiRouter);
 ```
 
 **Route Organization:**
@@ -166,7 +166,7 @@ app.use('/api/v1', apiRouter);
 - `/health` - Health check endpoint
 - `/.well-known` - OIDC discovery metadata
 - `/oauth2` - OAuth2/OIDC protocol endpoints
-- `/api/v1` - Versioned REST API
+- `/v1` - Versioned REST API
 
 ### 8. Error Handlers
 

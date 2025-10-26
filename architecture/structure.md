@@ -253,9 +253,9 @@ Routes are organized by API surface area:
 - **`/health`**: Health check for load balancers
 - **`/.well-known`**: OIDC discovery endpoints
 - **`/oauth2`**: OAuth 2.0/OIDC protocol endpoints
-- **`/api/v1/auth`**: Public authentication (register, login, etc.)
-- **`/api/v1/me`**: User self-service endpoints
-- **`/api/v1/admin`**: Admin endpoints (RBAC protected)
+- **`/v1/auth`**: Public authentication (register, login, etc.)
+- **`/v1/me`**: User self-service endpoints
+- **`/v1/admin`**: Admin endpoints (RBAC protected)
 
 **Naming Convention:**
 
@@ -266,7 +266,7 @@ Routes are organized by API surface area:
 **Example:**
 
 ```typescript
-// src/routes/api/v1/admin/users.ts
+// src/routes/v1/admin/users.ts
 import { Router } from 'express';
 import { requirePerm } from '@/middleware/rbac';
 

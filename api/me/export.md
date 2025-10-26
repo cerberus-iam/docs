@@ -5,7 +5,7 @@ Export all personal data for the authenticated user in compliance with data port
 ## Endpoint
 
 ```
-GET /api/v1/me/export
+GET /v1/me/export
 ```
 
 ## Authentication
@@ -166,7 +166,7 @@ User is not authenticated or session is invalid.
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/me/export"
+  "instance": "/v1/me/export"
 }
 ```
 
@@ -180,7 +180,7 @@ User account not found (rare edge case).
   "title": "Not Found",
   "status": 404,
   "detail": "User not found",
-  "instance": "/api/v1/me/export"
+  "instance": "/v1/me/export"
 }
 ```
 
@@ -189,7 +189,7 @@ User account not found (rare edge case).
 ### cURL
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/me/export \
+curl -X GET https://api.cerberus-iam.dev/v1/me/export \
   -H "Cookie: cerberus_session=abc123..." \
   -o user-data-export.json
 ```
@@ -197,7 +197,7 @@ curl -X GET https://api.cerberus-iam.dev/api/v1/me/export \
 ### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/export', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/export', {
   method: 'GET',
   credentials: 'include',
 });
@@ -221,7 +221,7 @@ import json
 from datetime import datetime
 
 response = requests.get(
-    'https://api.cerberus-iam.dev/api/v1/me/export',
+    'https://api.cerberus-iam.dev/v1/me/export',
     cookies={'cerberus_session': 'abc123...'}
 )
 

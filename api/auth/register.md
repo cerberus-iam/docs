@@ -5,7 +5,7 @@ Create a new organisation and owner account.
 ## Endpoint
 
 ```
-POST /api/v1/auth/register
+POST /v1/auth/register
 ```
 
 ## Description
@@ -214,7 +214,7 @@ After successful registration:
 ### cURL
 
 ```bash
-curl -X POST http://localhost:4000/api/v1/auth/register \
+curl -X POST http://localhost:4000/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "organisationName": "Acme Corporation",
@@ -228,7 +228,7 @@ curl -X POST http://localhost:4000/api/v1/auth/register \
 ### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('http://localhost:4000/api/v1/auth/register', {
+const response = await fetch('http://localhost:4000/v1/auth/register', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -286,7 +286,7 @@ interface ProblemDetails {
 }
 
 async function register(data: RegisterRequest): Promise<RegisterResponse> {
-  const response = await fetch('http://localhost:4000/api/v1/auth/register', {
+  const response = await fetch('http://localhost:4000/v1/auth/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -345,6 +345,6 @@ try {
 
 ## Related Endpoints
 
-- [POST /api/v1/auth/login](./login.md) - Login with credentials
-- [GET /api/v1/auth/verify-email](./verify-email.md) - Verify email address
-- [POST /api/v1/auth/forgot-password](./password-reset.md) - Request password reset
+- [POST /v1/auth/login](./login.md) - Login with credentials
+- [GET /v1/auth/verify-email](./verify-email.md) - Verify email address
+- [POST /v1/auth/forgot-password](./password-reset.md) - Request password reset

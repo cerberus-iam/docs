@@ -5,7 +5,7 @@ Retrieve a list of all OAuth 2.0 clients in the organisation.
 ## Endpoint
 
 ```
-GET /api/v1/admin/clients
+GET /v1/admin/clients
 ```
 
 ## Authentication
@@ -47,7 +47,7 @@ GET /api/v1/admin/clients
 ## Example
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/clients \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/clients \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```

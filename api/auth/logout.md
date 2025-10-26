@@ -5,7 +5,7 @@ End the current user session.
 ## Endpoint
 
 ```
-POST /api/v1/auth/logout
+POST /v1/auth/logout
 ```
 
 ## Description
@@ -128,7 +128,7 @@ CSRF tokens are typically obtained from one of these sources:
 
 ```javascript
 // 1. Login and store CSRF token
-const loginResponse = await fetch('/api/v1/auth/login', {
+const loginResponse = await fetch('/v1/auth/login', {
   method: 'POST',
   credentials: 'include',
   headers: { 'Content-Type': 'application/json' },
@@ -139,7 +139,7 @@ const loginResponse = await fetch('/api/v1/auth/login', {
 const csrfToken = loginResponse.headers.get('X-CSRF-Token');
 
 // 3. Use CSRF token for logout
-const logoutResponse = await fetch('/api/v1/auth/logout', {
+const logoutResponse = await fetch('/v1/auth/logout', {
   method: 'POST',
   credentials: 'include',
   headers: {
@@ -155,7 +155,7 @@ const logoutResponse = await fetch('/api/v1/auth/logout', {
 
 ```bash
 # Logout with session cookie and CSRF token
-curl -X POST http://localhost:4000/api/v1/auth/logout \
+curl -X POST http://localhost:4000/v1/auth/logout \
   -H "Content-Type: application/json" \
   -H "X-CSRF-Token: your-csrf-token-here" \
   -b cookies.txt # Load session cookie from file
@@ -165,7 +165,7 @@ curl -X POST http://localhost:4000/api/v1/auth/logout \
 
 ```javascript
 async function logout(csrfToken) {
-  const response = await fetch('http://localhost:4000/api/v1/auth/logout', {
+  const response = await fetch('http://localhost:4000/v1/auth/logout', {
     method: 'POST',
     credentials: 'include', // Include session cookie
     headers: {
@@ -222,7 +222,7 @@ class AuthService {
       throw new Error('CSRF token not available');
     }
 
-    const response = await fetch(`${this.baseUrl}/api/v1/auth/logout`, {
+    const response = await fetch(`${this.baseUrl}/v1/auth/logout`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -296,7 +296,7 @@ export function useLogout(csrfToken: string): UseLogoutResult {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:4000/api/v1/auth/logout', {
+      const response = await fetch('http://localhost:4000/v1/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -394,6 +394,6 @@ function LogoutButton() {
 
 ## Related Endpoints
 
-- [POST /api/v1/auth/login](./login.md) - Create new session
-- [GET /api/v1/me/sessions](../me/sessions.md) - View all active sessions
-- [DELETE /api/v1/me/sessions](../me/sessions.md) - Logout all sessions
+- [POST /v1/auth/login](./login.md) - Create new session
+- [GET /v1/me/sessions](../me/sessions.md) - View all active sessions
+- [DELETE /v1/me/sessions](../me/sessions.md) - Logout all sessions

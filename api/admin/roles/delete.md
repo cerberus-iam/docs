@@ -5,7 +5,7 @@ Delete a role from the organisation.
 ## Endpoint
 
 ```
-DELETE /api/v1/admin/roles/:id
+DELETE /v1/admin/roles/:id
 ```
 
 ## Authentication
@@ -34,7 +34,7 @@ Empty response body on successful deletion.
 ## Example
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/roles/rol_01h2xz9k3m4n5p6q7r8s9t0v2y \
+curl -X DELETE https://api.cerberus-iam.dev/v1/admin/roles/rol_01h2xz9k3m4n5p6q7r8s9t0v2y \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```

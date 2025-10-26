@@ -44,7 +44,7 @@ cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7
 ### Request
 
 ```typescript
-// POST /api/v1/admin/api-keys
+// POST /v1/admin/api-keys
 {
   "name": "Production Backend Service",
   "scopes": ["users:read", "users:write", "clients:read"],
@@ -93,7 +93,7 @@ console.log('API Key:', key);
 ### Authentication Header
 
 ```http
-GET /api/v1/admin/users HTTP/1.1
+GET /v1/admin/users HTTP/1.1
 Host: api.cerberus.local
 Authorization: Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7
 X-Org-Slug: acme
@@ -102,7 +102,7 @@ X-Org-Slug: acme
 ### Code Example (JavaScript)
 
 ```javascript
-const response = await fetch('https://api.cerberus.local/api/v1/admin/users', {
+const response = await fetch('https://api.cerberus.local/v1/admin/users', {
   headers: {
     Authorization: 'Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7',
     'X-Org-Slug': 'acme',
@@ -124,7 +124,7 @@ headers = {
 }
 
 response = requests.get(
-    'https://api.cerberus.local/api/v1/admin/users',
+    'https://api.cerberus.local/v1/admin/users',
     headers=headers
 )
 
@@ -134,7 +134,7 @@ users = response.json()
 ### Code Example (cURL)
 
 ```bash
-curl -X GET https://api.cerberus.local/api/v1/admin/users \
+curl -X GET https://api.cerberus.local/v1/admin/users \
   -H "Authorization: Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7" \
   -H "X-Org-Slug: acme"
 ```
@@ -257,7 +257,7 @@ Grant minimum scopes needed:
 ### Request
 
 ```typescript
-// GET /api/v1/admin/api-keys
+// GET /v1/admin/api-keys
 ```
 
 ### Response
@@ -296,7 +296,7 @@ Grant minimum scopes needed:
 ### Request
 
 ```typescript
-// DELETE /api/v1/admin/api-keys/:id
+// DELETE /v1/admin/api-keys/:id
 ```
 
 ### Response
@@ -429,7 +429,7 @@ kubectl create secret generic cerberus-api-key \
 
    ```bash
    curl -H "Authorization: Bearer $CERBERUS_API_KEY" \
-     https://api.cerberus.local/api/v1/admin/users
+     https://api.cerberus.local/v1/admin/users
    ```
 
 4. **Revoke old key:**

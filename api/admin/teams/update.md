@@ -5,7 +5,7 @@ Update an existing team's properties.
 ## Endpoint
 
 ```
-PATCH /api/v1/admin/teams/:id
+PATCH /v1/admin/teams/:id
 ```
 
 ## Authentication
@@ -41,7 +41,7 @@ PATCH /api/v1/admin/teams/:id
 ## Example
 
 ```bash
-curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/teams/tem_01h2xz9k3m4n5p6q7r8s9t0v2z \
+curl -X PATCH https://api.cerberus-iam.dev/v1/admin/teams/tem_01h2xz9k3m4n5p6q7r8s9t0v2z \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \

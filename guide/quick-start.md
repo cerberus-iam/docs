@@ -124,7 +124,7 @@ Expected response:
 Register a new user:
 
 ```bash
-curl -X POST http://localhost:4000/api/v1/auth/register \
+curl -X POST http://localhost:4000/v1/auth/register \
   -H "Content-Type: application/json" \
   -H "X-Org-Slug: acme-corp" \
   -d '{
@@ -155,7 +155,7 @@ If using Docker Compose, open [http://localhost:8025](http://localhost:8025) to 
 ### Test Login
 
 ```bash
-curl -X POST http://localhost:4000/api/v1/auth/login \
+curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
   -H "X-Org-Slug: acme-corp" \
   -d '{
@@ -170,7 +170,7 @@ The session cookie will be saved to `cookies.txt`.
 ### Access Protected Endpoint
 
 ```bash
-curl http://localhost:4000/api/v1/me/profile \
+curl http://localhost:4000/v1/me/profile \
   -H "X-Org-Slug: acme-corp" \
   -b cookies.txt
 ```

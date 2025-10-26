@@ -5,7 +5,7 @@ Verify a user's email address using a verification token.
 ## Endpoint
 
 ```
-GET /api/v1/auth/verify-email
+GET /v1/auth/verify-email
 ```
 
 ## Description
@@ -31,7 +31,7 @@ No special headers required.
 ### Example Request
 
 ```
-GET /api/v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8
+GET /v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8
 ```
 
 ## Response
@@ -100,7 +100,7 @@ GET /api/v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8
 
 Tokens are generated during:
 
-1. **User registration** (POST /api/v1/auth/register)
+1. **User registration** (POST /v1/auth/register)
 2. **Email change requests** (if implemented)
 3. **Resend verification email** (if implemented)
 
@@ -117,7 +117,7 @@ Tokens are generated during:
 
 ## Email Verification Flow
 
-1. **User registers:** POST /api/v1/auth/register
+1. **User registers:** POST /v1/auth/register
 2. **Server sends email:** Contains verification link with token
 3. **User clicks link:** Opens this endpoint with token parameter
 4. **Server verifies token:** Updates user record
@@ -138,7 +138,7 @@ Tokens are generated during:
 ### cURL
 
 ```bash
-curl -X GET 'http://localhost:4000/api/v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8'
+curl -X GET 'http://localhost:4000/v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8'
 ```
 
 ### JavaScript (fetch)
@@ -146,7 +146,7 @@ curl -X GET 'http://localhost:4000/api/v1/auth/verify-email?token=evt_a1b2c3d4e5
 ```javascript
 async function verifyEmail(token) {
   const response = await fetch(
-    `http://localhost:4000/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`,
+    `http://localhost:4000/v1/auth/verify-email?token=${encodeURIComponent(token)}`,
   );
 
   if (!response.ok) {
@@ -219,7 +219,7 @@ export function EmailVerificationPage() {
   async function verifyEmail(token: string) {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`
+        `http://localhost:4000/v1/auth/verify-email?token=${encodeURIComponent(token)}`
       );
 
       if (!response.ok) {
@@ -279,7 +279,7 @@ export function EmailVerificationPage() {
 // Useful for server-side email verification flows
 async function verifyEmailServerSide(token: string): Promise<boolean> {
   const response = await fetch(
-    `http://localhost:4000/api/v1/auth/verify-email?token=${encodeURIComponent(token)}`,
+    `http://localhost:4000/v1/auth/verify-email?token=${encodeURIComponent(token)}`,
   );
 
   return response.ok;
@@ -387,6 +387,6 @@ app.get('/verify', async (req, res) => {
 
 ## Related Endpoints
 
-- [POST /api/v1/auth/register](./register.md) - Register and receive verification email
-- [POST /api/v1/auth/login](./login.md) - Login after email verification
+- [POST /v1/auth/register](./register.md) - Register and receive verification email
+- [POST /v1/auth/login](./login.md) - Login after email verification
 - Resend Verification Email - (if implemented)

@@ -5,7 +5,7 @@ Update an existing role's properties.
 ## Endpoint
 
 ```
-PATCH /api/v1/admin/roles/:id
+PATCH /v1/admin/roles/:id
 ```
 
 ## Authentication
@@ -62,7 +62,7 @@ PATCH /api/v1/admin/roles/:id
 ## Example
 
 ```bash
-curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/roles/rol_01h2xz9k3m4n5p6q7r8s9t0v2y \
+curl -X PATCH https://api.cerberus-iam.dev/v1/admin/roles/rol_01h2xz9k3m4n5p6q7r8s9t0v2y \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \

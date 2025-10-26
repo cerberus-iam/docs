@@ -5,7 +5,7 @@ Create a new user in the organisation.
 ## Endpoint
 
 ```
-POST /api/v1/admin/users
+POST /v1/admin/users
 ```
 
 ## Authentication
@@ -140,7 +140,7 @@ None
       "message": "String must contain at least 8 character(s)"
     }
   ],
-  "instance": "/api/v1/admin/users"
+  "instance": "/v1/admin/users"
 }
 ```
 
@@ -152,7 +152,7 @@ None
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/users"
+  "instance": "/v1/admin/users"
 }
 ```
 
@@ -164,7 +164,7 @@ None
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:create",
-  "instance": "/api/v1/admin/users"
+  "instance": "/v1/admin/users"
 }
 ```
 
@@ -178,7 +178,7 @@ Email address is already registered.
   "title": "Conflict",
   "status": 409,
   "detail": "Email already registered",
-  "instance": "/api/v1/admin/users"
+  "instance": "/v1/admin/users"
 }
 ```
 
@@ -187,7 +187,7 @@ Email address is already registered.
 ### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/users \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/users \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -204,7 +204,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/admin/users \
 ### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/admin/users', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/admin/users', {
   method: 'POST',
   credentials: 'include',
   headers: {
@@ -236,7 +236,7 @@ if (response.ok) {
 import requests
 
 response = requests.post(
-    'https://api.cerberus-iam.dev/api/v1/admin/users',
+    'https://api.cerberus-iam.dev/v1/admin/users',
     cookies={'cerberus_session': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',

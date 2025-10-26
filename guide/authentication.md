@@ -54,7 +54,7 @@ Used for OAuth2 clients and API access:
 ```typescript
 import { authenticateBearer } from '@/middleware/authn';
 
-router.get('/api/v1/users', authenticateBearer, async (req, res) => {
+router.get('/v1/users', authenticateBearer, async (req, res) => {
   // req.user contains JWT payload data
   const users = await prisma.user.findMany({
     where: { organisationId: req.user.organisationId },
@@ -186,7 +186,7 @@ const result = validatePasswordStrength('weak');
 ### Login Flow
 
 ```typescript
-// POST /api/v1/auth/login
+// POST /v1/auth/login
 {
   "email": "user@example.com",
   "password": "SecurePass123",
@@ -234,7 +234,7 @@ const result = validatePasswordStrength('weak');
 #### 1. Request Reset
 
 ```typescript
-// POST /api/v1/auth/forgot-password
+// POST /v1/auth/forgot-password
 {
   "email": "user@example.com"
 }
@@ -257,7 +257,7 @@ https://admin.acme.com/reset-password?token=tok_...
 #### 2. Verify Token
 
 ```typescript
-// GET /api/v1/auth/reset-password?token=tok_...
+// GET /v1/auth/reset-password?token=tok_...
 ```
 
 **Process:**
@@ -270,7 +270,7 @@ https://admin.acme.com/reset-password?token=tok_...
 #### 3. Reset Password
 
 ```typescript
-// POST /api/v1/auth/reset-password
+// POST /v1/auth/reset-password
 {
   "token": "tok_...",
   "newPassword": "NewSecurePass123"
@@ -296,7 +296,7 @@ Cerberus implements TOTP based on RFC 6238.
 #### Enable TOTP
 
 ```typescript
-// POST /api/v1/me/mfa/totp/enable
+// POST /v1/me/mfa/totp/enable
 
 // Response
 {
@@ -324,7 +324,7 @@ Users scan the QR code with authenticator apps:
 #### Verify and Activate TOTP
 
 ```typescript
-// POST /api/v1/me/mfa/totp/verify
+// POST /v1/me/mfa/totp/verify
 {
   "code": "123456"
 }
@@ -358,7 +358,7 @@ Users scan the QR code with authenticator apps:
 #### Login with MFA
 
 ```typescript
-// POST /api/v1/auth/login/mfa
+// POST /v1/auth/login/mfa
 {
   "email": "user@example.com",
   "password": "SecurePass123",
@@ -376,7 +376,7 @@ Users scan the QR code with authenticator apps:
 #### Using Backup Codes
 
 ```typescript
-// POST /api/v1/auth/login/mfa
+// POST /v1/auth/login/mfa
 {
   "email": "user@example.com",
   "password": "SecurePass123",
@@ -395,7 +395,7 @@ Users scan the QR code with authenticator apps:
 #### Disable MFA
 
 ```typescript
-// POST /api/v1/me/mfa/totp/disable
+// POST /v1/me/mfa/totp/disable
 {
   "code": "123456"
 }
@@ -412,7 +412,7 @@ Users scan the QR code with authenticator apps:
 #### Regenerate Backup Codes
 
 ```typescript
-// POST /api/v1/me/mfa/backup-codes/regenerate
+// POST /v1/me/mfa/backup-codes/regenerate
 {
   "code": "123456"
 }
@@ -527,7 +527,7 @@ Per-organization configuration:
 #### 1. Send Verification Email
 
 ```typescript
-// POST /api/v1/auth/send-verification-email
+// POST /v1/auth/send-verification-email
 ```
 
 **Process:**
@@ -546,7 +546,7 @@ https://admin.acme.com/verify-email?token=tok_...
 #### 2. Verify Email
 
 ```typescript
-// POST /api/v1/auth/verify-email
+// POST /v1/auth/verify-email
 {
   "token": "tok_..."
 }

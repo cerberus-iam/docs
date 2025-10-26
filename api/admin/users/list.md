@@ -5,7 +5,7 @@ Retrieve a list of all users in the organisation.
 ## Endpoint
 
 ```
-GET /api/v1/admin/users
+GET /v1/admin/users
 ```
 
 ## Authentication
@@ -132,7 +132,7 @@ User is not authenticated.
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/users"
+  "instance": "/v1/admin/users"
 }
 ```
 
@@ -146,7 +146,7 @@ User lacks the required permission or CSRF token is invalid.
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:read",
-  "instance": "/api/v1/admin/users"
+  "instance": "/v1/admin/users"
 }
 ```
 
@@ -155,7 +155,7 @@ User lacks the required permission or CSRF token is invalid.
 ### cURL
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/users \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/users \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -163,7 +163,7 @@ curl -X GET https://api.cerberus-iam.dev/api/v1/admin/users \
 ### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/admin/users', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/admin/users', {
   method: 'GET',
   credentials: 'include',
   headers: {
@@ -181,7 +181,7 @@ console.log(`Found ${total} users:`, users);
 import requests
 
 response = requests.get(
-    'https://api.cerberus-iam.dev/api/v1/admin/users',
+    'https://api.cerberus-iam.dev/v1/admin/users',
     cookies={'cerberus_session': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )

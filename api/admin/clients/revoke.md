@@ -5,7 +5,7 @@ Revoke a client and invalidate all associated tokens.
 ## Endpoint
 
 ```
-POST /api/v1/admin/clients/:id/revoke
+POST /v1/admin/clients/:id/revoke
 ```
 
 ## Authentication
@@ -24,7 +24,7 @@ POST /api/v1/admin/clients/:id/revoke
 ## Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/clients/cli_01h2xz9k3m4n5p6q7r8s9t0v2e/revoke \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/clients/cli_01h2xz9k3m4n5p6q7r8s9t0v2e/revoke \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -34,7 +34,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/admin/clients/cli_01h2xz9k3m4n5
 To permanently delete a client:
 
 ```
-DELETE /api/v1/admin/clients/:id
+DELETE /v1/admin/clients/:id
 ```
 
 Returns `204 No Content` on success.

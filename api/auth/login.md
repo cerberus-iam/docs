@@ -5,7 +5,7 @@ Authenticate a user and create a session.
 ## Endpoint
 
 ```
-POST /api/v1/auth/login
+POST /v1/auth/login
 ```
 
 ## Description
@@ -240,7 +240,7 @@ On successful login:
 
 ```bash
 # Basic login
-curl -X POST http://localhost:4000/api/v1/auth/login \
+curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@acme.com",
@@ -249,7 +249,7 @@ curl -X POST http://localhost:4000/api/v1/auth/login \
   -c cookies.txt # Save session cookie
 
 # Login with MFA
-curl -X POST http://localhost:4000/api/v1/auth/login \
+curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@acme.com",
@@ -263,7 +263,7 @@ curl -X POST http://localhost:4000/api/v1/auth/login \
 
 ```javascript
 // Basic login
-const response = await fetch('http://localhost:4000/api/v1/auth/login', {
+const response = await fetch('http://localhost:4000/v1/auth/login', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ if (!response.ok) {
     const mfaToken = await promptForMfa();
 
     // Retry with MFA token
-    const retryResponse = await fetch('http://localhost:4000/api/v1/auth/login', {
+    const retryResponse = await fetch('http://localhost:4000/v1/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -351,7 +351,7 @@ class LoginService {
   private baseUrl = 'http://localhost:4000';
 
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await fetch(`${this.baseUrl}/api/v1/auth/login`, {
+    const response = await fetch(`${this.baseUrl}/v1/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -452,7 +452,7 @@ Sessions have two timeout mechanisms:
 
 ## Related Endpoints
 
-- [POST /api/v1/auth/register](./register.md) - Create new account
-- [POST /api/v1/auth/logout](./logout.md) - End session
-- [POST /api/v1/auth/forgot-password](./password-reset.md) - Reset password
-- [GET /api/v1/me/mfa](../me/mfa.md) - MFA enrollment and management
+- [POST /v1/auth/register](./register.md) - Create new account
+- [POST /v1/auth/logout](./logout.md) - End session
+- [POST /v1/auth/forgot-password](./password-reset.md) - Reset password
+- [GET /v1/me/mfa](../me/mfa.md) - MFA enrollment and management

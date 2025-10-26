@@ -18,7 +18,7 @@ Retrieve all pending and accepted invitations for the organisation.
 ### Endpoint
 
 ```
-GET /api/v1/admin/invitations
+GET /v1/admin/invitations
 ```
 
 ### Authentication
@@ -70,7 +70,7 @@ Send an email invitation to join the organisation.
 ### Endpoint
 
 ```
-POST /api/v1/admin/invitations
+POST /v1/admin/invitations
 ```
 
 ### Authentication
@@ -118,7 +118,7 @@ POST /api/v1/admin/invitations
 ### Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/invitations \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/invitations \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -143,7 +143,7 @@ Resend an invitation email to a pending invitation.
 ### Endpoint
 
 ```
-POST /api/v1/admin/invitations/:id/resend
+POST /v1/admin/invitations/:id/resend
 ```
 
 ### Authentication
@@ -168,7 +168,7 @@ POST /api/v1/admin/invitations/:id/resend
 ### Example
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/admin/invitations/inv_01h2xz9k3m4n5p6q7r8s9t0v2l/resend \
+curl -X POST https://api.cerberus-iam.dev/v1/admin/invitations/inv_01h2xz9k3m4n5p6q7r8s9t0v2l/resend \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -188,7 +188,7 @@ Cancel a pending invitation.
 ### Endpoint
 
 ```
-DELETE /api/v1/admin/invitations/:id
+DELETE /v1/admin/invitations/:id
 ```
 
 ### Authentication
@@ -203,7 +203,7 @@ Empty response on success.
 ### Example
 
 ```bash
-curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/invitations/inv_01h2xz9k3m4n5p6q7r8s9t0v2l \
+curl -X DELETE https://api.cerberus-iam.dev/v1/admin/invitations/inv_01h2xz9k3m4n5p6q7r8s9t0v2l \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -219,7 +219,7 @@ curl -X DELETE https://api.cerberus-iam.dev/api/v1/admin/invitations/inv_01h2xz9
 Users accept invitations via the public endpoint (no authentication required):
 
 ```
-POST /api/v1/auth/invitations/accept
+POST /v1/auth/invitations/accept
 ```
 
 **Request Body:**

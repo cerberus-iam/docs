@@ -80,7 +80,7 @@ Cerberus IAM API is a comprehensive Identity and Access Management service built
                  ▼
 ┌─────────────────────────────────────────────┐
 │            Route Handlers                   │
-│  /health, /.well-known, /oauth2, /api/v1    │
+│  /health, /.well-known, /oauth2, /v1    │
 └────────────────┬────────────────────────────┘
                  │
                  ▼

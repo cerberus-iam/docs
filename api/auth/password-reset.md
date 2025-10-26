@@ -6,8 +6,8 @@ Request and complete password reset flow.
 
 The password reset flow consists of two endpoints:
 
-1. **POST /api/v1/auth/forgot-password** - Request password reset (send reset email)
-2. **POST /api/v1/auth/reset-password** - Complete password reset with token
+1. **POST /v1/auth/forgot-password** - Request password reset (send reset email)
+2. **POST /v1/auth/reset-password** - Complete password reset with token
 
 ---
 
@@ -18,7 +18,7 @@ Send a password reset email to the user.
 ### Endpoint
 
 ```
-POST /api/v1/auth/forgot-password
+POST /v1/auth/forgot-password
 ```
 
 ### Description
@@ -109,7 +109,7 @@ If the email doesn't exist or belongs to SSO user:
 
 ```typescript
 async function requestPasswordReset(email: string): Promise<void> {
-  const response = await fetch('http://localhost:4000/api/v1/auth/forgot-password', {
+  const response = await fetch('http://localhost:4000/v1/auth/forgot-password', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ Reset password using the token from email.
 ### Endpoint
 
 ```
-POST /api/v1/auth/reset-password
+POST /v1/auth/reset-password
 ```
 
 ### Description
@@ -286,7 +286,7 @@ interface ResetPasswordRequest {
 }
 
 async function resetPassword(data: ResetPasswordRequest): Promise<void> {
-  const response = await fetch('http://localhost:4000/api/v1/auth/reset-password', {
+  const response = await fetch('http://localhost:4000/v1/auth/reset-password', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -327,7 +327,7 @@ async function resetPassword(data: ResetPasswordRequest): Promise<void> {
 ```
 1. User clicks "Forgot Password" on login page
    ↓
-2. Client calls POST /api/v1/auth/forgot-password with email
+2. Client calls POST /v1/auth/forgot-password with email
    ↓
 3. Server sends password reset email (if email exists)
    ↓
@@ -339,7 +339,7 @@ async function resetPassword(data: ResetPasswordRequest): Promise<void> {
    ↓
 7. User enters new password
    ↓
-8. Client calls POST /api/v1/auth/reset-password with token and password
+8. Client calls POST /v1/auth/reset-password with token and password
    ↓
 9. Server validates token, updates password, revokes sessions
    ↓
@@ -352,7 +352,7 @@ async function resetPassword(data: ResetPasswordRequest): Promise<void> {
 // Step 1: Request password reset
 async function handleForgotPassword(email: string) {
   try {
-    await fetch('http://localhost:4000/api/v1/auth/forgot-password', {
+    await fetch('http://localhost:4000/v1/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -368,7 +368,7 @@ async function handleForgotPassword(email: string) {
 // Step 2: Complete password reset
 async function handleResetPassword(token: string, password: string) {
   try {
-    const response = await fetch('http://localhost:4000/api/v1/auth/reset-password', {
+    const response = await fetch('http://localhost:4000/v1/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token, password })
@@ -518,5 +518,5 @@ function PasswordResetPage() {
 
 ## Related Endpoints
 
-- [POST /api/v1/auth/login](./login.md) - Login after password reset
-- [POST /api/v1/auth/register](./register.md) - Create new account
+- [POST /v1/auth/login](./login.md) - Login after password reset
+- [POST /v1/auth/register](./register.md) - Create new account

@@ -5,7 +5,7 @@ Retrieve a list of all roles in the organisation.
 ## Endpoint
 
 ```
-GET /api/v1/admin/roles
+GET /v1/admin/roles
 ```
 
 ## Authentication
@@ -52,7 +52,7 @@ GET /api/v1/admin/roles
 ## Example
 
 ```bash
-curl -X GET https://api.cerberus-iam.dev/api/v1/admin/roles \
+curl -X GET https://api.cerberus-iam.dev/v1/admin/roles \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```

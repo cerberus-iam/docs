@@ -19,7 +19,7 @@ Initiate the MFA enrollment process by generating a TOTP secret and QR code for 
 ### Endpoint
 
 ```
-POST /api/v1/me/mfa/enable
+POST /v1/me/mfa/enable
 ```
 
 ### Authentication
@@ -75,7 +75,7 @@ None
   "title": "Bad Request",
   "status": 400,
   "detail": "MFA is already enabled",
-  "instance": "/api/v1/me/mfa/enable"
+  "instance": "/v1/me/mfa/enable"
 }
 ```
 
@@ -87,7 +87,7 @@ None
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/me/mfa/enable"
+  "instance": "/v1/me/mfa/enable"
 }
 ```
 
@@ -96,7 +96,7 @@ None
 #### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/enable \
+curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/enable \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json"
@@ -105,7 +105,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/enable \
 #### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/mfa/enable', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/mfa/enable', {
   method: 'POST',
   credentials: 'include',
   headers: {
@@ -127,7 +127,7 @@ Complete the MFA enrollment by verifying a TOTP code from the user's authenticat
 ### Endpoint
 
 ```
-POST /api/v1/me/mfa/verify
+POST /v1/me/mfa/verify
 ```
 
 ### Authentication
@@ -192,7 +192,7 @@ POST /api/v1/me/mfa/verify
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid verification code",
-  "instance": "/api/v1/me/mfa/verify"
+  "instance": "/v1/me/mfa/verify"
 }
 ```
 
@@ -211,7 +211,7 @@ POST /api/v1/me/mfa/verify
       "message": "String must contain exactly 6 character(s)"
     }
   ],
-  "instance": "/api/v1/me/mfa/verify"
+  "instance": "/v1/me/mfa/verify"
 }
 ```
 
@@ -220,7 +220,7 @@ POST /api/v1/me/mfa/verify
 #### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/verify \
+curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/verify \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -230,7 +230,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/verify \
 #### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/mfa/verify', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/mfa/verify', {
   method: 'POST',
   credentials: 'include',
   headers: {
@@ -253,7 +253,7 @@ Verify if a TOTP token is valid without enabling or disabling MFA. Useful for te
 ### Endpoint
 
 ```
-POST /api/v1/me/mfa/check
+POST /v1/me/mfa/check
 ```
 
 ### Authentication
@@ -293,7 +293,7 @@ POST /api/v1/me/mfa/check
 #### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/check \
+curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/check \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -309,7 +309,7 @@ Disable multi-factor authentication for the user account after verifying a TOTP 
 ### Endpoint
 
 ```
-POST /api/v1/me/mfa/disable
+POST /v1/me/mfa/disable
 ```
 
 ### Authentication
@@ -363,7 +363,7 @@ POST /api/v1/me/mfa/disable
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid verification code",
-  "instance": "/api/v1/me/mfa/disable"
+  "instance": "/v1/me/mfa/disable"
 }
 ```
 
@@ -372,7 +372,7 @@ POST /api/v1/me/mfa/disable
 #### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/disable \
+curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/disable \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -382,7 +382,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/disable \
 #### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/mfa/disable', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/mfa/disable', {
   method: 'POST',
   credentials: 'include',
   headers: {
@@ -405,7 +405,7 @@ Generate a new set of backup codes. Requires verification with a TOTP code. Old 
 ### Endpoint
 
 ```
-POST /api/v1/me/mfa/backup-codes
+POST /v1/me/mfa/backup-codes
 ```
 
 ### Authentication
@@ -468,7 +468,7 @@ POST /api/v1/me/mfa/backup-codes
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid verification code",
-  "instance": "/api/v1/me/mfa/backup-codes"
+  "instance": "/v1/me/mfa/backup-codes"
 }
 ```
 
@@ -477,7 +477,7 @@ POST /api/v1/me/mfa/backup-codes
 #### cURL
 
 ```bash
-curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/backup-codes \
+curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/backup-codes \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -487,7 +487,7 @@ curl -X POST https://api.cerberus-iam.dev/api/v1/me/mfa/backup-codes \
 #### JavaScript (fetch)
 
 ```javascript
-const response = await fetch('https://api.cerberus-iam.dev/api/v1/me/mfa/backup-codes', {
+const response = await fetch('https://api.cerberus-iam.dev/v1/me/mfa/backup-codes', {
   method: 'POST',
   credentials: 'include',
   headers: {

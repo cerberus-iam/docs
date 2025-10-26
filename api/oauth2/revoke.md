@@ -232,4 +232,4 @@ class TokenManager {
 
 - [POST /oauth2/token](./token.md) - Get tokens
 - [POST /oauth2/introspect](./introspect.md) - Check token validity
-- [POST /api/v1/auth/logout](../auth/logout.md) - Session-based logout
+- [POST /v1/auth/logout](../auth/logout.md) - Session-based logout

@@ -5,7 +5,7 @@ Update an existing user's information.
 ## Endpoint
 
 ```
-PATCH /api/v1/admin/users/:id
+PATCH /v1/admin/users/:id
 ```
 
 ## Authentication
@@ -116,7 +116,7 @@ Returns the complete updated user object with the same fields as the [Get User](
       "message": "Invalid datetime"
     }
   ],
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -128,7 +128,7 @@ Returns the complete updated user object with the same fields as the [Get User](
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -140,7 +140,7 @@ Returns the complete updated user object with the same fields as the [Get User](
   "title": "Forbidden",
   "status": 403,
   "detail": "Missing required permission: users:update",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -154,7 +154,7 @@ User does not exist or does not belong to the same organisation.
   "title": "Not Found",
   "status": 404,
   "detail": "User not found",
-  "instance": "/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
+  "instance": "/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w"
 }
 ```
 
@@ -164,7 +164,7 @@ User does not exist or does not belong to the same organisation.
 
 ```bash
 # Update user's name
-curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
+curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -174,7 +174,7 @@ curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p
   }'
 
 # Block a user
-curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
+curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -184,7 +184,7 @@ curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p
   }'
 
 # Unblock a user
-curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
+curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
   -H "Cookie: cerberus_session=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
@@ -200,7 +200,7 @@ curl -X PATCH https://api.cerberus-iam.dev/api/v1/admin/users/usr_01h2xz9k3m4n5p
 const userId = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w';
 
 // Update user's phone number
-const response = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/users/${userId}`, {
+const response = await fetch(`https://api.cerberus-iam.dev/v1/admin/users/${userId}`, {
   method: 'PATCH',
   credentials: 'include',
   headers: {
@@ -216,7 +216,7 @@ const user = await response.json();
 console.log('User updated:', user);
 
 // Block a user
-const blockResponse = await fetch(`https://api.cerberus-iam.dev/api/v1/admin/users/${userId}`, {
+const blockResponse = await fetch(`https://api.cerberus-iam.dev/v1/admin/users/${userId}`, {
   method: 'PATCH',
   credentials: 'include',
   headers: {
@@ -240,7 +240,7 @@ user_id = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w'
 
 # Update user's name
 response = requests.patch(
-    f'https://api.cerberus-iam.dev/api/v1/admin/users/{user_id}',
+    f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}',
     cookies={'cerberus_session': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
@@ -257,7 +257,7 @@ print(f"User updated: {user['name']}")
 
 # Block a user
 block_response = requests.patch(
-    f'https://api.cerberus-iam.dev/api/v1/admin/users/{user_id}',
+    f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}',
     cookies={'cerberus_session': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
