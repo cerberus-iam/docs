@@ -1,0 +1,135 @@
+---
+layout: home
+
+hero:
+  name: "Cerberus IAM"
+  text: "Enterprise Identity & Access Management"
+  tagline: Production-ready OAuth2/OIDC provider with multi-tenant RBAC, built on Express.js and TypeScript
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /guide/introduction
+    - theme: alt
+      text: API Reference
+      link: /api/overview
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/cerberus-iam/api
+
+features:
+  - icon: 🔐
+    title: Complete OAuth2 & OIDC Provider
+    details: Full implementation of OAuth 2.1 and OpenID Connect 1.0 with authorization code flow, PKCE, token rotation, and refresh token family tracking
+
+  - icon: 🏢
+    title: Multi-Tenant Architecture
+    details: Built-in organization isolation with per-tenant users, roles, teams, and permissions. Perfect for SaaS applications
+
+  - icon: 🛡️
+    title: Enterprise Security
+    details: Argon2 password hashing, AES-256-GCM secret encryption, CSRF protection, rate limiting, and comprehensive audit logging
+
+  - icon: 👥
+    title: Role-Based Access Control
+    details: Flexible RBAC with hierarchical permissions, wildcard support, and dynamic policy evaluation
+
+  - icon: 🔑
+    title: Multi-Factor Authentication
+    details: TOTP-based MFA with backup codes, configurable at organization and user levels
+
+  - icon: 📊
+    title: Audit & Compliance
+    details: Comprehensive audit trail for all security events, GDPR-ready data export, and retention policies
+
+  - icon: 🚀
+    title: Production Ready
+    details: Docker support, structured logging with remote export, health checks, and zero-downtime deployment patterns
+
+  - icon: 🧪
+    title: Fully Tested
+    details: Comprehensive test suite with unit, integration, and E2E tests. Built with Jest and Supertest
+
+  - icon: 🔌
+    title: Webhooks & API Keys
+    details: Event-driven integrations with webhook subscriptions and server-to-server API key authentication
+
+  - icon: 📧
+    title: User Management
+    details: Email verification, password reset, user invitations, session management, and self-service profile
+
+  - icon: ⚡
+    title: High Performance
+    details: Optimized middleware pipeline, connection pooling, and Redis-ready rate limiting for horizontal scaling
+
+  - icon: 📖
+    title: Developer Friendly
+    details: Type-safe TypeScript, comprehensive documentation, OpenAPI ready, and clear code patterns
+---
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/cerberus-iam/api.git
+cd api
+
+# Install dependencies
+npm install
+
+# Set up environment
+cp .env.example .env
+
+# Start database
+docker-compose up -d postgres
+
+# Run migrations
+npm run db:migrate
+
+# Start development server
+npm run dev
+```
+
+Visit [http://localhost:4000/health](http://localhost:4000/health) to verify the server is running.
+
+## Use Cases
+
+### SaaS Applications
+Build multi-tenant SaaS platforms with complete user management, organization isolation, and flexible RBAC.
+
+### Enterprise SSO
+Deploy as a centralized identity provider for internal applications with OAuth2/OIDC support.
+
+### API Gateway Authentication
+Integrate with API gateways and microservices for centralized authentication and authorization.
+
+### Customer Identity
+Provide secure customer identity management with self-service registration, MFA, and profile management.
+
+## Technology Stack
+
+- **Runtime**: Node.js 18+/20+ (LTS)
+- **Framework**: Express.js 4
+- **Language**: TypeScript 5 (strict mode)
+- **Database**: PostgreSQL 14+ with Prisma ORM
+- **Authentication**: OAuth 2.1, OpenID Connect 1.0
+- **Security**: Argon2, AES-256-GCM, EdDSA/RS256 JWT
+- **Testing**: Jest with ts-jest, Supertest
+- **Deployment**: Docker, Docker Compose
+
+## What's Next?
+
+- Read the [Introduction](/guide/introduction) to understand Cerberus IAM's architecture
+- Follow the [Installation Guide](/guide/installation) to set up your development environment
+- Explore the [API Reference](/api/overview) to integrate with your application
+- Check the [Architecture Documentation](/architecture/overview) for in-depth technical details
+
+## Community & Support
+
+- [GitHub Issues](https://github.com/cerberus-iam/api/issues) - Report bugs and request features
+- [Discussions](https://github.com/cerberus-iam/api/discussions) - Ask questions and share ideas
+- [Contributing Guide](https://github.com/cerberus-iam/api/blob/main/CONTRIBUTING.md) - Learn how to contribute
+
+## License
+
+Cerberus IAM is released under the [MIT License](https://github.com/cerberus-iam/api/blob/main/LICENSE).
+
