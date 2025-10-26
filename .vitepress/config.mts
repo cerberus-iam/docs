@@ -52,6 +52,7 @@ export default defineConfig({
           items: [
             { text: 'Authentication', link: '/guide/authentication' },
             { text: 'Authorization & RBAC', link: '/guide/authorization' },
+            { text: 'RBAC Configuration', link: '/guide/rbac-configuration' },
             { text: 'Multi-Tenancy', link: '/guide/multi-tenancy' },
             { text: 'OAuth2 & OIDC', link: '/guide/oauth2' },
           ],
