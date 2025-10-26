@@ -12,12 +12,12 @@ POST /api/v1/auth/register
 
 Registers a new organisation with an owner account. This is the first step for new customers to onboard to Cerberus IAM. The endpoint creates:
 
-1. A new organisation with the specified slug and name
+1. A new organisation with an auto-generated slug from the organisation name
 2. An "Owner" role with full permissions
 3. An owner user account with hashed password
 4. Email verification token (sent via email)
 
-The organisation is created with a "trial" status and default session settings.
+The organisation is created with a "trial" status and default session settings. The organisation slug is automatically generated from the organisation name as a URL-safe identifier (e.g., "Acme Corporation" becomes "acme-corporation").
 
 ## Authentication
 
@@ -33,14 +33,19 @@ The organisation is created with a "trial" status and default session settings.
 
 ## Request Body
 
-| Field              | Type   | Required | Description                      | Constraints                                                |
-| ------------------ | ------ | -------- | -------------------------------- | ---------------------------------------------------------- |
-| `organisationName` | string | Yes      | Display name of the organisation | Minimum 1 character                                        |
-| `organisationSlug` | string | Yes      | URL-safe unique identifier       | Lowercase alphanumeric and hyphens only (`/^[a-z0-9-]+$/`) |
-| `email`            | string | Yes      | Owner's email address            | Valid email format                                         |
-| `firstName`        | string | Yes      | Owner's first name               | Minimum 1 character                                        |
-| `lastName`         | string | Yes      | Owner's last name                | Minimum 1 character                                        |
-| `password`         | string | Yes      | Owner's password                 | Minimum 8 characters, must meet strength requirements      |
+| Field              | Type   | Required | Description                                            | Constraints                                           |
+| ------------------ | ------ | -------- | ------------------------------------------------------ | ----------------------------------------------------- |
+| `organisationName` | string | Yes      | Display name of the organisation (slug auto-generated) | Minimum 1 character                                   |
+| `email`            | string | Yes      | Owner's email address                                  | Valid email format                                    |
+| `firstName`        | string | Yes      | Owner's first name                                     | Minimum 1 character                                   |
+| `lastName`         | string | Yes      | Owner's last name                                      | Minimum 1 character                                   |
+| `password`         | string | Yes      | Owner's password                                       | Minimum 8 characters, must meet strength requirements |
+
+**Note:** The organisation slug is automatically generated from `organisationName`. For example:
+
+- "Acme Corporation" becomes "acme-corporation"
+- "My Company!" becomes "my-company"
+- If the slug already exists, a number is appended (e.g., "acme-corporation-1")
 
 ### Password Strength Requirements
 
@@ -55,7 +60,6 @@ The organisation is created with a "trial" status and default session settings.
 ```json
 {
   "organisationName": "Acme Corporation",
-  "organisationSlug": "acme-corp",
   "email": "admin@acme.com",
   "firstName": "John",
   "lastName": "Doe",
@@ -74,7 +78,7 @@ The organisation is created with a "trial" status and default session settings.
   "message": "Organisation and owner account created successfully",
   "organisation": {
     "id": "org_a1b2c3d4e5f6",
-    "slug": "acme-corp",
+    "slug": "acme-corporation",
     "name": "Acme Corporation"
   },
   "user": {
@@ -84,6 +88,8 @@ The organisation is created with a "trial" status and default session settings.
   }
 }
 ```
+
+**Note:** The `slug` field in the response is the auto-generated slug from the organisation name.
 
 ### Error Responses
 
@@ -104,25 +110,6 @@ The organisation is created with a "trial" status and default session settings.
       "received": "undefined",
       "path": ["email"],
       "message": "Required"
-    }
-  ]
-}
-```
-
-**Invalid organisation slug format:**
-
-```json
-{
-  "type": "https://cerberus.local/errors/bad-request",
-  "title": "Bad Request",
-  "status": 400,
-  "detail": "Invalid input",
-  "errors": [
-    {
-      "code": "invalid_string",
-      "validation": "regex",
-      "path": ["organisationSlug"],
-      "message": "Invalid"
     }
   ]
 }
@@ -154,17 +141,6 @@ The organisation is created with a "trial" status and default session settings.
   "title": "Conflict",
   "status": 409,
   "detail": "Email already registered"
-}
-```
-
-**Organisation slug already taken:**
-
-```json
-{
-  "type": "https://cerberus.local/errors/conflict",
-  "title": "Conflict",
-  "status": 409,
-  "detail": "Organisation slug already taken"
 }
 ```
 
@@ -210,14 +186,20 @@ The organisation is created with a "trial" status and default session settings.
    - Slug: "owner"
    - All permissions granted
 
-3. **User account created** with:
+3. **Organisation slug generated** from the organisation name:
+   - Converted to lowercase
+   - Special characters removed
+   - Spaces replaced with hyphens
+   - Uniqueness ensured (numbers appended if needed)
+
+4. **User account created** with:
    - Password hashed using Argon2id
    - Identity provider: `local`
    - Email verification status: unverified
 
-4. **Email verification token generated** and sent to the provided email address
+5. **Email verification token generated** and sent to the provided email address
 
-5. **Audit log entry created** (if audit logging is enabled)
+6. **Audit log entry created** (if audit logging is enabled)
 
 ## Next Steps
 
@@ -236,7 +218,6 @@ curl -X POST http://localhost:4000/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "organisationName": "Acme Corporation",
-    "organisationSlug": "acme-corp",
     "email": "admin@acme.com",
     "firstName": "John",
     "lastName": "Doe",
@@ -254,7 +235,6 @@ const response = await fetch('http://localhost:4000/api/v1/auth/register', {
   },
   body: JSON.stringify({
     organisationName: 'Acme Corporation',
-    organisationSlug: 'acme-corp',
     email: 'admin@acme.com',
     firstName: 'John',
     lastName: 'Doe',
@@ -277,7 +257,6 @@ console.log('Registration successful:', data);
 ```typescript
 interface RegisterRequest {
   organisationName: string;
-  organisationSlug: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -320,11 +299,7 @@ async function register(data: RegisterRequest): Promise<RegisterResponse> {
 
     // Handle specific errors
     if (problem.status === 409) {
-      if (problem.detail.includes('Email')) {
-        throw new Error('This email is already registered');
-      } else if (problem.detail.includes('slug')) {
-        throw new Error('This organisation slug is already taken');
-      }
+      throw new Error('This email is already registered');
     }
 
     if (problem.status === 400 && problem.errors) {
@@ -343,7 +318,6 @@ async function register(data: RegisterRequest): Promise<RegisterResponse> {
 try {
   const result = await register({
     organisationName: 'Acme Corporation',
-    organisationSlug: 'acme-corp',
     email: 'admin@acme.com',
     firstName: 'John',
     lastName: 'Doe',
@@ -363,10 +337,11 @@ try {
 1. **Password Hashing:** Passwords are hashed using Argon2id before storage
 2. **Rate Limiting:** Endpoint is rate-limited to prevent abuse
 3. **Email Verification:** Users must verify their email before full access
-4. **Slug Uniqueness:** Organisation slugs must be globally unique
-5. **Input Validation:** All inputs are validated using Zod schemas
-6. **SQL Injection Protection:** Prisma ORM prevents SQL injection
-7. **HTTPS Required:** Always use HTTPS in production
+4. **Slug Auto-generation:** Organisation slugs are automatically generated and validated as URL-safe
+5. **Slug Uniqueness:** Organisation slugs must be globally unique (ensured automatically)
+6. **Input Validation:** All inputs are validated using Zod schemas
+7. **SQL Injection Protection:** Prisma ORM prevents SQL injection
+8. **HTTPS Required:** Always use HTTPS in production
 
 ## Related Endpoints
 
