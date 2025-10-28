@@ -206,13 +206,13 @@ const sessionToken = req.cookies[config.SESSION_COOKIE_NAME];
 
 **File:** `src/middleware/tenant.ts`
 
-**Purpose:** Establishes multi-tenant context from `X-Org-Slug` header.
+**Purpose:** Establishes multi-tenant context from `X-Org-Domain` header.
 
 **Applied To:** Most API routes under `/v1`
 
 **Flow:**
 
-1. Extract `X-Org-Slug` header
+1. Extract `X-Org-Domain` header
 2. Query database for organisation by slug
 3. Check if organisation exists and is not deleted
 4. Attach to `req.tenant`
@@ -225,10 +225,10 @@ export async function tenantMiddleware(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  const orgSlug = req.headers['x-org-slug'] as string;
+  const orgSlug = req.headers['X-Org-Domain'] as string;
 
   if (!orgSlug) {
-    sendProblem(res, badRequest('Missing X-Org-Slug header'));
+    sendProblem(res, badRequest('Missing X-Org-Domain header'));
     return;
   }
 
@@ -795,7 +795,7 @@ Instead of `next(error)`, middleware often sends Problem Details directly:
 
 ```typescript
 if (!req.tenant) {
-  sendProblem(res, badRequest('Missing X-Org-Slug header'));
+  sendProblem(res, badRequest('Missing X-Org-Domain header'));
   return;
 }
 ```

@@ -114,7 +114,7 @@ Cerberus IAM implements **Organization-scoped multi-tenancy**:
 
 - Each `Organisation` is the root tenant entity
 - All user operations are scoped to an organisation via `organisationId`
-- Tenant context is established via `X-Org-Slug` header
+- Tenant context is established via `X-Org-Domain` header
 - Data isolation enforced at database query level using Prisma filters
 
 ```typescript

@@ -96,7 +96,7 @@ console.log('API Key:', key);
 GET /v1/admin/users HTTP/1.1
 Host: api.cerberus.local
 Authorization: Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7
-X-Org-Slug: acme
+X-Org-Domain: acme
 ```
 
 ### Code Example (JavaScript)
@@ -105,7 +105,7 @@ X-Org-Slug: acme
 const response = await fetch('https://api.cerberus.local/v1/admin/users', {
   headers: {
     Authorization: 'Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7',
-    'X-Org-Slug': 'acme',
+    'X-Org-Domain': 'acme',
     'Content-Type': 'application/json',
   },
 });
@@ -120,7 +120,7 @@ import requests
 
 headers = {
     'Authorization': 'Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7',
-    'X-Org-Slug': 'acme',
+    'X-Org-Domain': 'acme',
 }
 
 response = requests.get(
@@ -136,7 +136,7 @@ users = response.json()
 ```bash
 curl -X GET https://api.cerberus.local/v1/admin/users \
   -H "Authorization: Bearer cerb_ak_7x9kp2m5n8q1r4t6v9y2z5c8f1h4j7" \
-  -H "X-Org-Slug: acme"
+  -H "X-Org-Domain: acme"
 ```
 
 ## API Key Middleware

@@ -29,7 +29,7 @@ The organisation is created with a "trial" status and default session settings. 
 | -------------- | -------- | -------------------------- |
 | `Content-Type` | Yes      | Must be `application/json` |
 
-**Note:** `X-Org-Slug` header is NOT required for registration (organisation doesn't exist yet).
+**Note:** `X-Org-Domain` header is NOT required for registration (organisation doesn't exist yet).
 
 ## Request Body
 

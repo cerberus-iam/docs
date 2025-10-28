@@ -31,7 +31,7 @@ The endpoint:
 | -------------- | -------- | -------------------------- |
 | `Content-Type` | Yes      | Must be `application/json` |
 
-**Note:** `X-Org-Slug` header is NOT required for login (organisation is determined from user's account).
+**Note:** `X-Org-Domain` header is NOT required for login (organisation is determined from user's account).
 
 ## Request Body
 

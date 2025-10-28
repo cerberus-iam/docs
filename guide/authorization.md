@@ -534,7 +534,7 @@ authenticateSession; // Must be logged in
 ### 2. Organization Context (Which tenant?)
 
 ```typescript
-tenantMiddleware; // X-Org-Slug header
+tenantMiddleware; // X-Org-Domain header
 ```
 
 ### 3. Permission Check (What can you do?)

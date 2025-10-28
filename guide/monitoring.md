@@ -26,7 +26,7 @@ Cerberus IAM uses **Pino** for high-performance, structured JSON logging.
     "url": "/v1/auth/login",
     "headers": {
       "user-agent": "Mozilla/5.0...",
-      "x-org-slug": "acme-corp"
+      "X-Org-Domain": "acme-corp"
     }
   },
   "res": {
@@ -213,7 +213,7 @@ role.permission.added
 
 ```bash
 curl "https://auth.example.com/v1/admin/audit-logs?eventType=user.login&startDate=2024-01-01&limit=100" \
-  -H "X-Org-Slug: acme-corp" \
+  -H "X-Org-Domain: acme-corp" \
   -H "Cookie: cerb_sid=..."
 ```
 

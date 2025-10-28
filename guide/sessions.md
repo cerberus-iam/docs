@@ -94,7 +94,7 @@ Update via Admin API:
 ```bash
 curl -X PATCH https://auth.example.com/v1/admin/organisation \
   -H "Content-Type: application/json" \
-  -H "X-Org-Slug: acme-corp" \
+  -H "X-Org-Domain: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -d '{
     "sessionLifetime": 43200,
@@ -367,15 +367,15 @@ async function getCSRFToken(): Promise<string> {
 
 ## Multi-Tenant Sessions
 
-Sessions are organization-scoped. The `X-Org-Slug` header determines which organization the session belongs to.
+Sessions are organization-scoped. The `X-Org-Domain` header determines which organization the session belongs to.
 
 ### Tenant Middleware
 
 The tenant middleware runs before authentication:
 
 ```typescript
-// 1. Extract X-Org-Slug header
-const slug = req.headers['x-org-slug'];
+// 1. Extract X-Org-Domain header
+const slug = req.headers['X-Org-Domain'];
 
 // 2. Lookup organization
 const org = await prisma.organisation.findUnique({ where: { slug } });

@@ -513,7 +513,7 @@ https://abc123.ngrok.io/webhooks/cerberus
 # Trigger test event
 curl -X POST https://api.cerberus.local/v1/admin/webhooks/test \
   -H "Authorization: Bearer $SESSION_TOKEN" \
-  -H "X-Org-Slug: acme" \
+  -H "X-Org-Domain: acme" \
   -H "Content-Type: application/json" \
   -d '{
     "webhookId": "wh_abc123",

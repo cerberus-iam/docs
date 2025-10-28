@@ -126,7 +126,7 @@ Register a new user:
 ```bash
 curl -X POST http://localhost:4000/v1/auth/register \
   -H "Content-Type: application/json" \
-  -H "X-Org-Slug: acme-corp" \
+  -H "X-Org-Domain: acme-corp" \
   -d '{
     "email": "user@example.com",
     "password": "SecurePass123!",
@@ -157,7 +157,7 @@ If using Docker Compose, open [http://localhost:8025](http://localhost:8025) to 
 ```bash
 curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
-  -H "X-Org-Slug: acme-corp" \
+  -H "X-Org-Domain: acme-corp" \
   -d '{
     "email": "user@example.com",
     "password": "SecurePass123!"
@@ -171,7 +171,7 @@ The session cookie will be saved to `cookies.txt`.
 
 ```bash
 curl http://localhost:4000/v1/me/profile \
-  -H "X-Org-Slug: acme-corp" \
+  -H "X-Org-Domain: acme-corp" \
   -b cookies.txt
 ```
 

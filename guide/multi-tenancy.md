@@ -142,10 +142,10 @@ router.get('/v1/admin/users', (req, res) => {
 ```typescript
 export async function tenantMiddleware(req, res, next) {
   // Extract organization slug from header
-  const orgSlug = req.headers['x-org-slug'];
+  const orgSlug = req.headers['X-Org-Domain'];
 
   if (!orgSlug) {
-    return badRequest('Missing X-Org-Slug header');
+    return badRequest('Missing X-Org-Domain header');
   }
 
   // Load organization
@@ -429,13 +429,13 @@ const user = await prisma.user.findFirst({
 ```http
 GET /v1/admin/users HTTP/1.1
 Host: api.cerberus.local
-X-Org-Slug: acme
+X-Org-Domain: acme
 Cookie: cerb_sid=...
 ```
 
 **Headers:**
 
-- `X-Org-Slug` - Organization slug (required for admin routes)
+- `X-Org-Domain` - Organization slug (required for admin routes)
 - `Cookie` - Session cookie (authentication)
 
 ### Response Format
@@ -599,9 +599,9 @@ if (previousOrgId !== currentOrgId) {
 
 ## Troubleshooting
 
-### Missing X-Org-Slug Header
+### Missing X-Org-Domain Header
 
-**Error:** "Missing X-Org-Slug header"
+**Error:** "Missing X-Org-Domain header"
 
 **Solutions:**
 

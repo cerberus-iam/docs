@@ -70,7 +70,7 @@ Used for machine-to-machine authentication.
 
 ### Required Headers
 
-#### X-Org-Slug
+#### X-Org-Domain
 
 **Required for:** Tenant-scoped admin APIs such as `/v1/admin/*`
 
@@ -79,7 +79,7 @@ Used for machine-to-machine authentication.
 **Example:**
 
 ```
-X-Org-Slug: acme-corp
+X-Org-Domain: acme-corp
 ```
 
 **When not required:**
