@@ -201,7 +201,7 @@ export class UserService {
 ```typescript
 // utils/problem.ts
 export const unauthorized = (detail: string): Problem => ({
-  type: 'https://cerberus.local/errors/unauthorized',
+  type: 'https://api.cerberus-iam.com/errors/unauthorized',
   title: 'Unauthorized',
   status: 401,
   detail,

@@ -56,7 +56,7 @@ GET /v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Missing verification token"
@@ -67,7 +67,7 @@ GET /v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid or expired verification token"
@@ -80,7 +80,7 @@ GET /v1/auth/verify-email?token=evt_a1b2c3d4e5f6g7h8
 
 ```json
 {
-  "type": "https://cerberus.local/errors/not-found",
+  "type": "https://api.cerberus-iam.com/errors/not-found",
   "title": "Not Found",
   "status": 404,
   "detail": "User not found for provided token"

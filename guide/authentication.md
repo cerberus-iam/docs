@@ -40,7 +40,7 @@ router.get('/me/profile', authenticateSession, async (req, res) => {
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Invalid or expired session"
@@ -190,42 +190,35 @@ const result = validatePasswordStrength('weak');
 {
   "email": "user@example.com",
   "password": "SecurePass123",
-  "organisationSlug": "acme"
+  "mfaToken": "123456" // optional - required when the user/org enforces MFA
 }
 ```
 
 **Process:**
 
 1. Find user by email
-2. Verify user belongs to organization
-3. Check user is not blocked
-4. Verify password with Argon2
-5. Check MFA requirement
-6. Create session and set cookie
-7. Update login stats (lastLoginAt, loginCount)
-8. Create audit log entry
+2. Check user is not blocked
+3. Verify password with Argon2
+4. Determine if MFA is required (organisation policy or prior enrolment)
+5. When required, verify the provided `mfaToken`
+6. Create the session and set the cookie
+7. Update login stats (`lastLoginAt`, `lastLoginIp`, `loginCount`)
 
 **Response:**
 
 ```json
 {
-  "success": true,
-  "requiresMfa": false,
+  "message": "Login successful",
   "user": {
     "id": "usr_...",
-    "name": "John Doe",
-    "email": "user@example.com"
+    "email": "user@example.com",
+    "name": "John Doe"
+  },
+  "organisation": {
+    "id": "org_...",
+    "slug": "acme-corp",
+    "name": "Acme Corporation"
   }
-}
-```
-
-**With MFA Enabled:**
-
-```json
-{
-  "success": false,
-  "requiresMfa": true,
-  "mfaMethods": ["totp"]
 }
 ```
 
@@ -254,20 +247,7 @@ const result = validatePasswordStrength('weak');
 https://admin.acme.com/reset-password?token=tok_...
 ```
 
-#### 2. Verify Token
-
-```typescript
-// GET /v1/auth/reset-password?token=tok_...
-```
-
-**Process:**
-
-1. Lookup token by hash
-2. Check expiration
-3. Check not already consumed
-4. Return success if valid
-
-#### 3. Reset Password
+#### 2. Reset Password
 
 ```typescript
 // POST /v1/auth/reset-password
@@ -279,13 +259,14 @@ https://admin.acme.com/reset-password?token=tok_...
 
 **Process:**
 
-1. Validate token (same as step 2)
+1. Validate token (format, existence, expiration, not yet consumed)
 2. Validate password strength
 3. Hash new password
 4. Update user password
 5. Mark token as consumed
 6. Revoke all existing sessions
-7. Send confirmation email
+
+> Note: The API does not expose a separate token-inspection endpoint. Clients typically render a reset form using the token from the email link and rely on the POST request above to validate it.
 
 ## Multi-Factor Authentication (MFA)
 
@@ -295,10 +276,11 @@ Cerberus implements TOTP based on RFC 6238.
 
 #### Enable TOTP
 
-```typescript
-// POST /v1/me/mfa/totp/enable
+`POST /v1/me/mfa/enable`
 
-// Response
+Returns the TOTP secret and OTP Auth URI for enrolment:
+
+```json
 {
   "secret": "JBSWY3DPEHPK3PXP",
   "qrCodeUri": "otpauth://totp/Cerberus:user@example.com?secret=JBSWY3DPEHPK3PXP&issuer=Cerberus"
@@ -323,20 +305,21 @@ Users scan the QR code with authenticator apps:
 
 #### Verify and Activate TOTP
 
-```typescript
-// POST /v1/me/mfa/totp/verify
-{
-  "code": "123456"
-}
+`POST /v1/me/mfa/verify`
 
-// Response
+```json
 {
-  "success": true,
-  "backupCodes": [
-    "ABCD-1234-EFGH-5678",
-    "IJKL-9012-MNOP-3456",
-    // ... 8 more codes
-  ]
+  "token": "123456"
+}
+```
+
+Response:
+
+```json
+{
+  "message": "MFA enabled successfully",
+  "backupCodes": ["ABCD-1234-EFGH-5678", "IJKL-9012-MNOP-3456"],
+  "warning": "Save these backup codes in a safe place. They can be used if you lose access to your authenticator."
 }
 ```
 
@@ -357,72 +340,40 @@ Users scan the QR code with authenticator apps:
 
 #### Login with MFA
 
-```typescript
-// POST /v1/auth/login/mfa
-{
-  "email": "user@example.com",
-  "password": "SecurePass123",
-  "code": "123456"
-}
-```
-
-**Process:**
-
-1. Verify email/password (same as regular login)
-2. Decrypt TOTP secret
-3. Verify TOTP code
-4. Create session on success
-
-#### Using Backup Codes
-
-```typescript
-// POST /v1/auth/login/mfa
-{
-  "email": "user@example.com",
-  "password": "SecurePass123",
-  "backupCode": "ABCD-1234-EFGH-5678"
-}
-```
-
-**Process:**
-
-1. Verify email/password
-2. Check each hashed backup code
-3. Mark used backup code as consumed
-4. Create session
-5. Warn user about remaining backup codes
+MFA is handled through the standard login endpoint. Supply the six-digit code via the optional `mfaToken` field when the organisation or user requires MFA.
 
 #### Disable MFA
 
-```typescript
-// POST /v1/me/mfa/totp/disable
+`POST /v1/me/mfa/disable`
+
+```json
 {
-  "code": "123456"
+  "token": "123456"
 }
 ```
 
-**Process:**
+Process:
 
 1. Verify current TOTP code
 2. Set `mfaEnabled = false`
-3. Clear `totpSecret`
-4. Clear `backupCodes`
-5. Clear `mfaMethods`
+3. Clear `totpSecret`, `backupCodes`, and `mfaMethods`
 
 #### Regenerate Backup Codes
 
-```typescript
-// POST /v1/me/mfa/backup-codes/regenerate
-{
-  "code": "123456"
-}
+`POST /v1/me/mfa/backup-codes`
 
-// Response
+```json
 {
-  "backupCodes": [
-    "NEW1-2345-CODE-6789",
-    // ... 9 more codes
-  ]
+  "token": "123456"
+}
+```
+
+Response:
+
+```json
+{
+  "backupCodes": ["NEW1-2345-CODE-6789"],
+  "message": "Backup codes regenerated successfully"
 }
 ```
 

@@ -463,7 +463,7 @@ Include organization context when helpful:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/not-found",
+  "type": "https://api.cerberus-iam.com/errors/not-found",
   "title": "Not Found",
   "status": 404,
   "detail": "Organisation 'invalid-slug' not found"

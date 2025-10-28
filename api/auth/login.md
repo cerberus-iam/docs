@@ -98,7 +98,7 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input"
@@ -111,7 +111,7 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Invalid email or password"
@@ -122,7 +122,7 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Account is blocked"
@@ -133,7 +133,7 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Multi-factor authentication required",
@@ -145,7 +145,7 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "MFA enrollment required before logging in",
@@ -157,7 +157,7 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Invalid MFA token",
@@ -171,11 +171,10 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit-exceeded",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
-  "detail": "Rate limit exceeded. Please try again later.",
-  "retryAfter": 30
+  "detail": "Rate limit exceeded. Please try again later."
 }
 ```
 

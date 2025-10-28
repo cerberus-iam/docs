@@ -85,7 +85,7 @@ Claims returned depend on the scopes granted:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required"
@@ -96,7 +96,7 @@ Claims returned depend on the scopes granted:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Invalid or expired token"
@@ -107,7 +107,7 @@ Claims returned depend on the scopes granted:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "User not found"

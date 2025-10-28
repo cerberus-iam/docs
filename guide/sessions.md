@@ -74,10 +74,9 @@ SESSION_COOKIE_SECURE=false
 
 # Cookie domain (.example.com for subdomains)
 SESSION_COOKIE_DOMAIN=localhost
-
-# SameSite attribute (lax, strict, none)
-SESSION_COOKIE_SAMESITE=lax
 ```
+
+> SameSite is hard-coded to `lax` by the API to balance CSRF protection with login redirects. There is no environment flag to override it.
 
 ### Organization Settings
 
@@ -85,8 +84,8 @@ Per-organization session policies:
 
 ```typescript
 {
-  sessionLifetime: 86400,        // 24 hours (seconds)
-  sessionIdleTimeout: 3600       // 1 hour (seconds)
+  sessionLifetime: 3600,         // 1 hour (seconds)
+  sessionIdleTimeout: 1800       // 30 minutes (seconds)
 }
 ```
 
@@ -110,7 +109,7 @@ curl -X PATCH https://auth.example.com/v1/admin/organisation \
 Sessions use httpOnly cookies to prevent JavaScript access:
 
 ```http
-Set-Cookie: cerb_sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=86400
+Set-Cookie: cerb_sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=3600
 ```
 
 **Attributes:**
@@ -184,7 +183,6 @@ This enables:
 
 ```bash
 curl https://auth.example.com/v1/me/sessions \
-  -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..."
 ```
 
@@ -192,26 +190,28 @@ curl https://auth.example.com/v1/me/sessions \
 
 ```json
 {
-  "sessions": [
+  "data": [
     {
       "id": "session-uuid-1",
       "ipAddress": "192.168.1.100",
       "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)...",
       "lastActivityAt": "2024-01-15T10:30:00Z",
-      "expiresAt": "2024-01-16T10:00:00Z",
-      "current": true
+      "expiresAt": "2024-01-15T11:30:00Z",
+      "createdAt": "2024-01-15T09:30:00Z"
     },
     {
       "id": "session-uuid-2",
       "ipAddress": "192.168.1.101",
       "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0...)...",
       "lastActivityAt": "2024-01-15T09:00:00Z",
-      "expiresAt": "2024-01-16T09:00:00Z",
-      "current": false
+      "expiresAt": "2024-01-15T10:30:00Z",
+      "createdAt": "2024-01-15T06:30:00Z"
     }
   ]
 }
 ```
+
+The API returns a flat list of the caller's active sessions; the client can infer the "current" session by comparing identifiers if needed.
 
 ### Revoke a Session
 
@@ -219,7 +219,6 @@ curl https://auth.example.com/v1/me/sessions \
 
 ```bash
 curl -X DELETE https://auth.example.com/v1/me/sessions/session-uuid-2 \
-  -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -H "X-CSRF-Token: csrf-token-here"
 ```
@@ -232,7 +231,6 @@ This logs the user out from that specific device/browser.
 
 ```bash
 curl -X POST https://auth.example.com/v1/auth/logout \
-  -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -H "X-CSRF-Token: csrf-token-here"
 ```
@@ -246,7 +244,6 @@ To revoke all user sessions (e.g., password change, security breach):
 ```bash
 # Admin API (future feature)
 curl -X DELETE https://auth.example.com/v1/admin/users/:userId/sessions \
-  -H "X-Org-Slug: acme-corp" \
   -H "Cookie: cerb_sid=..." \
   -H "X-CSRF-Token: csrf-token-here"
 ```
@@ -257,7 +254,7 @@ curl -X DELETE https://auth.example.com/v1/admin/users/:userId/sessions \
 
 Sessions expire after `sessionLifetime` seconds from creation, regardless of activity.
 
-**Default:** 24 hours (86400 seconds)
+**Default:** 1 hour (3600 seconds)
 
 ```typescript
 expiresAt = createdAt + sessionLifetime;
@@ -267,7 +264,7 @@ expiresAt = createdAt + sessionLifetime;
 
 Sessions expire after `sessionIdleTimeout` seconds of inactivity.
 
-**Default:** 1 hour (3600 seconds)
+**Default:** 30 minutes (1800 seconds)
 
 ```typescript
 if (now - lastActivityAt > sessionIdleTimeout) {
@@ -301,7 +298,7 @@ interface Session {
   userAgent: string;
   lastActivityAt: string;
   expiresAt: string;
-  current: boolean;
+  createdAt: string;
 }
 
 export function SessionManager() {
@@ -315,13 +312,10 @@ export function SessionManager() {
   async function fetchSessions() {
     const response = await fetch('/v1/me/sessions', {
       credentials: 'include',
-      headers: {
-        'X-Org-Slug': 'acme-corp'
-      }
     });
 
     const data = await response.json();
-    setSessions(data.sessions);
+    setSessions(data.data);
     setLoading(false);
   }
 
@@ -333,7 +327,6 @@ export function SessionManager() {
       method: 'DELETE',
       credentials: 'include',
       headers: {
-        'X-Org-Slug': 'acme-corp',
         'X-CSRF-Token': csrfToken
       }
     });
@@ -350,16 +343,14 @@ export function SessionManager() {
       {sessions.map(session => (
         <div key={session.id} className="session-card">
           <div>
-            <strong>{session.current ? 'This device' : 'Other device'}</strong>
             <p>IP: {session.ipAddress}</p>
             <p>Last active: {new Date(session.lastActivityAt).toLocaleString()}</p>
+            <p>Created: {new Date(session.createdAt).toLocaleString()}</p>
             <p>Expires: {new Date(session.expiresAt).toLocaleString()}</p>
           </div>
-          {!session.current && (
-            <button onClick={() => revokeSession(session.id)}>
-              Revoke
-            </button>
-          )}
+          <button onClick={() => revokeSession(session.id)}>
+            Revoke
+          </button>
         </div>
       ))}
     </div>
@@ -368,8 +359,7 @@ export function SessionManager() {
 
 async function getCSRFToken(): Promise<string> {
   const response = await fetch('/v1/me/profile', {
-    credentials: 'include',
-    headers: { 'X-Org-Slug': 'acme-corp' }
+    credentials: 'include'
   });
   return response.headers.get('X-CSRF-Token') || '';
 }
@@ -415,15 +405,16 @@ if (session.organisationId !== req.tenant.id) {
 NODE_ENV=production
 SESSION_COOKIE_SECURE=true
 SESSION_COOKIE_DOMAIN=.yourdomain.com
-SESSION_COOKIE_SAMESITE=strict
 ```
+
+SameSite remains `lax` in production—you can only tighten it by proxying responses and rewriting the cookie.
 
 ### Session Duration
 
 Balance security and user experience:
 
-- **High security**: 1-4 hours absolute, 15-30 minutes idle
-- **Standard**: 24 hours absolute, 1 hour idle
+- **High security**: 1–2 hours absolute, 10–20 minutes idle
+- **Standard (default)**: 1 hour absolute, 30 minutes idle
 - **Convenience**: 7 days absolute, 24 hours idle
 
 ### HTTPS Only

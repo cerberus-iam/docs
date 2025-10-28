@@ -672,7 +672,7 @@ const perUserLimiter = createRateLimitMiddleware({
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
   "detail": "Rate limit exceeded. Please try again later."

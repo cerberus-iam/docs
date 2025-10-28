@@ -101,7 +101,7 @@ Errors are returned as query parameters in the redirect URI (per OAuth2 spec):
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid redirect_uri"
@@ -112,7 +112,7 @@ Errors are returned as query parameters in the redirect URI (per OAuth2 spec):
 
 ```json
 {
-  "type": "https://cerberus.local/errors/not-found",
+  "type": "https://api.cerberus-iam.com/errors/not-found",
   "title": "Not Found",
   "status": 404,
   "detail": "Client not found or inactive"

@@ -72,7 +72,7 @@ Used for machine-to-machine authentication.
 
 #### X-Org-Slug
 
-**Required for:** Multi-tenant endpoints (API v1 routes)
+**Required for:** Tenant-scoped admin APIs such as `/v1/admin/*`
 
 **Description:** Identifies the organisation context for the request. Each organisation has a unique slug assigned during registration.
 
@@ -86,6 +86,7 @@ X-Org-Slug: acme-corp
 
 - OAuth2/OIDC endpoints (organisation derived from client/token)
 - Public endpoints (registration, password reset)
+- `/v1/me/*` routes (tenant inferred from the authenticated session)
 
 ### Optional Headers
 
@@ -172,7 +173,7 @@ All errors follow RFC 7807 Problem Details format. See [errors.md](./errors.md) 
 **Example:**
 
 ```json
-{
+{https://api.cerberus-iam.com
   "type": "https://cerberus.local/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
@@ -196,13 +197,7 @@ The API implements rate limiting to prevent abuse.
 - `AUTH_RATE_WINDOW_SEC` / `AUTH_RATE_MAX`: Auth endpoints
 - `TOKEN_RATE_WINDOW_SEC` / `TOKEN_RATE_MAX`: Token endpoint
 
-**Rate limit headers:**
-
-```
-X-RateLimit-Limit: 30
-X-RateLimit-Remaining: 25
-X-RateLimit-Reset: 1638360000
-```
+**Rate limit headers:** When a limit is hit the response includes a `Retry-After` header (seconds until the window resets) and an RFC&nbsp;7807 error body. No `X-RateLimit-*` headers are emitted today.
 
 ## Pagination
 
@@ -274,7 +269,6 @@ const response = await fetch('http://localhost:4000/v1/auth/login', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'X-Org-Slug': 'acme-corp',
   },
   body: JSON.stringify({
     email: 'user@example.com',
@@ -291,7 +285,6 @@ const data = await response.json();
 ```bash
 curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
-  -H "X-Org-Slug: acme-corp" \
   -d '{
     "email": "user@example.com",
     "password": "SecurePass123!"

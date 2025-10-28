@@ -99,7 +99,7 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",
@@ -119,7 +119,7 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Password too weak",
@@ -137,7 +137,7 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "type": "https://cerberus.local/errors/conflict",
+  "type": "https://api.cerberus-iam.com/errors/conflict",
   "title": "Conflict",
   "status": 409,
   "detail": "Email already registered"
@@ -150,11 +150,10 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit-exceeded",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
-  "detail": "Rate limit exceeded. Please try again later.",
-  "retryAfter": 30
+  "detail": "Rate limit exceeded. Please try again later."
 }
 ```
 
@@ -166,7 +165,7 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "type": "https://cerberus.local/errors/signup-failed",
+  "type": "https://api.cerberus-iam.com/errors/signup-failed",
   "title": "Signup Failed",
   "status": 500,
   "detail": "Failed to create account"
@@ -184,7 +183,7 @@ The organisation is created with a "trial" status and default session settings. 
 2. **Owner role created** with:
    - Name: "Owner"
    - Slug: "owner"
-   - All permissions granted
+   - Broad administrative permissions (full CRUD over users, organisations, teams, invitations, plus read access to roles/permissions)
 
 3. **Organisation slug generated** from the organisation name:
    - Converted to lowercase

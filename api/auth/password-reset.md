@@ -71,7 +71,7 @@ Initiates the password reset process by sending a password reset email to the us
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid email"
@@ -82,11 +82,10 @@ Initiates the password reset process by sending a password reset email to the us
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit-exceeded",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
-  "detail": "Rate limit exceeded. Please try again later.",
-  "retryAfter": 30
+  "detail": "Rate limit exceeded. Please try again later."
 }
 ```
 
@@ -194,7 +193,7 @@ Completes the password reset process by:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",
@@ -213,7 +212,7 @@ Completes the password reset process by:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Password too weak",
@@ -229,7 +228,7 @@ Completes the password reset process by:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid or expired password reset token"
@@ -240,7 +239,7 @@ Completes the password reset process by:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Password reset not available for this account"
@@ -251,11 +250,10 @@ Completes the password reset process by:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit-exceeded",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
-  "detail": "Rate limit exceeded. Please try again later.",
-  "retryAfter": 30
+  "detail": "Rate limit exceeded. Please try again later."
 }
 ```
 

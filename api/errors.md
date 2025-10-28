@@ -8,7 +8,7 @@ All errors return a JSON object with the following structure:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/error-type",
+  "type": "https://api.cerberus-iam.com/errors/error-type",
   "title": "Human-Readable Error Title",
   "status": 400,
   "detail": "Detailed description of what went wrong",
@@ -34,7 +34,7 @@ Additional fields may be included depending on the error type.
 
 Invalid input, malformed request, or validation errors.
 
-**Error type:** `https://cerberus.local/errors/bad-request`
+**Error type:** `https://api.cerberus-iam.com/errors/bad-request`
 
 **Common causes:**
 
@@ -48,7 +48,7 @@ Invalid input, malformed request, or validation errors.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",
@@ -68,7 +68,7 @@ Invalid input, malformed request, or validation errors.
 
 Authentication is required or has failed.
 
-**Error type:** `https://cerberus.local/errors/unauthorized`
+**Error type:** `https://api.cerberus-iam.com/errors/unauthorized`
 
 **Common causes:**
 
@@ -82,7 +82,7 @@ Authentication is required or has failed.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Invalid email or password"
@@ -93,7 +93,7 @@ Authentication is required or has failed.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Multi-factor authentication required",
@@ -105,7 +105,7 @@ Authentication is required or has failed.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "MFA enrollment required before logging in",
@@ -117,7 +117,7 @@ Authentication is required or has failed.
 
 Authenticated but insufficient permissions.
 
-**Error type:** `https://cerberus.local/errors/forbidden`
+**Error type:** `https://api.cerberus-iam.com/errors/forbidden`
 
 **Common causes:**
 
@@ -130,7 +130,7 @@ Authenticated but insufficient permissions.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/forbidden",
+  "type": "https://api.cerberus-iam.com/errors/forbidden",
   "title": "Forbidden",
   "status": 403,
   "detail": "You do not have permission to access this resource"
@@ -141,7 +141,7 @@ Authenticated but insufficient permissions.
 
 Requested resource does not exist.
 
-**Error type:** `https://cerberus.local/errors/not-found`
+**Error type:** `https://api.cerberus-iam.com/errors/not-found`
 
 **Common causes:**
 
@@ -154,7 +154,7 @@ Requested resource does not exist.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/not-found",
+  "type": "https://api.cerberus-iam.com/errors/not-found",
   "title": "Not Found",
   "status": 404,
   "detail": "The requested resource was not found"
@@ -165,7 +165,7 @@ Requested resource does not exist.
 
 Request conflicts with current server state.
 
-**Error type:** `https://cerberus.local/errors/conflict`
+**Error type:** `https://api.cerberus-iam.com/errors/conflict`
 
 **Common causes:**
 
@@ -178,7 +178,7 @@ Request conflicts with current server state.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/conflict",
+  "type": "https://api.cerberus-iam.com/errors/conflict",
   "title": "Conflict",
   "status": 409,
   "detail": "Email already registered"
@@ -189,7 +189,7 @@ Request conflicts with current server state.
 
 Request is well-formed but contains semantic errors.
 
-**Error type:** `https://cerberus.local/errors/unprocessable-entity`
+**Error type:** `https://api.cerberus-iam.com/errors/unprocessable-entity`
 
 **Common causes:**
 
@@ -202,7 +202,7 @@ Request is well-formed but contains semantic errors.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Password too weak",
@@ -218,26 +218,22 @@ Request is well-formed but contains semantic errors.
 
 Rate limit exceeded.
 
-**Error type:** `https://cerberus.local/errors/rate-limit-exceeded`
+**Error type:** `https://api.cerberus-iam.com/errors/rate-limit`
 
 **Example:**
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit-exceeded",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
-  "detail": "Rate limit exceeded. Please try again later.",
-  "retryAfter": 30
+  "detail": "Rate limit exceeded. Please try again later."
 }
 ```
 
 **Response headers:**
 
 ```
-X-RateLimit-Limit: 30
-X-RateLimit-Remaining: 0
-X-RateLimit-Reset: 1638360030
 Retry-After: 30
 ```
 
@@ -245,7 +241,7 @@ Retry-After: 30
 
 Unexpected server error.
 
-**Error type:** `https://cerberus.local/errors/internal-server-error`
+**Error type:** `https://api.cerberus-iam.com/errors/internal-server-error`
 
 **Common causes:**
 
@@ -257,7 +253,7 @@ Unexpected server error.
 
 ```json
 {
-  "type": "https://cerberus.local/errors/internal-server-error",
+  "type": "https://api.cerberus-iam.com/errors/internal-server-error",
   "title": "Internal Server Error",
   "status": 500,
   "detail": "An unexpected error occurred"
@@ -303,7 +299,7 @@ Validation errors include detailed information about each validation failure:
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",

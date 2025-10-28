@@ -7,10 +7,10 @@ Cerberus IAM provides a comprehensive suite of identity and access management fe
 ### Email/Password Authentication
 
 - **Secure Password Hashing**: Argon2 algorithm (Password Hashing Competition winner)
-- **Configurable Password Policies**: Minimum length, complexity requirements, expiration
+- **Baseline Password Policy**: Minimum length plus upper/lowercase and numeric checks
 - **Email Verification**: Secure token-based email confirmation
 - **Password Reset Flow**: Self-service password recovery with time-limited tokens
-- **Account Lockout**: Protection against brute force attacks
+- **Login Telemetry**: `lastLoginAt`, `lastLoginIp`, and `loginCount` tracking
 
 ### Multi-Factor Authentication (MFA)
 
@@ -26,14 +26,14 @@ Cerberus IAM provides a comprehensive suite of identity and access management fe
 - **Configurable Lifetime**: Per-organization session duration settings
 - **Idle Timeout**: Automatic session expiration after inactivity
 - **Multi-Device Support**: Users can have multiple active sessions
-- **Session Revocation**: Terminate individual or all user sessions
+- **Session Revocation**: Terminate individual sessions via `/v1/me/sessions/:id`
 - **Device Tracking**: IP address and user agent logging for audit
 
 ## Authorization Features
 
 ### Role-Based Access Control (RBAC)
 
-- **Hierarchical Roles**: Organization-level role definitions
+- **Tenant-Scoped Roles**: Organization-specific role definitions
 - **Granular Permissions**: Resource-action based permission model (`resource:action`)
 - **Wildcard Support**: `users:*` for all user operations, `*` for superuser access
 - **Default Roles**: Automatically assigned roles for new users
@@ -50,7 +50,7 @@ Cerberus IAM provides a comprehensive suite of identity and access management fe
 ### API Key Authentication
 
 - **Long-Lived Tokens**: Server-to-server authentication without user sessions
-- **Scoped Permissions**: Limit API key capabilities to specific operations
+- **Scope Metadata**: Persist allowed scopes for downstream authorization
 - **Key Rotation**: Generate new keys without downtime
 - **Prefix-Based Identification**: Easily identify key types (`ck_live_...`)
 - **Secure Hashing**: Keys are hashed at rest using SHA-256
@@ -132,7 +132,7 @@ Cerberus IAM provides a comprehensive suite of identity and access management fe
 
 - **MFA Requirements**: Enforce MFA for all organization users
 - **Session Policies**: Custom session lifetime and idle timeout
-- **Password Policies**: Organization-specific password rules
+- **Password Policy Metadata**: Store intended password rules for custom enforcement
 - **Token Lifetimes**: Custom access/refresh token TTLs
 - **Allowed Domains**: Whitelist callback URLs, logout URLs, and origins
 
@@ -159,7 +159,6 @@ Cerberus IAM provides a comprehensive suite of identity and access management fe
 - **Refresh Token Reuse Detection**: Automatically detect and respond to token reuse
 - **Token Family Revocation**: Revoke entire token family on suspicious activity
 - **Login Analytics**: Track login attempts, failures, and success rates
-- **Account Lockout**: Temporary suspension after repeated failed attempts
 
 ## Integration Features
 

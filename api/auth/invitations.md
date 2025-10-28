@@ -75,7 +75,7 @@ This is similar to registration, but the user is joining an existing organisatio
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid input",
@@ -95,7 +95,7 @@ This is similar to registration, but the user is joining an existing organisatio
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Password too weak",
@@ -111,7 +111,7 @@ This is similar to registration, but the user is joining an existing organisatio
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invalid or expired invitation token"
@@ -122,7 +122,7 @@ This is similar to registration, but the user is joining an existing organisatio
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invitation has already been accepted"
@@ -133,7 +133,7 @@ This is similar to registration, but the user is joining an existing organisatio
 
 ```json
 {
-  "type": "https://cerberus.local/errors/bad-request",
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
   "title": "Bad Request",
   "status": 400,
   "detail": "Invitation has been cancelled"
@@ -144,11 +144,10 @@ This is similar to registration, but the user is joining an existing organisatio
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit-exceeded",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
-  "detail": "Rate limit exceeded. Please try again later.",
-  "retryAfter": 30
+  "detail": "Rate limit exceeded. Please try again later."
 }
 ```
 

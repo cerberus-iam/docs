@@ -63,7 +63,7 @@ Set-Cookie: cerb_sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Authentication required"
@@ -74,7 +74,7 @@ Set-Cookie: cerb_sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 
 ```json
 {
-  "type": "https://cerberus.local/errors/unauthorized",
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
   "title": "Unauthorized",
   "status": 401,
   "detail": "Invalid or expired session"
@@ -87,7 +87,7 @@ Set-Cookie: cerb_sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 
 ```json
 {
-  "type": "https://cerberus.local/errors/forbidden",
+  "type": "https://api.cerberus-iam.com/errors/forbidden",
   "title": "Forbidden",
   "status": 403,
   "detail": "CSRF token required"
@@ -98,7 +98,7 @@ Set-Cookie: cerb_sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 
 ```json
 {
-  "type": "https://cerberus.local/errors/forbidden",
+  "type": "https://api.cerberus-iam.com/errors/forbidden",
   "title": "Forbidden",
   "status": 403,
   "detail": "Invalid CSRF token"

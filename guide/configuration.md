@@ -225,7 +225,7 @@ TOKEN_RATE_MAX=30
 
 ```json
 {
-  "type": "https://cerberus.local/errors/rate-limit",
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
   "title": "Too Many Requests",
   "status": 429,
   "detail": "Rate limit exceeded. Please try again later."
@@ -299,7 +299,7 @@ class UnauthorizedError extends Error {
 app.use((err: Error, req, res, next) => {
   if (err instanceof UnauthorizedError) {
     return res.status(401).json({
-      type: 'https://cerberus.local/errors/unauthorized',
+      type: 'https://api.cerberus-iam.com/errors/unauthorized',
       title: 'Unauthorized',
       status: 401,
       detail: err.message,
