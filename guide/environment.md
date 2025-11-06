@@ -172,6 +172,22 @@ ADMIN_WEB_INTERNAL_ORIGIN=http://admin-web:3000
 - Kubernetes internal networking
 - Server-to-server communication
 
+#### `LOGIN_UI_URL`
+
+- **Type:** `string` (URL)
+- **Optional:** Yes
+- **Description:** Absolute URL to the hosted login experience
+
+```bash
+LOGIN_UI_URL=https://login.yourcompany.com/sign-in
+```
+
+**Behavior:**
+
+- When set, unauthenticated authorization requests (`/oauth2/authorize`) redirect here
+- The API appends a `redirect_uri` query parameter pointing back to the original issuer URL
+- Leave unset to use the built-in `/auth/login` route (useful for development or legacy flows)
+
 ### Cryptography & JWT
 
 #### `JWT_ALG`

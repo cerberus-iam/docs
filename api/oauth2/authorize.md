@@ -90,8 +90,13 @@ If user is not authenticated:
 **Location Header:**
 
 ```
-/auth/login?redirect_uri=/oauth2/authorize?client_id=...
+https://login.example.com/sign-in?redirect_uri=https%3A%2F%2Fissuer.example%2Foauth2%2Fauthorize%3Fclient_id%3D...
 ```
+
+> The exact URL depends on your deployment:
+>
+> - If `LOGIN_UI_URL` is configured, users are redirected to that external UI with a `redirect_uri` query parameter that points back to the original `/oauth2/authorize` request on the issuer.
+> - If `LOGIN_UI_URL` is not set, the API falls back to the legacy relative redirect (`/auth/login?redirect_uri=...`).
 
 ### Error Responses
 
