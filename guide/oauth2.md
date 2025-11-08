@@ -289,7 +289,7 @@ curl https://auth.example.com/.well-known/openid-configuration
   "jwks_uri": "https://auth.example.com/oauth2/jwks.json",
   "scopes_supported": ["openid", "profile", "email", "phone", "offline_access"],
   "response_types_supported": ["code"],
-  "grant_types_supported": ["authorization_code", "refresh_token"],
+  "grant_types_supported": ["authorization_code", "refresh_token", "client_credentials"],
   "subject_types_supported": ["public"],
   "id_token_signing_alg_values_supported": ["EdDSA", "RS256"],
   "token_endpoint_auth_methods_supported": ["client_secret_basic", "client_secret_post", "none"]
@@ -508,9 +508,25 @@ Similar to SPA but with app-specific redirect URI:
 myapp://oauth/callback
 ```
 
-### Machine-to-Machine (Future)
+### Machine-to-Machine (Client Credentials)
 
-Client credentials grant for server-to-server:
+The client credentials grant enables service-to-service authentication without user context.
+
+**Use Cases:**
+
+- Backend services calling APIs
+- Microservices communication
+- Scheduled jobs and cron tasks
+- System-level integrations
+
+**Requirements:**
+
+- Confidential client (has client_secret)
+- Client must authenticate
+- No user involved (no refresh tokens)
+- Custom scopes only (OIDC scopes prohibited)
+
+**Example Request:**
 
 ```bash
 curl -X POST https://auth.example.com/oauth2/token \
@@ -518,6 +534,85 @@ curl -X POST https://auth.example.com/oauth2/token \
   -d "grant_type=client_credentials" \
   -d "scope=api:read api:write"
 ```
+
+**Response:**
+
+```json
+{
+  "access_token": "eyJhbGc...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "api:read api:write"
+}
+```
+
+**Access Token Claims:**
+
+```json
+{
+  "iss": "https://auth.example.com",
+  "sub": "client-id",
+  "client_id": "client-id",
+  "aud": "client-id",
+  "exp": 1704567890,
+  "iat": 1704564290,
+  "jti": "token-id",
+  "scope": "api:read api:write",
+  "org": "org-id",
+  "roles": []
+}
+```
+
+**Key Differences from User Tokens:**
+
+- `sub` is the client_id (not user ID)
+- No `refresh_token` in response
+- `roles` is always empty array
+- Cannot use OIDC scopes (openid, profile, email, etc.)
+
+**Token Management:**
+
+```typescript
+class ServiceClient {
+  private token: string | null = null;
+  private expiresAt: number = 0;
+
+  async getToken(): Promise<string> {
+    // Request new token if expired or expiring soon
+    if (!this.token || Date.now() >= this.expiresAt - 5 * 60 * 1000) {
+      await this.requestToken();
+    }
+    return this.token;
+  }
+
+  private async requestToken(): Promise<void> {
+    const response = await fetch('https://auth.example.com/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+      },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        scope: 'api:read api:write',
+      }),
+    });
+
+    const data = await response.json();
+    this.token = data.access_token;
+    this.expiresAt = Date.now() + data.expires_in * 1000;
+  }
+
+  async callAPI(url: string): Promise<Response> {
+    const token = await this.getToken();
+    return fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+}
+```
+
+See [Token Endpoint - Client Credentials](/api/oauth2/token#grant-type-client-credentials) for full documentation.
 
 ## Troubleshooting
 

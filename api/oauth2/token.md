@@ -1,6 +1,6 @@
 # OAuth2 Token Endpoint
 
-Exchange authorization code or refresh token for access tokens.
+Exchange authorization code, refresh token, or client credentials for access tokens.
 
 ## Endpoint
 
@@ -10,10 +10,11 @@ POST /oauth2/token
 
 ## Description
 
-The token endpoint supports two grant types:
+The token endpoint supports three grant types:
 
 1. **authorization_code** - Exchange authorization code for tokens
 2. **refresh_token** - Refresh access token using refresh token
+3. **client_credentials** - Service-to-service authentication (machine-to-machine)
 
 This endpoint handles client authentication and issues JWT access tokens and optionally refresh tokens.
 
@@ -118,6 +119,229 @@ grant_type=refresh_token&refresh_token=rt_x1y2z3a4b5c6d7e8f9&client_id=cli_abc12
 ```
 
 **Note:** Refresh token rotation is enabled. A new refresh token is issued and the old one is revoked.
+
+## Grant Type: client_credentials
+
+Obtain an access token for service-to-service authentication without user context.
+
+### Description
+
+The client credentials grant is used for machine-to-machine (M2M) authentication where the client is acting on its own behalf rather than on behalf of a user. This is commonly used for:
+
+- Backend services calling APIs
+- Microservices communication
+- Scheduled jobs accessing protected resources
+- System-level integrations
+
+### Requirements
+
+- **Client Type**: Must be a confidential client
+- **Authentication**: Client must authenticate (Basic or POST)
+- **No Refresh Token**: Client credentials tokens do not include refresh tokens
+- **No User Context**: Tokens have no associated user (userId is null)
+- **OIDC Scopes Prohibited**: Cannot request openid, profile, email, address, or phone scopes
+
+### Request Body Parameters
+
+| Parameter       | Type   | Required    | Description                                     |
+| --------------- | ------ | ----------- | ----------------------------------------------- |
+| `grant_type`    | string | Yes         | Must be `client_credentials`                    |
+| `scope`         | string | No          | Space-separated custom scopes (not OIDC scopes) |
+| `client_id`     | string | Conditional | Required if not using HTTP Basic auth           |
+| `client_secret` | string | Conditional | Required for client authentication              |
+
+### Example Request (HTTP Basic Auth)
+
+```http
+POST /oauth2/token HTTP/1.1
+Host: localhost:4000
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic Y2xpX2FiYzEyMzpzZWNyZXRfaGVyZQ==
+
+grant_type=client_credentials&scope=api:read api:write
+```
+
+### Example Request (POST Auth)
+
+```http
+POST /oauth2/token HTTP/1.1
+Host: localhost:4000
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id=cli_abc123&client_secret=secret_here&scope=api:read api:write
+```
+
+### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "access_token": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "api:read api:write"
+}
+```
+
+**Note:** No `refresh_token` is included in the response.
+
+### Access Token Claims
+
+The access token for client credentials has a different structure than user tokens:
+
+```json
+{
+  "iss": "http://localhost:4000",
+  "sub": "cli_abc123",
+  "client_id": "cli_abc123",
+  "aud": "cli_abc123",
+  "exp": 1638360000,
+  "iat": 1638356400,
+  "jti": "at_unique_id",
+  "scope": "api:read api:write",
+  "org": "org_a1b2c3d4e5f6",
+  "roles": []
+}
+```
+
+**Key Differences from User Tokens:**
+
+- `sub` is the client_id (not user ID)
+- `roles` is always an empty array
+- No user-specific claims
+
+### Error Responses
+
+**Public client attempting client_credentials:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
+  "title": "Unauthorized",
+  "status": 401,
+  "detail": "Client credentials grant requires confidential client"
+}
+```
+
+**OIDC scopes requested:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Invalid scopes for client_credentials: openid, profile. OIDC scopes are not allowed."
+}
+```
+
+**Invalid client credentials:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/unauthorized",
+  "title": "Unauthorized",
+  "status": 401,
+  "detail": "Invalid client credentials"
+}
+```
+
+### Code Example
+
+```typescript
+async function getClientCredentialsToken(
+  clientId: string,
+  clientSecret: string,
+  scopes: string[],
+): Promise<string> {
+  const response = await fetch('http://localhost:4000/oauth2/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
+    },
+    body: new URLSearchParams({
+      grant_type: 'client_credentials',
+      scope: scopes.join(' '),
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Token request failed: ${error.detail}`);
+  }
+
+  const data = await response.json();
+  return data.access_token;
+}
+
+// Usage
+const accessToken = await getClientCredentialsToken('cli_service123', 'my_client_secret', [
+  'api:read',
+  'api:write',
+]);
+
+// Use token for API requests
+const apiResponse = await fetch('https://api.example.com/v1/data', {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+});
+```
+
+### Token Refresh Strategy
+
+Since client credentials tokens do not include refresh tokens, implement one of these strategies:
+
+**1. Token Caching with Expiry Check:**
+
+```typescript
+class ClientCredentialsManager {
+  private accessToken: string | null = null;
+  private expiresAt: number = 0;
+
+  async getAccessToken(): Promise<string> {
+    // Refresh if token expired or expiring soon (5 min buffer)
+    if (!this.accessToken || Date.now() >= this.expiresAt - 5 * 60 * 1000) {
+      await this.refreshToken();
+    }
+    return this.accessToken!;
+  }
+
+  private async refreshToken(): Promise<void> {
+    const response = await getClientCredentialsToken(
+      process.env.CLIENT_ID!,
+      process.env.CLIENT_SECRET!,
+      ['api:read', 'api:write'],
+    );
+
+    this.accessToken = response.access_token;
+    this.expiresAt = Date.now() + response.expires_in * 1000;
+  }
+}
+```
+
+**2. Request New Token on 401:**
+
+```typescript
+async function callApiWithRetry(url: string): Promise<Response> {
+  let token = await getClientCredentialsToken(...);
+
+  let response = await fetch(url, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+
+  // If unauthorized, get new token and retry once
+  if (response.status === 401) {
+    token = await getClientCredentialsToken(...);
+    response = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+  }
+
+  return response;
+}
+```
 
 ## Client Authentication
 
