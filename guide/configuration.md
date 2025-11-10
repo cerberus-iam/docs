@@ -352,10 +352,68 @@ When adding new configuration:
 3. Document in `/docs/guide/environment.md`
 4. Update CI/CD workflows if needed
 
+## Session Cookie Configuration
+
+The API supports flexible session cookie domain configuration to handle single-domain, multi-domain, or dynamic domain scenarios.
+
+### SESSION_COOKIE_DOMAIN Options
+
+#### 1. All Domains (Dynamic)
+
+Set `SESSION_COOKIE_DOMAIN=*` to automatically resolve the cookie domain based on the request origin:
+
+```env
+SESSION_COOKIE_DOMAIN=*
+```
+
+**Behavior:**
+
+- Extracts the root domain from the `Origin` header
+- `https://admin.example.com` → cookie domain `.example.com`
+- `https://app.another.com` → cookie domain `.another.com`
+- Works across all subdomains of the extracted root domain
+- Best for multi-tenant IAM serving multiple client applications
+
+**Use Case:** IAM API serving multiple unrelated domains or tenant-specific subdomains
+
+#### 2. Specific Domain
+
+Set a specific domain to restrict cookies to that domain and its subdomains:
+
+```env
+SESSION_COOKIE_DOMAIN=.example.com
+```
+
+**Behavior:**
+
+- Cookie works for `example.com`, `admin.example.com`, `app.example.com`, etc.
+- Fixed domain regardless of request origin
+- Best when all client applications share the same parent domain
+
+**Use Case:** Single organization with all apps under one domain
+
+#### 3. Localhost or Current Host
+
+Set to `localhost` or leave empty to use the current host only (no domain attribute):
+
+```env
+SESSION_COOKIE_DOMAIN=localhost
+# or
+SESSION_COOKIE_DOMAIN=
+```
+
+**Behavior:**
+
+- Cookie only works for the exact host that set it
+- No subdomain sharing
+- Best for local development
+
+**Use Case:** Development environment
+
 ## Security Hardening Checklist
 
 - [ ] Enable `SESSION_COOKIE_SECURE=true` in production
-- [ ] Set `SESSION_COOKIE_DOMAIN` to your production domain
+- [ ] Set `SESSION_COOKIE_DOMAIN` appropriately (use `*` for multi-domain IAM)
 - [ ] Configure `ADMIN_WEB_ORIGIN` with production URLs only
 - [ ] Use strong `SECRET_ENCRYPTION_KEY` (32 bytes, base64)
 - [ ] Enable rate limiting (already configured)
