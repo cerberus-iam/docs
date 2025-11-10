@@ -7,7 +7,7 @@
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview",
-    "start:static": "npx --yes serve -s .vitepress/dist -l $PORT"
+    "start": "npx --yes serve -s .vitepress/dist -l $PORT"
   },
   "devDependencies": {
     "vitepress": "^1.0.0"
