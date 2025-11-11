@@ -7,6 +7,9 @@ export default defineConfig({
     'Enterprise-grade Identity and Access Management API built with Express.js and TypeScript',
   base: '/',
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+  rewrites: {
+    '/': '/guide/introduction',
+  },
   ignoreDeadLinks: [
     // Localhost URLs are expected in development guides
     /^http:\/\/localhost/,
