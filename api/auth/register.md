@@ -1,6 +1,6 @@
-# Register
+# Register (Accept Invitation)
 
-Create a new organisation and owner account.
+Accept an invitation to join an existing organisation.
 
 ## Endpoint
 
@@ -10,18 +10,21 @@ POST /v1/auth/register
 
 ## Description
 
-Registers a new organisation with an owner account. This is the first step for new customers to onboard to Cerberus IAM. The endpoint creates:
+Accepts an invitation to join an existing organisation. This endpoint creates a new user account based on an invitation sent by an organisation administrator. The endpoint:
 
-1. A new organisation with an auto-generated slug from the organisation name
-2. An "Owner" role with full permissions
-3. An owner user account with hashed password
-4. Email verification token (sent via email)
+1. Validates the invitation token
+2. Verifies the invitation hasn't expired or been accepted
+3. Confirms the provided email matches the invitation
+4. Creates a user account with the provided details
+5. Associates the user with the specified role and teams
+6. Marks the invitation as accepted
+7. Auto-verifies the user's email address
 
-The organisation is created with a "trial" status and default session settings. The organisation slug is automatically generated from the organisation name as a URL-safe identifier (e.g., "Acme Corporation" becomes "acme-corporation").
+**Note:** This endpoint was previously used for creating new organisations. It now exclusively handles invitation-based registration. Users created through this endpoint join existing organisations rather than creating new ones.
 
 ## Authentication
 
-**Required:** No (public endpoint)
+**Required:** No (uses invitation token)
 
 ## Headers
 
@@ -29,23 +32,15 @@ The organisation is created with a "trial" status and default session settings. 
 | -------------- | -------- | -------------------------- |
 | `Content-Type` | Yes      | Must be `application/json` |
 
-**Note:** `X-Org-Domain` header is NOT required for registration (organisation doesn't exist yet).
-
 ## Request Body
 
-| Field              | Type   | Required | Description                                            | Constraints                                           |
-| ------------------ | ------ | -------- | ------------------------------------------------------ | ----------------------------------------------------- |
-| `organisationName` | string | Yes      | Display name of the organisation (slug auto-generated) | Minimum 1 character                                   |
-| `email`            | string | Yes      | Owner's email address                                  | Valid email format                                    |
-| `firstName`        | string | Yes      | Owner's first name                                     | Minimum 1 character                                   |
-| `lastName`         | string | Yes      | Owner's last name                                      | Minimum 1 character                                   |
-| `password`         | string | Yes      | Owner's password                                       | Minimum 8 characters, must meet strength requirements |
-
-**Note:** The organisation slug is automatically generated from `organisationName`. For example:
-
-- "Acme Corporation" becomes "acme-corporation"
-- "My Company!" becomes "my-company"
-- If the slug already exists, a number is appended (e.g., "acme-corporation-1")
+| Field       | Type   | Required | Description                            | Constraints                                           |
+| ----------- | ------ | -------- | -------------------------------------- | ----------------------------------------------------- |
+| `token`     | string | Yes      | Invitation token from invitation email | Minimum 1 character                                   |
+| `email`     | string | Yes      | Email address (must match invitation)  | Valid email format                                    |
+| `firstName` | string | Yes      | User's first name                      | Minimum 1 character                                   |
+| `lastName`  | string | Yes      | User's last name                       | Minimum 1 character                                   |
+| `password`  | string | Yes      | User's password                        | Minimum 8 characters, must meet strength requirements |
 
 ### Password Strength Requirements
 
@@ -59,10 +54,10 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "organisationName": "Acme Corporation",
-  "email": "admin@acme.com",
-  "firstName": "John",
-  "lastName": "Doe",
+  "token": "inv_a1b2c3d4e5f6g7h8",
+  "email": "jane.smith@acme.com",
+  "firstName": "Jane",
+  "lastName": "Smith",
   "password": "SecurePass123!"
 }
 ```
@@ -75,7 +70,7 @@ The organisation is created with a "trial" status and default session settings. 
 
 ```json
 {
-  "message": "Organisation and owner account created successfully",
+  "message": "Account created successfully",
   "organisation": {
     "id": "org_a1b2c3d4e5f6",
     "slug": "acme-corporation",
@@ -83,13 +78,11 @@ The organisation is created with a "trial" status and default session settings. 
   },
   "user": {
     "id": "usr_x1y2z3a4b5c6",
-    "email": "admin@acme.com",
-    "name": "John Doe"
+    "email": "jane.smith@acme.com",
+    "name": "Jane Smith"
   }
 }
 ```
-
-**Note:** The `slug` field in the response is the auto-generated slug from the organisation name.
 
 ### Error Responses
 
@@ -112,6 +105,28 @@ The organisation is created with a "trial" status and default session settings. 
       "message": "Required"
     }
   ]
+}
+```
+
+**Invalid invitation token:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Invalid invitation token"
+}
+```
+
+**Invitation expired:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Invitation has expired"
 }
 ```
 
@@ -144,6 +159,28 @@ The organisation is created with a "trial" status and default session settings. 
 }
 ```
 
+**Invitation already accepted:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/conflict",
+  "title": "Conflict",
+  "status": 409,
+  "detail": "Invitation has already been accepted"
+}
+```
+
+**Email mismatch:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/conflict",
+  "title": "Conflict",
+  "status": 409,
+  "detail": "Email is not associated with this invitation"
+}
+```
+
 #### 429 Too Many Requests
 
 **Rate limit exceeded:**
@@ -161,52 +198,70 @@ The organisation is created with a "trial" status and default session settings. 
 
 #### 500 Internal Server Error
 
-**Signup failed:**
+**Registration failed:**
 
 ```json
 {
-  "type": "https://api.cerberus-iam.com/errors/signup-failed",
-  "title": "Signup Failed",
-  "status": 500,
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
+  "title": "Bad Request",
+  "status": 400,
   "detail": "Failed to create account"
 }
 ```
 
+## Invitation Token Details
+
+### Token Source
+
+Invitation tokens are created by organisation administrators through:
+
+- **POST /v1/admin/invitations** - Create invitation (admin only)
+
+### Token Delivery
+
+The invitation email is sent to the invited user containing:
+
+- A link to accept the invitation: `{ISSUER_URL}/auth/accept-invitation?token={token}`
+- Organisation name
+- Expiration date (default: 7 days)
+
+### Token Properties
+
+- **Length:** 64 characters (32-byte secure random string, hex-encoded)
+- **Expiration:** Configurable per invitation (default: 7 days)
+- **One-time use:** Token is marked as accepted after successful registration
+
 ## Side Effects
 
-1. **Organisation created** with:
-   - Status: `trial`
-   - Session lifetime: 3600 seconds (1 hour)
-   - Session idle timeout: 1800 seconds (30 minutes)
-   - MFA requirement: `false` (optional by default)
+On successful registration:
 
-2. **Owner role created** with:
-   - Name: "Owner"
-   - Slug: "owner"
-   - Broad administrative permissions (full CRUD over users, organisations, teams, invitations, plus read access to roles/permissions)
-
-3. **Organisation slug generated** from the organisation name:
-   - Converted to lowercase
-   - Special characters removed
-   - Spaces replaced with hyphens
-   - Uniqueness ensured (numbers appended if needed)
-
-4. **User account created** with:
+1. **User account created** with:
+   - Email from invitation
+   - Name from request
    - Password hashed using Argon2id
    - Identity provider: `local`
-   - Email verification status: unverified
+   - Email automatically verified (no verification step required)
+   - Associated with invitation's organisation
 
-5. **Email verification token generated** and sent to the provided email address
+2. **Role assigned:**
+   - User gets the role specified in the invitation
 
-6. **Audit log entry created** (if audit logging is enabled)
+3. **Teams assigned:**
+   - User joins any teams specified in the invitation (if provided)
+
+4. **Invitation marked accepted:**
+   - `acceptedAt` timestamp set to current time
+   - Token cannot be reused
+
+5. **Audit log entry created:** Registration event logged with organisation context
 
 ## Next Steps
 
 After successful registration:
 
-1. **Verify email:** Check email inbox for verification link
-2. **Click verification link:** Completes email verification (see [verify-email.md](./verify-email.md))
-3. **Login:** Use credentials to login (see [login.md](./login.md))
+1. **Login:** Use the created credentials to login (see [login.md](./login.md))
+2. **Access organisation resources:** User has immediate access based on assigned role
+3. **No email verification required:** Email is auto-verified for invited users
 
 ## Code Examples
 
@@ -216,10 +271,10 @@ After successful registration:
 curl -X POST http://localhost:4000/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "organisationName": "Acme Corporation",
-    "email": "admin@acme.com",
-    "firstName": "John",
-    "lastName": "Doe",
+    "token": "inv_a1b2c3d4e5f6g7h8",
+    "email": "jane.smith@acme.com",
+    "firstName": "Jane",
+    "lastName": "Smith",
     "password": "SecurePass123!"
   }'
 ```
@@ -233,10 +288,10 @@ const response = await fetch('http://localhost:4000/v1/auth/register', {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    organisationName: 'Acme Corporation',
-    email: 'admin@acme.com',
-    firstName: 'John',
-    lastName: 'Doe',
+    token: 'inv_a1b2c3d4e5f6g7h8',
+    email: 'jane.smith@acme.com',
+    firstName: 'Jane',
+    lastName: 'Smith',
     password: 'SecurePass123!',
   }),
 });
@@ -255,7 +310,7 @@ console.log('Registration successful:', data);
 
 ```typescript
 interface RegisterRequest {
-  organisationName: string;
+  token: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -298,7 +353,7 @@ async function register(data: RegisterRequest): Promise<RegisterResponse> {
 
     // Handle specific errors
     if (problem.status === 409) {
-      throw new Error('This email is already registered');
+      throw new Error('This email is already registered or invitation already accepted');
     }
 
     if (problem.status === 400 && problem.errors) {
@@ -313,18 +368,26 @@ async function register(data: RegisterRequest): Promise<RegisterResponse> {
   return response.json();
 }
 
-// Usage
+// Usage (typically called from invitation link click)
 try {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  if (!token) {
+    throw new Error('No invitation token provided');
+  }
+
   const result = await register({
-    organisationName: 'Acme Corporation',
-    email: 'admin@acme.com',
-    firstName: 'John',
-    lastName: 'Doe',
+    token,
+    email: 'jane.smith@acme.com',
+    firstName: 'Jane',
+    lastName: 'Smith',
     password: 'SecurePass123!',
   });
 
   console.log('Success:', result);
-  // Redirect to email verification page or login
+  // Redirect to login page
+  window.location.href = '/login';
 } catch (error) {
   console.error('Registration failed:', error.message);
   // Show error to user
@@ -334,16 +397,19 @@ try {
 ## Security Considerations
 
 1. **Password Hashing:** Passwords are hashed using Argon2id before storage
-2. **Rate Limiting:** Endpoint is rate-limited to prevent abuse
-3. **Email Verification:** Users must verify their email before full access
-4. **Slug Auto-generation:** Organisation slugs are automatically generated and validated as URL-safe
-5. **Slug Uniqueness:** Organisation slugs must be globally unique (ensured automatically)
-6. **Input Validation:** All inputs are validated using Zod schemas
-7. **SQL Injection Protection:** Prisma ORM prevents SQL injection
-8. **HTTPS Required:** Always use HTTPS in production
+2. **Rate Limiting:** Endpoint is rate-limited to prevent abuse (30 requests per 60 seconds)
+3. **Token Validation:** Invitation tokens are validated for:
+   - Existence and format
+   - Expiration (default: 7 days)
+   - Single-use (cannot be reused after acceptance)
+   - Email match (provided email must match invitation)
+4. **Email Auto-verification:** Users created via invitation have verified emails automatically
+5. **Input Validation:** All inputs are validated using Zod schemas
+6. **SQL Injection Protection:** Prisma ORM prevents SQL injection
+7. **HTTPS Required:** Always use HTTPS in production
 
 ## Related Endpoints
 
 - [POST /v1/auth/login](./login.md) - Login with credentials
-- [GET /v1/auth/verify-email](./verify-email.md) - Verify email address
-- [POST /v1/auth/forgot-password](./password-reset.md) - Request password reset
+- [POST /v1/auth/invitations/accept](./invitations.md) - Alternative invitation acceptance endpoint
+- [POST /v1/admin/invitations](../admin/invitations.md) - Create invitations (admin only)

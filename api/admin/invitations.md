@@ -216,17 +216,28 @@ curl -X DELETE https://api.cerberus-iam.dev/v1/admin/invitations/inv_01h2xz9k3m4
 
 ## Invitation Acceptance Flow
 
-Users accept invitations via the public endpoint (no authentication required):
+Users accept invitations via one of two public endpoints (no authentication required):
+
+**Option 1: Direct invitation acceptance endpoint**
 
 ```
 POST /v1/auth/invitations/accept
 ```
+
+**Option 2: Registration endpoint (recommended for UI flows)**
+
+```
+POST /v1/auth/register
+```
+
+Both endpoints accept the same request format and require an invitation token.
 
 **Request Body:**
 
 ```json
 {
   "token": "inv_token_abc123...",
+  "email": "new.hire@example.com",
   "firstName": "Jane",
   "lastName": "Doe",
   "password": "SecureP@ssw0rd123"
@@ -237,7 +248,12 @@ POST /v1/auth/invitations/accept
 
 ```json
 {
-  "message": "Invitation accepted successfully",
+  "message": "Account created successfully",
+  "organisation": {
+    "id": "org_01h2xz9k3m4n5p6q7r8s9t0v1w",
+    "slug": "acme-corp",
+    "name": "Acme Corporation"
+  },
   "user": {
     "id": "usr_01h2xz9k3m4n5p6q7r8s9t0v3y",
     "email": "new.hire@example.com",
@@ -252,9 +268,11 @@ The invitation email includes:
 
 - Organisation name
 - Inviter's name
-- Link to accept invitation (with embedded token)
+- Link to accept invitation: `{ISSUER_URL}/auth/accept-invitation?token={token}`
 - Expiration date
 - Instructions for account setup
+
+**Note:** The frontend at `/auth/accept-invitation` should submit to either `/v1/auth/register` or `/v1/auth/invitations/accept` with the invitation token and user details.
 
 ## Notes
 

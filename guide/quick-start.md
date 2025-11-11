@@ -121,17 +121,29 @@ Expected response:
 
 ### Test Registration
 
-Register a new user:
+**Note:** User registration now requires an invitation. First, you need to create an organisation and invitation through the database seeding or admin API. For testing purposes, you can use the seed script:
+
+```bash
+npm run seed
+```
+
+This will create:
+
+- A test organisation (`acme-corp`)
+- An admin user
+- Sample invitations
+
+Then accept an invitation:
 
 ```bash
 curl -X POST http://localhost:4000/v1/auth/register \
   -H "Content-Type: application/json" \
-  -H "X-Org-Domain: acme-corp" \
   -d '{
-    "email": "user@example.com",
-    "password": "SecurePass123!",
-    "firstName": "John",
-    "lastName": "Doe"
+    "token": "test-invitation-token",
+    "email": "invited.user@example.com",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "password": "SecurePass123!"
   }'
 ```
 
@@ -139,27 +151,33 @@ Expected response:
 
 ```json
 {
-  "id": "uuid-here",
-  "email": "user@example.com",
-  "firstName": "John",
-  "lastName": "Doe",
-  "name": "John Doe",
-  "createdAt": "2024-01-15T10:30:00.000Z"
+  "message": "Account created successfully",
+  "organisation": {
+    "id": "org-uuid-here",
+    "slug": "acme-corp",
+    "name": "Acme Corporation"
+  },
+  "user": {
+    "id": "usr-uuid-here",
+    "email": "invited.user@example.com",
+    "name": "Jane Smith"
+  }
 }
 ```
 
 ### Check Email (Mailhog)
 
-If using Docker Compose, open [http://localhost:8025](http://localhost:8025) to view the verification email sent by Mailhog.
+**Note:** Invitation emails are sent when invitations are created by administrators. Users created through invitation acceptance have their email automatically verified (no verification step needed).
+
+If using Docker Compose, open [http://localhost:8025](http://localhost:8025) to view invitation emails sent by Mailhog.
 
 ### Test Login
 
 ```bash
 curl -X POST http://localhost:4000/v1/auth/login \
   -H "Content-Type: application/json" \
-  -H "X-Org-Domain: acme-corp" \
   -d '{
-    "email": "user@example.com",
+    "email": "invited.user@example.com",
     "password": "SecurePass123!"
   }' \
   -c cookies.txt
@@ -171,7 +189,6 @@ The session cookie will be saved to `cookies.txt`.
 
 ```bash
 curl http://localhost:4000/v1/me/profile \
-  -H "X-Org-Domain: acme-corp" \
   -b cookies.txt
 ```
 
