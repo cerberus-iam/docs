@@ -26,7 +26,8 @@ GET /v1/admin/users
 
 | Header         | Required | Description                         |
 | -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
+| `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
 | `X-CSRF-Token` | Yes      | CSRF token for request validation   |
 
 ### Query Parameters
@@ -156,7 +157,8 @@ User lacks the required permission or CSRF token is invalid.
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/users \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
+  -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -168,6 +170,7 @@ const response = await fetch('https://api.cerberus-iam.dev/v1/admin/users', {
   credentials: 'include',
   headers: {
     'X-CSRF-Token': getCsrfToken(),
+    'X-Org-Domain': 'acme-corp',
   },
 });
 
@@ -181,9 +184,12 @@ console.log(`Found ${total} users:`, users);
 import requests
 
 response = requests.get(
-    'https://api.cerberus-iam.dev/v1/admin/users',
-    cookies={'cerberus_session': 'abc123...'},
-    headers={'X-CSRF-Token': 'xyz789...'}
+  'https://api.cerberus-iam.dev/v1/admin/users',
+  cookies={'cerb_sid': 'abc123...'},
+  headers={
+    'X-CSRF-Token': 'xyz789...',
+    'X-Org-Domain': 'acme-corp'
+  }
 )
 
 users_data = response.json()
@@ -197,6 +203,7 @@ for user in users_data['data']:
 - Users are filtered by the authenticated user's organisation (tenant isolation)
 - Soft-deleted users are excluded from the results
 - The endpoint returns all users without pagination (consider implementing pagination for large datasets)
+- Include the `X-Org-Domain` header matching the organisation slug
 - Role and team information is included in the response for convenience
 - Phone numbers may be null if not provided
 - Blocked users are included in the results with `blockedAt` and `blockedReason` fields populated

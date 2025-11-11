@@ -13,6 +13,16 @@ GET /v1/admin/teams
 - **Required**: Yes
 - **Required Permission**: `teams:read`
 
+## Request
+
+### Headers
+
+| Header         | Required | Description                         |
+| -------------- | -------- | ----------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
+| `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
+| `X-CSRF-Token` | Yes      | CSRF token                          |
+
 ## Response (200 OK)
 
 ```json
@@ -42,6 +52,12 @@ GET /v1/admin/teams
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/teams \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
+  -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
+
+## Notes
+
+- Responses are scoped to the organisation identified by `X-Org-Domain`
+- Pagination is not yet available; all teams are returned in one payload
 ```

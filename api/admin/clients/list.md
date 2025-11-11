@@ -13,6 +13,16 @@ GET /v1/admin/clients
 - **Required**: Yes
 - **Required Permission**: `clients:read`
 
+## Request
+
+### Headers
+
+| Header         | Required | Description                         |
+| -------------- | -------- | ----------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
+| `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
+| `X-CSRF-Token` | Yes      | CSRF token                          |
+
 ## Response (200 OK)
 
 ```json
@@ -44,10 +54,16 @@ GET /v1/admin/clients
 
 **Note**: `clientSecret` is never exposed in list or get responses.
 
+## Notes
+
+- Responses are scoped to the organisation identified by `X-Org-Domain`
+- Pagination is not yet implemented; all clients are returned in a single response
+
 ## Example
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/clients \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
+  -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
 ```

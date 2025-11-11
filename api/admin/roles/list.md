@@ -18,10 +18,11 @@ GET /v1/admin/roles
 
 ### Headers
 
-| Header         | Required | Description    |
-| -------------- | -------- | -------------- |
-| `Cookie`       | Yes      | Session cookie |
-| `X-CSRF-Token` | Yes      | CSRF token     |
+| Header         | Required | Description                         |
+| -------------- | -------- | ----------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
+| `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
+| `X-CSRF-Token` | Yes      | CSRF token                          |
 
 ## Response (200 OK)
 
@@ -53,6 +54,12 @@ GET /v1/admin/roles
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/roles \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
+  -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
+
+## Notes
+
+- Results are limited to the authenticated organisation (`X-Org-Domain`)
+- Pagination is not yet supported; all roles are returned in a single response
 ```
