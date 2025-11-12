@@ -57,6 +57,7 @@ export default defineConfig({
             { text: 'Authorization & RBAC', link: '/guide/authorization' },
             { text: 'RBAC Configuration', link: '/guide/rbac-configuration' },
             { text: 'Multi-Tenancy', link: '/guide/multi-tenancy' },
+            { text: 'Security Controls', link: '/guide/security' },
             { text: 'OAuth2 & OIDC', link: '/guide/oauth2' },
           ],
         },
@@ -89,9 +90,11 @@ export default defineConfig({
         {
           text: 'Authentication',
           items: [
-            { text: 'Register', link: '/api/auth/register' },
+            { text: 'Onboard Organisation', link: '/api/auth/onboard' },
+            { text: 'Register (Accept Invitation)', link: '/api/auth/register' },
             { text: 'Login', link: '/api/auth/login' },
             { text: 'Logout', link: '/api/auth/logout' },
+            { text: 'Revoke Session', link: '/api/auth/session' },
             { text: 'Email Verification', link: '/api/auth/verify-email' },
             { text: 'Password Reset', link: '/api/auth/password-reset' },
             { text: 'Invitations', link: '/api/auth/invitations' },

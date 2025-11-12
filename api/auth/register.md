@@ -20,7 +20,7 @@ Accepts an invitation to join an existing organisation. This endpoint creates a 
 6. Marks the invitation as accepted
 7. Auto-verifies the user's email address
 
-**Note:** This endpoint was previously used for creating new organisations. It now exclusively handles invitation-based registration. Users created through this endpoint join existing organisations rather than creating new ones.
+**Note:** This endpoint was previously used for creating new organisations. It now exclusively handles invitation-based registration. Use [`POST /v1/auth/onboard`](./onboard.md) to create a new organisation with an owner account.
 
 ## Authentication
 

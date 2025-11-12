@@ -122,7 +122,9 @@ Set-Cookie: cerb_sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=360
 
 ### CSRF Protection
 
-Session-based requests require CSRF token validation for state-changing operations (POST, PUT, PATCH, DELETE).
+Session-based requests require CSRF token validation for state-changing operations (POST, PUT, PATCH, DELETE),
+except for the explicitly whitelisted session termination endpoints documented in `@/lib/security/csrf-policy.ts`
+(`POST /v1/auth/logout` and `DELETE /v1/auth/session`).
 
 **CSRF Flow:**
 
@@ -231,11 +233,22 @@ This logs the user out from that specific device/browser.
 
 ```bash
 curl -X POST https://auth.example.com/v1/auth/logout \
-  -H "Cookie: cerb_sid=..." \
-  -H "X-CSRF-Token: csrf-token-here"
+  -H "Cookie: cerb_sid=..."
 ```
 
-Deletes the current session and clears the cookie.
+Deletes the current session and clears the cookie. CSRF tokens are not required for logout.
+
+### Revoke Current Session (Idempotent)
+
+**Endpoint:** `DELETE /v1/auth/session`
+
+```bash
+curl -X DELETE https://auth.example.com/v1/auth/session \
+  -H "Cookie: cerb_sid=..."
+```
+
+Provides a REST-style alternative that succeeds even if the session is already inactive and clears
+session plus CSRF cookies.
 
 ### Logout All Sessions
 
@@ -384,7 +397,7 @@ const org = await prisma.organisation.findUnique({ where: { slug } });
 req.tenant = { id: org.id, slug, organisation: org };
 ```
 
-### Session Validation
+### Tenant Session Validation
 
 Session authentication validates organization match:
 

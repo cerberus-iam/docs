@@ -35,7 +35,7 @@ Used for web applications and admin interfaces.
 - HttpOnly flag prevents JavaScript access
 - Secure flag enforced in production
 - SameSite=Lax for CSRF protection
-- CSRF token required for state-changing operations
+- CSRF tokens guard state-changing operations except for the centrally managed logout exemptions (`POST /v1/auth/logout`, `DELETE /v1/auth/session`)
 
 ### 2. Bearer Token Authentication (OAuth2)
 
