@@ -551,10 +551,10 @@ curl -s "$API_URL/v1/users" \
 
 If you encounter issues during migration:
 
-1. Check the [Troubleshooting Guide](/guide/troubleshooting)
-2. Review [API Error Codes](/api/errors)
+1. Review the [Migration Guide](/guide/migration-v2) thoroughly
+2. Check the [X-Org-Domain Reference](/api/x-org-domain) for authentication details
 3. Open an issue on [GitHub](https://github.com/cerberus-iam/api/issues)
-4. Contact support at support@cerberus-iam.com
+4. Contact support at <support@cerberus-iam.com>
 
 ## Rollback Procedure
 
