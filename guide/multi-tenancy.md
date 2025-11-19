@@ -1,17 +1,30 @@
-# Multi-Tenancy
+# Multi-Tenancy & Organisations
 
-This guide covers the multi-tenant architecture, organization isolation, and tenant middleware in Cerberus IAM.
+This guide covers the multi-tenant architecture, organisation isolation, many-to-many membership model, and tenant middleware in Cerberus IAM.
 
 ## Overview
 
 Cerberus is designed as a **multi-tenant IAM platform** where each organization is completely isolated:
 
-- **Organization** - The tenant root entity
-- **Data Isolation** - Each organization's data is strictly separated
-- **Resource Scoping** - All resources belong to an organization
-- **Shared Infrastructure** - Single database, multiple organizations
+- **Organisation** - The tenant root entity
+- **Many-to-Many Membership** - Users can belong to multiple organisations
+- **Data Isolation** - Each organisation's data is strictly separated
+- **Resource Scoping** - All resources belong to an organisation
+- **Shared Infrastructure** - Single database, multiple organisations
 
-## Organization Model
+::: tip What's New in v2.0
+Version 2.0 introduces **many-to-many organisation membership**, allowing users to:
+
+- Belong to multiple organisations with one email
+- Have different roles per organisation
+- Seamlessly switch between organisations
+
+See the [Migration Guide](/guide/migration-v2) for upgrade details.
+:::
+
+## Organisation Model
+
+The `Organisation` is the root tenant entity that owns all tenant-scoped resources:
 
 ```prisma
 model Organisation {
@@ -116,6 +129,100 @@ enum OrganisationStatus {
   }
 }
 ```
+
+## Many-to-Many Organisation Membership
+
+::: info New in v2.0
+Cerberus now supports **many-to-many relationships** between users and organisations via the `OrganisationMember` join table.
+:::
+
+### Membership Model
+
+Users can belong to multiple organisations, with independent roles and teams in each:
+
+```prisma
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique  // Globally unique
+  name        String
+  memberships OrganisationMember[]
+}
+
+model OrganisationMember {
+  id             String   @id @default(uuid())
+  userId         String
+  organisationId String
+  joinedAt       DateTime @default(now())
+  leftAt         DateTime?  // null = active, set = left org
+
+  user         User         @relation(fields: [userId], references: [id])
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  roles        Role[]       // Per-membership roles
+  teams        Team[]       // Per-membership teams
+
+  @@unique([userId, organisationId])
+}
+```
+
+### Key Benefits
+
+**1. Single User Identity**
+
+- One email address = one user account across all organisations
+- Users can belong to multiple organisations with different roles
+- Seamless SSO across all organisations
+
+**2. Per-Organisation Roles**
+
+```typescript
+// Same user, different roles in different orgs
+{
+  "id": "user-123",
+  "email": "john@example.com",
+  "memberships": [
+    {
+      "organisationId": "acme-corp",
+      "roles": [{ "name": "Admin", "slug": "admin" }],
+      "joinedAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "organisationId": "widgets-inc",
+      "roles": [{ "name": "User", "slug": "user" }],
+      "joinedAt": "2024-06-15T00:00:00Z"
+    }
+  ]
+}
+```
+
+**3. Flexible User Management**
+
+- Invite existing users to your organisation (no new account needed)
+- Remove users from organisation without deleting their account
+- Track join/leave dates for audit trails
+
+### X-Org-Domain Header
+
+Since users can belong to multiple organisations, **all authenticated requests must include the `X-Org-Domain` header** to specify which organisation context the request is for:
+
+```bash
+curl https://api.example.com/v1/users \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "X-Org-Domain: acme-corp"
+```
+
+The `tenantMiddleware` reads this header and validates the user is a member of that organisation.
+
+**Required for:**
+
+- All `/v1/auth/*` endpoints (login, logout, etc.)
+- All `/v1/me/*` endpoints (profile, sessions)
+- All `/v1/admin/*` endpoints
+- OAuth2 authorize/consent flows
+
+**Not required for:**
+
+- OAuth2 `/token` endpoint with `client_credentials` grant (machine-to-machine)
+- Public endpoints (e.g., `/health`, `/v1/.well-known/*`)
 
 ## Tenant Middleware
 

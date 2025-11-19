@@ -176,8 +176,9 @@ This document provides detailed field-level descriptions for all database entiti
 
 **Unique Constraints:**
 
-- `email` globally unique
-- `[organisationId, email]` composite unique
+- `email` globally unique (one user can only belong to one organisation)
+
+**Important:** Email addresses are globally unique across all organisations. Once a user is registered with an organisation, that email cannot be used in any other organisation. This enforces single-organisation membership per user, which supports the platform's use case where each application is its own organisation/tenant.
 
 ---
 

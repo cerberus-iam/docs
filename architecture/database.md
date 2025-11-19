@@ -1,5 +1,9 @@
 # Database Schema Overview
 
+::: info Updated for v2.0
+The schema now supports **many-to-many relationships** between users and organisations via the `OrganisationMember` join table. See the [Migration Guide](/guide/migration-v2) for upgrade details.
+:::
+
 ## Database Technology
 
 - **DBMS**: PostgreSQL 14+
@@ -15,11 +19,12 @@ The schema is organized into logical sections:
 1. **Enums**: Type-safe enum definitions
 2. **Global Entities**: Non-tenant-scoped entities (Permissions, Scopes)
 3. **Organisation**: Root tenant entity
-4. **User & Authentication**: User accounts, sessions, MFA
-5. **Roles & Teams**: RBAC structures
-6. **OAuth/OIDC**: Clients, tokens, authorization codes
-7. **Audit & Compliance**: Audit logs, data export
-8. **Integrations**: Webhooks, API keys, SAML
+4. **User & Authentication**: User accounts, memberships, sessions, MFA
+5. **Organisation Membership**: Many-to-many user-organisation relationships
+6. **Roles & Teams**: RBAC structures (scoped per membership)
+7. **OAuth/OIDC**: Clients, tokens, authorization codes
+8. **Audit & Compliance**: Audit logs, data export
+9. **Integrations**: Webhooks, API keys, SAML
 
 ## Entity Categories
 
@@ -71,18 +76,51 @@ enum OrganisationStatus {
 
 ### 2. Relation Types
 
+**Many-to-Many (via Join Table):**
+
+```prisma
+model User {
+  id          String               @id @default(uuid())
+  email       String               @unique  // Globally unique
+  memberships OrganisationMember[]
+}
+
+model Organisation {
+  id      String               @id @default(uuid())
+  members OrganisationMember[]
+}
+
+model OrganisationMember {
+  id             String   @id @default(uuid())
+  userId         String
+  organisationId String
+  joinedAt       DateTime @default(now())
+  leftAt         DateTime?  // Soft delete for membership
+
+  user         User         @relation(fields: [userId], references: [id])
+  organisation Organisation @relation(fields: [organisationId], references: [id])
+  roles        Role[]       // Roles for this specific membership
+  teams        Team[]       // Teams for this specific membership
+
+  @@unique([userId, organisationId])
+  @@index([userId])
+  @@index([organisationId])
+  @@map("organisation_members")
+}
+```
+
 **One-to-Many:**
 
 ```prisma
 model Organisation {
   id    String @id @default(uuid())
-  users User[] @relation("OrganisationUsers")
+  roles Role[] @relation("OrganisationRoles")
 }
 
-model User {
+model Role {
   id             String       @id @default(uuid())
   organisationId String       @map("organisation_id")
-  organisation   Organisation @relation("OrganisationUsers", fields: [organisationId], references: [id])
+  organisation   Organisation @relation("OrganisationRoles", fields: [organisationId], references: [id])
 }
 ```
 

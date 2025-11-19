@@ -27,11 +27,16 @@ The endpoint:
 
 ## Headers
 
-| Header         | Required | Description                |
-| -------------- | -------- | -------------------------- |
-| `Content-Type` | Yes      | Must be `application/json` |
+| Header         | Required | Description                                               |
+| -------------- | -------- | --------------------------------------------------------- |
+| `Content-Type` | Yes      | Must be `application/json`                                |
+| `X-Org-Domain` | Yes      | Organisation slug (e.g., `acme-corp`) - required in v2.0+ |
 
-**Note:** `X-Org-Domain` header is NOT required for login (organisation is determined from user's account).
+::: info X-Org-Domain Header (v2.0+)
+The `X-Org-Domain` header is **required** as of v2.0 to specify which organisation the user is logging into. This enables support for users who belong to multiple organisations.
+
+If the user is not a member of the specified organisation, the request will fail with `403 Forbidden`.
+:::
 
 ## Request Body
 
@@ -43,22 +48,67 @@ The endpoint:
 
 ### Example Request (Basic Login)
 
-```json
+::: code-group
+
+```bash [cURL]
+curl -X POST https://api.cerberus-iam.com/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -H "X-Org-Domain: acme-corp" \
+  -d '{
+    "email": "admin@acme.com",
+    "password": "SecurePass123!"
+  }'
+```
+
+```json [Request Body]
 {
   "email": "admin@acme.com",
   "password": "SecurePass123!"
 }
 ```
 
+```typescript [JavaScript/TypeScript]
+const response = await fetch('https://api.cerberus-iam.com/v1/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Org-Domain': 'acme-corp',
+  },
+  body: JSON.stringify({
+    email: 'admin@acme.com',
+    password: 'SecurePass123!',
+  }),
+});
+
+const data = await response.json();
+```
+
+:::
+
 ### Example Request (With MFA)
 
-```json
+::: code-group
+
+```bash [cURL]
+curl -X POST https://api.cerberus-iam.com/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -H "X-Org-Domain: acme-corp" \
+  -d '{
+    "email": "admin@acme.com",
+    "password": "SecurePass123!",
+    "mfaToken": "123456"
+  }'
+```
+
+```json [Request Body]
 {
   "email": "admin@acme.com",
   "password": "SecurePass123!",
   "mfaToken": "123456"
 }
 ```
+
+:::
 
 ## Response
 
@@ -92,6 +142,21 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ### Error Responses
 
+#### 400 Bad Request - Missing X-Org-Domain Header
+
+::: danger New in v2.0
+The `X-Org-Domain` header is now required for all login requests.
+:::
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "X-Org-Domain header is required. This header must contain the organisation slug."
+}
+```
+
 #### 400 Bad Request - Invalid Input
 
 **Invalid email format:**
@@ -118,6 +183,25 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 }
 ```
 
+#### 403 Forbidden - Not a Member
+
+::: danger New in v2.0
+If the user is not a member of the organisation specified in `X-Org-Domain`, the request is rejected.
+:::
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/forbidden",
+  "title": "Forbidden",
+  "status": 403,
+  "detail": "You are not a member of this organisation"
+}
+```
+
+**Solution:** Verify the organisation slug is correct, or check if the user needs to be invited to this organisation.
+
+#### 401 Unauthorized - Account Issues
+
 **Account blocked:**
 
 ```json
@@ -128,6 +212,8 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
   "detail": "Account is blocked"
 }
 ```
+
+#### 401 Unauthorized - MFA Issues
 
 **MFA required (token not provided):**
 

@@ -1,6 +1,6 @@
 # Authentication
 
-This guide covers authentication mechanisms, password hashing, multi-factor authentication (MFA), and session management in Cerberus IAM.
+This guide covers authentication mechanisms, password hashing, multi-factor authentication (MFA), organisation context, and session management in Cerberus IAM.
 
 ## Overview
 
@@ -11,10 +11,48 @@ Cerberus supports multiple authentication methods:
 - **API keys** - Long-lived keys for server-to-server
 - **OAuth2/OIDC** - Standard protocol flows
 
+::: tip What's New in v2.0
+All authenticated requests now require the **`X-Org-Domain` header** to specify which organisation context the request is for. This enables users to belong to multiple organisations with different roles in each.
+
+See the [Migration Guide](/guide/migration-v2) for details.
+:::
+
 > **Token-first runtime**
 >
 > Set `AUTH_ALLOW_SESSIONS=false` to disable cookie sessions entirely. In this mode every protected route
 > must be invoked with an `Authorization: Bearer <token>` header, and CSRF protection is skipped automatically.
+
+## Organisation Context (X-Org-Domain Header)
+
+Since users can belong to multiple organisations in v2.0, all authenticated requests must include the `X-Org-Domain` header:
+
+```bash
+# Example authenticated request
+curl https://api.example.com/v1/users \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "X-Org-Domain: your-org-slug" \
+  -H "Content-Type: application/json"
+```
+
+**Why is this needed?**
+
+- Users can have different roles/permissions in different organisations
+- Resources (users, roles, teams, etc.) are scoped to organisations
+- Tokens and sessions need to know which organisation context to operate in
+
+**When is it required?**
+
+- All `/v1/auth/*` endpoints (login, register, logout)
+- All `/v1/me/*` endpoints (profile, sessions)
+- All `/v1/admin/*` endpoints
+- OAuth2 authorize and consent flows
+
+**When is it NOT required?**
+
+- OAuth2 `/token` endpoint with `client_credentials` grant
+- Public endpoints (health checks, discovery documents)
+
+The `tenantMiddleware` validates this header and populates `req.tenant` with the organisation details.
 
 ## Authentication Middleware
 
@@ -53,9 +91,15 @@ router.get('/me/profile', authenticateSession, async (req, res) => {
 1. Extracts session cookie (`cerb_sid` by default)
 2. Validates session token (SHA-256 hash lookup)
 3. Checks expiration and idle timeout
-4. Loads user with roles and permissions
-5. Verifies user is not blocked
-6. Attaches `req.user` and `req.authOrganisation`
+4. **Loads user's membership** for the target organisation (from `req.tenant`)
+5. Verifies user is an active member (not left the organisation)
+6. Loads roles and permissions for that specific membership
+7. Verifies user is not blocked
+8. Attaches `req.user` (with membership data) and `req.authOrganisation`
+
+::: tip Multi-Organisation Support
+If a user belongs to multiple organisations, the middleware loads the membership for the organisation specified in the `X-Org-Domain` header. If the user is not a member, the request is rejected with `403 Forbidden`.
+:::
 
 > **Note:** `authenticateSession` short-circuits when `AUTH_ALLOW_SESSIONS=false`, steering callers toward bearer tokens.
 
@@ -90,8 +134,28 @@ router.get('/v1/users', authenticateBearer, async (req, res) => {
 
 1. Extracts `Authorization: Bearer <token>` header
 2. Verifies JWT signature with public key
-3. Validates issuer, expiration
-4. Attaches minimal user info from JWT claims
+3. Validates issuer, expiration, and **`org` claim**
+4. **Validates user is still a member** of the organisation in the token
+5. Loads user's membership with roles and permissions for that organisation
+6. Attaches user info with membership data to `req.user`
+
+::: info JWT Organisation Claim
+All JWT tokens include an `org` claim that specifies which organisation the token is scoped to:
+
+```json
+{
+  "sub": "user-123",
+  "org": "org-abc", // Organisation ID
+  "client_id": "client-xyz",
+  "roles": ["admin"],
+  "scope": "openid profile email",
+  "iat": 1234567890,
+  "exp": 1234571490
+}
+```
+
+When switching organisations, users must obtain a new token by logging in with a different `X-Org-Domain` header.
+:::
 
 ### API Key Authentication
 
