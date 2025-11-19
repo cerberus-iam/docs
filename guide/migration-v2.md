@@ -13,18 +13,63 @@ Version 2.0 introduces a **fundamental architectural change** to support users b
 
 ## Breaking Changes
 
-### 1. X-Org-Domain Header Required
+### 1. Organisation Context Required for Authentication
 
-**All authenticated API requests** must now include the `X-Org-Domain` header to specify which organisation context the request is for.
+**Authentication requests** must now provide organisation context via **one of two methods**:
+
+#### Method 1: OAuth Flows (Recommended) - Using `client_id`
+
+For OAuth2/OIDC flows, simply include the `client_id` in your login request. The API automatically derives the organisation from the OAuth client configuration.
 
 ::: code-group
 
-```bash [Before v2.0]
-curl https://api.example.com/v1/users \
-  -H "Authorization: Bearer $TOKEN"
+```bash [OAuth Login]
+curl -X POST https://api.example.com/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "client_id": "your-client-id"
+  }'
 ```
 
-```bash [After v2.0]
+```typescript [Auth UI Example]
+// The client_id is extracted from OAuth redirect URL
+const params = new URLSearchParams(window.location.search);
+const redirectUri = params.get('redirect_uri');
+const redirectUrl = new URL(redirectUri);
+const clientId = redirectUrl.searchParams.get('client_id');
+
+// Pass to login
+await login(email, password, clientId);
+```
+
+:::
+
+**Why use client_id?**
+
+- ✅ Simpler integration for OAuth flows
+- ✅ No custom headers needed in login UI
+- ✅ Organisation derived from trusted OAuth client configuration
+- ✅ More secure (org not user-supplied)
+
+#### Method 2: Direct API Access - Using `X-Org-Domain` Header
+
+For direct API access (admin panels, API clients, backend services), include the `X-Org-Domain` header:
+
+::: code-group
+
+```bash [Direct Login]
+curl -X POST https://api.example.com/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -H "X-Org-Domain: your-org-slug" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+```
+
+```bash [Other Authenticated Requests]
 curl https://api.example.com/v1/users \
   -H "Authorization: Bearer $TOKEN" \
   -H "X-Org-Domain: your-org-slug"
@@ -32,16 +77,21 @@ curl https://api.example.com/v1/users \
 
 :::
 
-**Why?** Since users can now belong to multiple organisations, we need to know which organisation context each request is for.
+**When to use X-Org-Domain?**
+
+- Direct API access (not via OAuth)
+- Admin panels or internal tools
+- Backend-to-backend API calls
+- CLI tools or scripts
 
 **Affected Endpoints:**
 
-- All `/v1/auth/*` routes (login, logout, register)
+- All `/v1/auth/*` routes (login, logout, register) - unless using `client_id`
 - All `/v1/me/*` routes (profile, sessions)
 - All `/v1/admin/*` routes
 - OAuth2 `/authorize` and `/consent` endpoints
 
-**Exception:** Client credentials flow (`/oauth2/token` with `grant_type=client_credentials`) does NOT require this header.
+**Exception:** Client credentials flow (`/oauth2/token` with `grant_type=client_credentials`) does NOT require either method.
 
 ### 2. User Data Structure Changed
 
@@ -81,12 +131,23 @@ Users no longer have a direct `organisationId` field. Instead, they have a `memb
 
 ### 3. Login Flow Updated
 
-When a user belongs to multiple organisations, they must specify which organisation to log in to via the `X-Org-Domain` header.
+When a user belongs to multiple organisations, they must specify which organisation to log in to using **either** `client_id` (OAuth) **or** `X-Org-Domain` header (direct API).
 
 ::: code-group
 
-```bash [Single Organisation User]
-# User belongs to one org - works as before
+```bash [OAuth Flow (client_id)]
+# OAuth flows - organisation derived from client
+curl -X POST https://api.example.com/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "client_id": "your-oauth-client-id"
+  }'
+```
+
+```bash [Direct API (X-Org-Domain)]
+# Direct API - must specify organisation header
 curl -X POST https://api.example.com/v1/auth/login \
   -H "Content-Type: application/json" \
   -H "X-Org-Domain: acme-corp" \
@@ -96,8 +157,9 @@ curl -X POST https://api.example.com/v1/auth/login \
   }'
 ```
 
-```bash [Multi-Organisation User]
-# User belongs to multiple orgs - must specify which org
+```bash [Multi-Org User]
+# Same user can login to different orgs
+# Using X-Org-Domain approach:
 curl -X POST https://api.example.com/v1/auth/login \
   -H "Content-Type: application/json" \
   -H "X-Org-Domain: company-a" \
@@ -106,7 +168,7 @@ curl -X POST https://api.example.com/v1/auth/login \
     "password": "password123"
   }'
 
-# Can login to different org with same credentials
+# Different organisation
 curl -X POST https://api.example.com/v1/auth/login \
   -H "Content-Type: application/json" \
   -H "X-Org-Domain: company-b" \

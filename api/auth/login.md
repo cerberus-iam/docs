@@ -27,30 +27,52 @@ The endpoint:
 
 ## Headers
 
-| Header         | Required | Description                                               |
-| -------------- | -------- | --------------------------------------------------------- |
-| `Content-Type` | Yes      | Must be `application/json`                                |
-| `X-Org-Domain` | Yes      | Organisation slug (e.g., `acme-corp`) - required in v2.0+ |
+| Header         | Required    | Description                                                         |
+| -------------- | ----------- | ------------------------------------------------------------------- |
+| `Content-Type` | Yes         | Must be `application/json`                                          |
+| `X-Org-Domain` | Conditional | Organisation slug (e.g., `acme-corp`) - see below for when required |
 
-::: info X-Org-Domain Header (v2.0+)
-The `X-Org-Domain` header is **required** as of v2.0 to specify which organisation the user is logging into. This enables support for users who belong to multiple organisations.
+::: info Organisation Context (v2.0+)
+As of v2.0, you must provide organisation context using **one of two methods**:
+
+**Method 1: OAuth Flows (Recommended)** - Include `client_id` in request body
+- For OAuth2/OIDC authorization flows
+- Organisation automatically derived from OAuth client configuration
+- Simpler integration, no custom headers needed
+
+**Method 2: Direct API Access** - Include `X-Org-Domain` header
+- For direct API access (admin panels, API clients)
+- Required when `client_id` is not provided
 
 If the user is not a member of the specified organisation, the request will fail with `403 Forbidden`.
 :::
 
 ## Request Body
 
-| Field      | Type   | Required    | Description                                    |
-| ---------- | ------ | ----------- | ---------------------------------------------- |
-| `email`    | string | Yes         | User's email address                           |
-| `password` | string | Yes         | User's password                                |
-| `mfaToken` | string | Conditional | 6-digit TOTP code (required if MFA is enabled) |
+| Field       | Type   | Required    | Description                                    |
+| ----------- | ------ | ----------- | ---------------------------------------------- |
+| `email`     | string | Yes         | User's email address                           |
+| `password`  | string | Yes         | User's password                                |
+| `mfaToken`  | string | Conditional | 6-digit TOTP code (required if MFA is enabled) |
+| `client_id` | string | Conditional | OAuth client ID (for OAuth flows)              |
 
 ### Example Request (Basic Login)
 
 ::: code-group
 
-```bash [cURL]
+```bash [OAuth Flow (client_id)]
+# OAuth flows - organisation derived from client
+curl -X POST https://api.cerberus-iam.com/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@acme.com",
+    "password": "SecurePass123!",
+    "client_id": "oauth-client-abc123"
+  }'
+```
+
+```bash [Direct API (X-Org-Domain)]
+# Direct API access - use X-Org-Domain header
 curl -X POST https://api.cerberus-iam.com/v1/auth/login \
   -H "Content-Type: application/json" \
   -H "X-Org-Domain: acme-corp" \
@@ -60,7 +82,15 @@ curl -X POST https://api.cerberus-iam.com/v1/auth/login \
   }'
 ```
 
-```json [Request Body]
+```json [Request Body (OAuth)]
+{
+  "email": "admin@acme.com",
+  "password": "SecurePass123!",
+  "client_id": "oauth-client-abc123"
+}
+```
+
+```json [Request Body (Direct)]
 {
   "email": "admin@acme.com",
   "password": "SecurePass123!"
@@ -68,6 +98,20 @@ curl -X POST https://api.cerberus-iam.com/v1/auth/login \
 ```
 
 ```typescript [JavaScript/TypeScript]
+// OAuth flow
+const response = await fetch('https://api.cerberus-iam.com/v1/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    email: 'admin@acme.com',
+    password: 'SecurePass123!',
+    client_id: 'oauth-client-abc123',
+  }),
+});
+
+// Direct API access
 const response = await fetch('https://api.cerberus-iam.com/v1/auth/login', {
   method: 'POST',
   headers: {
@@ -79,8 +123,6 @@ const response = await fetch('https://api.cerberus-iam.com/v1/auth/login', {
     password: 'SecurePass123!',
   }),
 });
-
-const data = await response.json();
 ```
 
 :::
