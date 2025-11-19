@@ -6,6 +6,10 @@ Learn how Cerberus IAM manages user sessions for web applications.
 
 Cerberus IAM provides **session-based authentication** for web applications using secure, httpOnly cookies. Sessions are stored in the database and validated on each request.
 
+::: warning Token-first deployments
+Session middleware only runs when `AUTH_ALLOW_SESSIONS=true`. If you disable the flag (recommended for global integrations) every protected route must use OAuth2/OIDC bearer tokens or API keys instead, and the endpoints in this guide (`/v1/auth/login`, `/v1/auth/logout`, `/v1/me/sessions`, etc.) will reject requests.
+:::
+
 ## How Sessions Work
 
 ### Session Lifecycle
@@ -181,6 +185,8 @@ This enables:
 
 ### List Active Sessions
 
+> Available only when `AUTH_ALLOW_SESSIONS=true`.
+
 **Endpoint:** `GET /v1/me/sessions`
 
 ```bash
@@ -217,6 +223,8 @@ The API returns a flat list of the caller's active sessions; the client can infe
 
 ### Revoke a Session
 
+> Available only when `AUTH_ALLOW_SESSIONS=true`.
+
 **Endpoint:** `DELETE /v1/me/sessions/:id`
 
 ```bash
@@ -229,6 +237,8 @@ This logs the user out from that specific device/browser.
 
 ### Logout (Current Session)
 
+> Available only when `AUTH_ALLOW_SESSIONS=true`.
+
 **Endpoint:** `POST /v1/auth/logout`
 
 ```bash
@@ -239,6 +249,8 @@ curl -X POST https://auth.example.com/v1/auth/logout \
 Deletes the current session and clears the cookie. CSRF tokens are not required for logout.
 
 ### Revoke Current Session (Idempotent)
+
+> Available only when `AUTH_ALLOW_SESSIONS=true`.
 
 **Endpoint:** `DELETE /v1/auth/session`
 

@@ -386,6 +386,22 @@ SESSION_COOKIE_DOMAIN=.acme.com
 SESSION_COOKIE_DOMAIN=auth.acme.com
 ```
 
+#### `AUTH_ALLOW_SESSIONS`
+
+- **Type:** `boolean`
+- **Default:** `true`
+- **Description:** Feature flag that keeps legacy cookie sessions active when `true`. Set to `false` to require OAuth2/OIDC or API key authentication for every route.
+
+```bash
+AUTH_ALLOW_SESSIONS=false
+```
+
+**Notes:**
+
+- When disabled, the API rejects `authenticateSession` calls, skips CSRF token emission, and expects `Authorization: Bearer` headers instead.
+- Keep enabled while migrating browser clients; token-only services can safely flip it sooner.
+- Companion Postman variable: `auth_allow_sessions` (used by the collection scripts).
+
 ### Email Configuration
 
 #### `EMAIL_FROM`
@@ -698,6 +714,7 @@ node scripts/generate-secret-encryption-key.js
    - `LOG_REMOTE_API_KEY` - Quarterly
 
 4. **Validate in CI/CD**
+
    ```yaml
    # GitHub Actions
    - name: Validate Config

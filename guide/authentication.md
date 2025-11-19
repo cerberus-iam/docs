@@ -11,7 +11,28 @@ Cerberus supports multiple authentication methods:
 - **API keys** - Long-lived keys for server-to-server
 - **OAuth2/OIDC** - Standard protocol flows
 
+> **Token-first runtime**
+>
+> Set `AUTH_ALLOW_SESSIONS=false` to disable cookie sessions entirely. In this mode every protected route
+> must be invoked with an `Authorization: Bearer <token>` header, and CSRF protection is skipped automatically.
+
 ## Authentication Middleware
+
+### Unified Request Authentication
+
+Most protected routers can simply rely on `authenticateRequest`, which prefers bearer tokens but gracefully
+falls back to cookies while `AUTH_ALLOW_SESSIONS=true`.
+
+```typescript
+import { authenticateRequest } from '@/middleware/authn';
+
+router.use(authenticateRequest);
+```
+
+- **Bearer-first** – If an `Authorization: Bearer` header is present the JWT path runs, even when sessions stay enabled.
+- **Session fallback** – When the flag allows sessions and no bearer token is supplied a cookie lookup is performed.
+- **Token-only mode** – With `AUTH_ALLOW_SESSIONS=false`, requests without a bearer token receive `401 Bearer token required for this resource`.
+- **CSRF aware** – The CSRF middleware auto-skips validation for bearer requests so API clients are never blocked by cookie-only requirements.
 
 ### Session Authentication
 
@@ -35,6 +56,8 @@ router.get('/me/profile', authenticateSession, async (req, res) => {
 4. Loads user with roles and permissions
 5. Verifies user is not blocked
 6. Attaches `req.user` and `req.authOrganisation`
+
+> **Note:** `authenticateSession` short-circuits when `AUTH_ALLOW_SESSIONS=false`, steering callers toward bearer tokens.
 
 **Response on Failure:**
 
@@ -243,7 +266,7 @@ const result = validatePasswordStrength('weak');
 
 **Email Link:**
 
-```
+```text
 https://admin.acme.com/reset-password?token=tok_...
 ```
 
@@ -490,7 +513,7 @@ Per-organization configuration:
 
 **Email Link:**
 
-```
+```text
 https://admin.acme.com/verify-email?token=tok_...
 ```
 
