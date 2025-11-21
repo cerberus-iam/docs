@@ -214,7 +214,7 @@ role.permission.added
 ```bash
 curl "https://auth.example.com/v1/admin/audit-logs?eventType=user.login&startDate=2024-01-01&limit=100" \
   -H "X-Org-Domain: acme-corp" \
-  -H "Cookie: cerb_sid=..."
+  -H "Cookie: cerberus_session=..."
 ```
 
 **Filters:**

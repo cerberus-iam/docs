@@ -137,25 +137,33 @@ export default defineConfig({
           text: 'Admin: Roles & Permissions',
           items: [
             { text: 'List Roles', link: '/api/admin/roles/list' },
+            { text: 'Get Role', link: '/api/admin/roles/get' },
             { text: 'Create Role', link: '/api/admin/roles/create' },
             { text: 'Update Role', link: '/api/admin/roles/update' },
             { text: 'Delete Role', link: '/api/admin/roles/delete' },
+            { text: 'Assign Permission', link: '/api/admin/roles/assign-permission' },
+            { text: 'Remove Permission', link: '/api/admin/roles/remove-permission' },
             { text: 'List Permissions', link: '/api/admin/permissions/list' },
+            { text: 'Get Permission', link: '/api/admin/permissions/get' },
           ],
         },
         {
           text: 'Admin: Teams',
           items: [
             { text: 'List Teams', link: '/api/admin/teams/list' },
+            { text: 'Get Team', link: '/api/admin/teams/get' },
             { text: 'Create Team', link: '/api/admin/teams/create' },
             { text: 'Update Team', link: '/api/admin/teams/update' },
             { text: 'Delete Team', link: '/api/admin/teams/delete' },
+            { text: 'Add Member', link: '/api/admin/teams/add-member' },
+            { text: 'Remove Member', link: '/api/admin/teams/remove-member' },
           ],
         },
         {
           text: 'Admin: OAuth2 Clients',
           items: [
             { text: 'List Clients', link: '/api/admin/clients/list' },
+            { text: 'Get Client', link: '/api/admin/clients/get' },
             { text: 'Create Client', link: '/api/admin/clients/create' },
             { text: 'Update Client', link: '/api/admin/clients/update' },
             { text: 'Revoke Client', link: '/api/admin/clients/revoke' },
@@ -165,6 +173,7 @@ export default defineConfig({
           text: 'Admin: Other',
           items: [
             { text: 'Organisation Settings', link: '/api/admin/organisation' },
+            { text: 'Delete Organisation', link: '/api/admin/organisation/delete' },
             { text: 'API Keys', link: '/api/admin/api-keys' },
             { text: 'Webhooks', link: '/api/admin/webhooks' },
             { text: 'Invitations', link: '/api/admin/invitations' },

@@ -26,7 +26,7 @@ GET /v1/admin/users
 
 | Header         | Required | Description                         |
 | -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
+| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
 | `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
 | `X-CSRF-Token` | Yes      | CSRF token for request validation   |
 
@@ -157,7 +157,7 @@ User lacks the required permission or CSRF token is invalid.
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/users \
-  -H "Cookie: cerb_sid=abc123..." \
+  -H "Cookie: cerberus_session=abc123..." \
   -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
 ```
@@ -185,7 +185,7 @@ import requests
 
 response = requests.get(
   'https://api.cerberus-iam.dev/v1/admin/users',
-  cookies={'cerb_sid': 'abc123...'},
+  cookies={'cerberus_session': 'abc123...'},
   headers={
     'X-CSRF-Token': 'xyz789...',
     'X-Org-Domain': 'acme-corp'

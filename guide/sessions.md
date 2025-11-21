@@ -23,11 +23,11 @@ sequenceDiagram
     Database-->>API: User valid
     API->>Database: Create session
     Database-->>API: Session token
-    API-->>Browser: Set-Cookie: cerb_sid=TOKEN
+    API-->>Browser: Set-Cookie: cerberus_session=TOKEN
     Browser-->>User: Logged in
 
     User->>Browser: Access protected page
-    Browser->>API: GET /v1/me/profile (Cookie: cerb_sid=TOKEN)
+    Browser->>API: GET /v1/me/profile (Cookie: cerberus_session=TOKEN)
     API->>Database: Validate session
     Database-->>API: Session valid, user data
     API-->>Browser: User profile
@@ -66,8 +66,8 @@ On each authenticated request:
 ### Environment Variables
 
 ```env
-# Cookie name (default: cerb_sid)
-SESSION_COOKIE_NAME=cerb_sid
+# Cookie name (default: cerberus_session)
+SESSION_COOKIE_NAME=cerberus_session
 
 # HTTPS only (set true in production)
 SESSION_COOKIE_SECURE=false
@@ -95,7 +95,7 @@ Update via Admin API:
 curl -X PATCH https://auth.example.com/v1/admin/organisation \
   -H "Content-Type: application/json" \
   -H "X-Org-Domain: acme-corp" \
-  -H "Cookie: cerb_sid=..." \
+  -H "Cookie: cerberus_session=..." \
   -d '{
     "sessionLifetime": 43200,
     "sessionIdleTimeout": 1800
@@ -109,7 +109,7 @@ curl -X PATCH https://auth.example.com/v1/admin/organisation \
 Sessions use httpOnly cookies to prevent JavaScript access:
 
 ```http
-Set-Cookie: cerb_sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=3600
+Set-Cookie: cerberus_session=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=3600
 ```
 
 **Attributes:**
@@ -185,7 +185,7 @@ This enables:
 
 ```bash
 curl https://auth.example.com/v1/me/sessions \
-  -H "Cookie: cerb_sid=..."
+  -H "Cookie: cerberus_session=..."
 ```
 
 **Response:**
@@ -221,7 +221,7 @@ The API returns a flat list of the caller's active sessions; the client can infe
 
 ```bash
 curl -X DELETE https://auth.example.com/v1/me/sessions/session-uuid-2 \
-  -H "Cookie: cerb_sid=..." \
+  -H "Cookie: cerberus_session=..." \
   -H "X-CSRF-Token: csrf-token-here"
 ```
 
@@ -233,7 +233,7 @@ This logs the user out from that specific device/browser.
 
 ```bash
 curl -X POST https://auth.example.com/v1/auth/logout \
-  -H "Cookie: cerb_sid=..."
+  -H "Cookie: cerberus_session=..."
 ```
 
 Deletes the current session and clears the cookie. CSRF tokens are not required for logout.
@@ -244,7 +244,7 @@ Deletes the current session and clears the cookie. CSRF tokens are not required 
 
 ```bash
 curl -X DELETE https://auth.example.com/v1/auth/session \
-  -H "Cookie: cerb_sid=..."
+  -H "Cookie: cerberus_session=..."
 ```
 
 Provides a REST-style alternative that succeeds even if the session is already inactive and clears
@@ -257,7 +257,7 @@ To revoke all user sessions (e.g., password change, security breach):
 ```bash
 # Admin API (future feature)
 curl -X DELETE https://auth.example.com/v1/admin/users/:userId/sessions \
-  -H "Cookie: cerb_sid=..." \
+  -H "Cookie: cerberus_session=..." \
   -H "X-CSRF-Token: csrf-token-here"
 ```
 
@@ -405,7 +405,7 @@ Session authentication validates organization match:
 // Ensure session belongs to requested organization
 if (session.organisationId !== req.tenant.id) {
   // Invalid - session for different org
-  res.clearCookie('cerb_sid');
+  res.clearCookie('cerberus_session');
   return sendProblem(res, unauthorized());
 }
 ```

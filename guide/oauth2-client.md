@@ -25,7 +25,7 @@ This guide shows you how to integrate your application with Cerberus IAM as an O
 curl -X POST https://auth.example.com/v1/admin/clients \
   -H "Content-Type: application/json" \
   -H "X-Org-Domain: your-org" \
-  -H "Cookie: cerb_sid=..." \
+  -H "Cookie: cerberus_session=..." \
   -d '{
     "name": "My Application",
     "clientType": "public",

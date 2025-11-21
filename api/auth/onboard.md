@@ -186,5 +186,5 @@ On successful onboarding:
 
 - The endpoint is rate-limited with the authentication policy (`AUTH_RATE_MAX`/`AUTH_RATE_WINDOW_SEC`).
 - Passwords are hashed with Argon2id; store only the hash.
-- A session cookie (`cerb_sid`) is issued immediately after onboarding; handle it over HTTPS in production.
+- A session cookie (`cerberus_session`) is issued immediately after onboarding; handle it over HTTPS in production.
 - Ensure the organisation slug is unique; the server generates suffixed slugs automatically.

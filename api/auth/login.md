@@ -69,7 +69,7 @@ The endpoint:
 **Headers:**
 
 ```
-Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600
+Set-Cookie: cerberus_session=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600
 ```
 
 **Body:**
@@ -209,7 +209,7 @@ If organisation requires MFA but user hasn't enrolled:
 
 | Property | Value                | Description                            |
 | -------- | -------------------- | -------------------------------------- |
-| Name     | `cerb_sid`           | Configurable via `SESSION_COOKIE_NAME` |
+| Name     | `cerberus_session`   | Configurable via `SESSION_COOKIE_NAME` |
 | HttpOnly | `true`               | Prevents JavaScript access             |
 | Secure   | `true` (production)  | HTTPS only in production               |
 | SameSite | `Lax`                | CSRF protection                        |

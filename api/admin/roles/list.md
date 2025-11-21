@@ -20,7 +20,7 @@ GET /v1/admin/roles
 
 | Header         | Required | Description                         |
 | -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
+| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
 | `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
 | `X-CSRF-Token` | Yes      | CSRF token                          |
 
@@ -54,7 +54,7 @@ GET /v1/admin/roles
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/roles \
-  -H "Cookie: cerb_sid=abc123..." \
+  -H "Cookie: cerberus_session=abc123..." \
   -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
 
