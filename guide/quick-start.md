@@ -44,7 +44,6 @@ DATABASE_URL="postgresql://cerberus:secret@localhost:5432/cerberus_iam"
 NODE_ENV="development"
 PORT=4000
 ISSUER_URL="http://localhost:4000"
-AUTH_ALLOW_SESSIONS=false
 
 # Cryptography
 JWT_ALG="EdDSA"
@@ -58,10 +57,6 @@ EMAIL_FROM="noreply@cerberus.local"
 SMTP_HOST="localhost"
 SMTP_PORT=1025
 ```
-
-::: tip Choose your auth mode
-Leave `AUTH_ALLOW_SESSIONS=false` (recommended) to run the API in token-only mode. Set it to `true` only if you need temporary cookie-based sessions while testing legacy flows.
-:::
 
 Generate a secure encryption key:
 
@@ -108,11 +103,6 @@ npm run dev
 The server will start on [http://localhost:4000](http://localhost:4000).
 
 ## Verify Installation
-
-### Choose Your Authentication Flow
-
-- **Token login (default)** – Leave `AUTH_ALLOW_SESSIONS=false` and follow the OAuth2 Authorization Code + PKCE flow below to mint bearer tokens for API calls.
-- **Session login (optional)** – If you temporarily set `AUTH_ALLOW_SESSIONS=true`, you can use the legacy `/v1/auth/login` endpoint with cookies as shown later in this guide.
 
 ### Check Health Endpoint
 
@@ -181,42 +171,7 @@ Expected response:
 
 If using Docker Compose, open [http://localhost:8025](http://localhost:8025) to view invitation emails sent by Mailhog.
 
-### Token Login (Authorization Code + PKCE)
-
-1. Keep `AUTH_ALLOW_SESSIONS=false` and ensure you have run `npm run db:seed` so the demo OAuth client exists. Copy the `Client ID` printed in the seed output.
-2. Generate a PKCE verifier/challenge pair (copy both values):
-
-```bash
-node -e "const crypto=require('crypto');const verifier=crypto.randomBytes(48).toString('base64url');const challenge=crypto.createHash('sha256').update(verifier).digest('base64url');console.log('CODE_VERIFIER='+verifier);console.log('CODE_CHALLENGE='+challenge);"
-```
-
-1. Start the authorization request in a browser (replace placeholders):
-
-```bash
-open "http://localhost:4000/oauth2/authorize?response_type=code&client_id=CLIENT_ID_FROM_SEED&redirect_uri=http://localhost:5173/callback&scope=openid%20profile%20email&code_challenge_method=S256&code_challenge=CODE_CHALLENGE"
-```
-
-Use `xdg-open` (Linux) or paste the URL manually if `open` is unavailable. Sign in with `owner@demo.local` / `change-me`, then allow the request. The browser will redirect to `http://localhost:5173/callback?code=...`; copy the `code` query parameter from the address bar.
-
-1. Exchange the code for tokens:
-
-```bash
-curl -X POST http://localhost:4000/oauth2/token \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=authorization_code&client_id=CLIENT_ID_FROM_SEED&redirect_uri=http://localhost:5173/callback&code=AUTH_CODE&code_verifier=CODE_VERIFIER"
-```
-
-1. Save the `access_token` for API calls:
-
-```bash
-export ACCESS_TOKEN="paste-access-token"
-```
-
-> Need refresh tokens or a deeper explanation? See [OAuth2 Client Setup](/guide/oauth2-client) for detailed automation steps.
-
-### Session Login (Optional)
-
-> Only available when `AUTH_ALLOW_SESSIONS=true`. Skip this section if you are following the token-only flow.
+### Test Login
 
 ```bash
 curl -X POST http://localhost:4000/v1/auth/login \
@@ -231,15 +186,6 @@ curl -X POST http://localhost:4000/v1/auth/login \
 The session cookie will be saved to `cookies.txt`.
 
 ### Access Protected Endpoint
-
-**Bearer tokens (default):**
-
-```bash
-curl http://localhost:4000/v1/me/profile \
-  -H "Authorization: Bearer $ACCESS_TOKEN"
-```
-
-**Session cookies (optional):**
 
 ```bash
 curl http://localhost:4000/v1/me/profile \

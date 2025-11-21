@@ -1,6 +1,6 @@
 # Authentication
 
-This guide covers authentication mechanisms, password hashing, multi-factor authentication (MFA), organisation context, and session management in Cerberus IAM.
+This guide covers authentication mechanisms, password hashing, multi-factor authentication (MFA), and session management in Cerberus IAM.
 
 ## Overview
 
@@ -11,73 +11,14 @@ Cerberus supports multiple authentication methods:
 - **API keys** - Long-lived keys for server-to-server
 - **OAuth2/OIDC** - Standard protocol flows
 
-::: tip What's New in v2.0
-All authenticated requests now require the **`X-Org-Domain` header** to specify which organisation context the request is for. This enables users to belong to multiple organisations with different roles in each.
-
-See the [Migration Guide](/guide/migration-v2) for details.
-:::
-
-> **Token-first runtime**
->
-> Set `AUTH_ALLOW_SESSIONS=false` to disable cookie sessions entirely. In this mode every protected route
-> must be invoked with an `Authorization: Bearer <token>` header, and CSRF protection is skipped automatically.
-
-## Organisation Context (X-Org-Domain Header)
-
-Since users can belong to multiple organisations in v2.0, all authenticated requests must include the `X-Org-Domain` header:
-
-```bash
-# Example authenticated request
-curl https://api.example.com/v1/users \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "X-Org-Domain: your-org-slug" \
-  -H "Content-Type: application/json"
-```
-
-**Why is this needed?**
-
-- Users can have different roles/permissions in different organisations
-- Resources (users, roles, teams, etc.) are scoped to organisations
-- Tokens and sessions need to know which organisation context to operate in
-
-**When is it required?**
-
-- All `/v1/auth/*` endpoints (login, register, logout)
-- All `/v1/me/*` endpoints (profile, sessions)
-- All `/v1/admin/*` endpoints
-- OAuth2 authorize and consent flows
-
-**When is it NOT required?**
-
-- OAuth2 `/token` endpoint with `client_credentials` grant
-- Public endpoints (health checks, discovery documents)
-
-The `tenantMiddleware` validates this header and populates `req.tenant` with the organisation details.
-
 ## Authentication Middleware
-
-### Unified Request Authentication
-
-Most protected routers can simply rely on `authenticateRequest`, which prefers bearer tokens but gracefully
-falls back to cookies while `AUTH_ALLOW_SESSIONS=true`.
-
-```typescript
-import { authenticateRequest } from '@/middleware/authn';
-
-router.use(authenticateRequest);
-```
-
-- **Bearer-first** – If an `Authorization: Bearer` header is present the JWT path runs, even when sessions stay enabled.
-- **Session fallback** – When the flag allows sessions and no bearer token is supplied a cookie lookup is performed.
-- **Token-only mode** – With `AUTH_ALLOW_SESSIONS=false`, requests without a bearer token receive `401 Bearer token required for this resource`.
-- **CSRF aware** – The CSRF middleware auto-skips validation for bearer requests so API clients are never blocked by cookie-only requirements.
 
 ### Session Authentication
 
 Used for admin UI and web applications:
 
 ```typescript
-import { authenticateSession } from '@/middleware/authn';
+import { authenticateSession } from '@/middleware/auth';
 
 router.get('/me/profile', authenticateSession, async (req, res) => {
   // req.user is populated with authenticated user
@@ -91,17 +32,9 @@ router.get('/me/profile', authenticateSession, async (req, res) => {
 1. Extracts session cookie (`cerb_sid` by default)
 2. Validates session token (SHA-256 hash lookup)
 3. Checks expiration and idle timeout
-4. **Loads user's membership** for the target organisation (from `req.tenant`)
-5. Verifies user is an active member (not left the organisation)
-6. Loads roles and permissions for that specific membership
-7. Verifies user is not blocked
-8. Attaches `req.user` (with membership data) and `req.authOrganisation`
-
-::: tip Multi-Organisation Support
-If a user belongs to multiple organisations, the middleware loads the membership for the organisation specified in the `X-Org-Domain` header. If the user is not a member, the request is rejected with `403 Forbidden`.
-:::
-
-> **Note:** `authenticateSession` short-circuits when `AUTH_ALLOW_SESSIONS=false`, steering callers toward bearer tokens.
+4. Loads user with roles and permissions
+5. Verifies user is not blocked
+6. Attaches `req.user` and `req.authOrganisation`
 
 **Response on Failure:**
 
@@ -119,7 +52,7 @@ If a user belongs to multiple organisations, the middleware loads the membership
 Used for OAuth2 clients and API access:
 
 ```typescript
-import { authenticateBearer } from '@/middleware/authn';
+import { authenticateBearer } from '@/middleware/auth';
 
 router.get('/v1/users', authenticateBearer, async (req, res) => {
   // req.user contains JWT payload data
@@ -134,28 +67,8 @@ router.get('/v1/users', authenticateBearer, async (req, res) => {
 
 1. Extracts `Authorization: Bearer <token>` header
 2. Verifies JWT signature with public key
-3. Validates issuer, expiration, and **`org` claim**
-4. **Validates user is still a member** of the organisation in the token
-5. Loads user's membership with roles and permissions for that organisation
-6. Attaches user info with membership data to `req.user`
-
-::: info JWT Organisation Claim
-All JWT tokens include an `org` claim that specifies which organisation the token is scoped to:
-
-```json
-{
-  "sub": "user-123",
-  "org": "org-abc", // Organisation ID
-  "client_id": "client-xyz",
-  "roles": ["admin"],
-  "scope": "openid profile email",
-  "iat": 1234567890,
-  "exp": 1234571490
-}
-```
-
-When switching organisations, users must obtain a new token by logging in with a different `X-Org-Domain` header.
-:::
+3. Validates issuer, expiration
+4. Attaches minimal user info from JWT claims
 
 ### API Key Authentication
 
@@ -186,7 +99,7 @@ router.post('/webhooks/incoming', authenticateApiKey, async (req, res) => {
 Allows both authenticated and anonymous access:
 
 ```typescript
-import { optionalAuth } from '@/middleware/authn';
+import { optionalAuth } from '@/middleware/auth';
 
 router.get('/oauth2/authorize', optionalAuth, async (req, res) => {
   if (req.user) {
@@ -330,7 +243,7 @@ const result = validatePasswordStrength('weak');
 
 **Email Link:**
 
-```text
+```
 https://admin.acme.com/reset-password?token=tok_...
 ```
 
@@ -577,7 +490,7 @@ Per-organization configuration:
 
 **Email Link:**
 
-```text
+```
 https://admin.acme.com/verify-email?token=tok_...
 ```
 

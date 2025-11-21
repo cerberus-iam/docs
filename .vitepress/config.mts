@@ -39,7 +39,6 @@ export default defineConfig({
             { text: 'What is Cerberus IAM?', link: '/guide/introduction' },
             { text: 'Features', link: '/guide/features' },
             { text: 'Quick Start', link: '/guide/quick-start' },
-            { text: 'Migration to v2.0', link: '/guide/migration-v2' },
           ],
         },
         {
@@ -57,7 +56,7 @@ export default defineConfig({
             { text: 'Authentication', link: '/guide/authentication' },
             { text: 'Authorization & RBAC', link: '/guide/authorization' },
             { text: 'RBAC Configuration', link: '/guide/rbac-configuration' },
-            { text: 'Multi-Tenancy & Organisations', link: '/guide/multi-tenancy' },
+            { text: 'Multi-Tenancy', link: '/guide/multi-tenancy' },
             { text: 'Security Controls', link: '/guide/security' },
             { text: 'OAuth2 & OIDC', link: '/guide/oauth2' },
           ],
@@ -85,7 +84,6 @@ export default defineConfig({
           text: 'API Reference',
           items: [
             { text: 'Overview', link: '/api/overview' },
-            { text: 'X-Org-Domain Header', link: '/api/x-org-domain' },
             { text: 'Error Handling', link: '/api/errors' },
           ],
         },

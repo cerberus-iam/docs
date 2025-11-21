@@ -27,130 +27,38 @@ The endpoint:
 
 ## Headers
 
-| Header         | Required    | Description                                                         |
-| -------------- | ----------- | ------------------------------------------------------------------- |
-| `Content-Type` | Yes         | Must be `application/json`                                          |
-| `X-Org-Domain` | Conditional | Organisation slug (e.g., `acme-corp`) - see below for when required |
+| Header         | Required | Description                |
+| -------------- | -------- | -------------------------- |
+| `Content-Type` | Yes      | Must be `application/json` |
 
-::: info Organisation Context (v2.0+)
-As of v2.0, you must provide organisation context using **one of two methods**:
-
-**Method 1: OAuth Flows (Recommended)** - Include `client_id` in request body
-- For OAuth2/OIDC authorization flows
-- Organisation automatically derived from OAuth client configuration
-- Simpler integration, no custom headers needed
-
-**Method 2: Direct API Access** - Include `X-Org-Domain` header
-- For direct API access (admin panels, API clients)
-- Required when `client_id` is not provided
-
-If the user is not a member of the specified organisation, the request will fail with `403 Forbidden`.
-:::
+**Note:** `X-Org-Domain` header is NOT required for login (organisation is determined from user's account).
 
 ## Request Body
 
-| Field       | Type   | Required    | Description                                    |
-| ----------- | ------ | ----------- | ---------------------------------------------- |
-| `email`     | string | Yes         | User's email address                           |
-| `password`  | string | Yes         | User's password                                |
-| `mfaToken`  | string | Conditional | 6-digit TOTP code (required if MFA is enabled) |
-| `client_id` | string | Conditional | OAuth client ID (for OAuth flows)              |
+| Field      | Type   | Required    | Description                                    |
+| ---------- | ------ | ----------- | ---------------------------------------------- |
+| `email`    | string | Yes         | User's email address                           |
+| `password` | string | Yes         | User's password                                |
+| `mfaToken` | string | Conditional | 6-digit TOTP code (required if MFA is enabled) |
 
 ### Example Request (Basic Login)
 
-::: code-group
-
-```bash [OAuth Flow (client_id)]
-# OAuth flows - organisation derived from client
-curl -X POST https://api.cerberus-iam.com/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "admin@acme.com",
-    "password": "SecurePass123!",
-    "client_id": "oauth-client-abc123"
-  }'
-```
-
-```bash [Direct API (X-Org-Domain)]
-# Direct API access - use X-Org-Domain header
-curl -X POST https://api.cerberus-iam.com/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -H "X-Org-Domain: acme-corp" \
-  -d '{
-    "email": "admin@acme.com",
-    "password": "SecurePass123!"
-  }'
-```
-
-```json [Request Body (OAuth)]
-{
-  "email": "admin@acme.com",
-  "password": "SecurePass123!",
-  "client_id": "oauth-client-abc123"
-}
-```
-
-```json [Request Body (Direct)]
+```json
 {
   "email": "admin@acme.com",
   "password": "SecurePass123!"
 }
 ```
 
-```typescript [JavaScript/TypeScript]
-// OAuth flow
-const response = await fetch('https://api.cerberus-iam.com/v1/auth/login', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    email: 'admin@acme.com',
-    password: 'SecurePass123!',
-    client_id: 'oauth-client-abc123',
-  }),
-});
-
-// Direct API access
-const response = await fetch('https://api.cerberus-iam.com/v1/auth/login', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-Org-Domain': 'acme-corp',
-  },
-  body: JSON.stringify({
-    email: 'admin@acme.com',
-    password: 'SecurePass123!',
-  }),
-});
-```
-
-:::
-
 ### Example Request (With MFA)
 
-::: code-group
-
-```bash [cURL]
-curl -X POST https://api.cerberus-iam.com/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -H "X-Org-Domain: acme-corp" \
-  -d '{
-    "email": "admin@acme.com",
-    "password": "SecurePass123!",
-    "mfaToken": "123456"
-  }'
-```
-
-```json [Request Body]
+```json
 {
   "email": "admin@acme.com",
   "password": "SecurePass123!",
   "mfaToken": "123456"
 }
 ```
-
-:::
 
 ## Response
 
@@ -184,21 +92,6 @@ Set-Cookie: cerb_sid=<session_token>; Path=/; HttpOnly; Secure; SameSite=Lax; Ma
 
 ### Error Responses
 
-#### 400 Bad Request - Missing X-Org-Domain Header
-
-::: danger New in v2.0
-The `X-Org-Domain` header is now required for all login requests.
-:::
-
-```json
-{
-  "type": "https://api.cerberus-iam.com/errors/bad-request",
-  "title": "Bad Request",
-  "status": 400,
-  "detail": "X-Org-Domain header is required. This header must contain the organisation slug."
-}
-```
-
 #### 400 Bad Request - Invalid Input
 
 **Invalid email format:**
@@ -225,25 +118,6 @@ The `X-Org-Domain` header is now required for all login requests.
 }
 ```
 
-#### 403 Forbidden - Not a Member
-
-::: danger New in v2.0
-If the user is not a member of the organisation specified in `X-Org-Domain`, the request is rejected.
-:::
-
-```json
-{
-  "type": "https://api.cerberus-iam.com/errors/forbidden",
-  "title": "Forbidden",
-  "status": 403,
-  "detail": "You are not a member of this organisation"
-}
-```
-
-**Solution:** Verify the organisation slug is correct, or check if the user needs to be invited to this organisation.
-
-#### 401 Unauthorized - Account Issues
-
 **Account blocked:**
 
 ```json
@@ -254,8 +128,6 @@ If the user is not a member of the organisation specified in `X-Org-Domain`, the
   "detail": "Account is blocked"
 }
 ```
-
-#### 401 Unauthorized - MFA Issues
 
 **MFA required (token not provided):**
 
