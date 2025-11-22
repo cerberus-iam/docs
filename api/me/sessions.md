@@ -34,10 +34,10 @@ GET /v1/me/sessions
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
 
 #### Query Parameters
 
@@ -116,7 +116,7 @@ None
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/me/sessions \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -163,10 +163,10 @@ DELETE /v1/me/sessions/:id
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
 
 #### Path Parameters
 
@@ -218,7 +218,7 @@ Empty response body. Session has been successfully revoked.
 
 ```bash
 curl -X DELETE https://api.cerberus-iam.dev/v1/me/sessions/ses_01h2xz9k3m4n5p6q7r8s9t0v1w \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -249,7 +249,7 @@ session_id = 'ses_01h2xz9k3m4n5p6q7r8s9t0v1w'
 
 response = requests.delete(
     f'https://api.cerberus-iam.dev/v1/me/sessions/{session_id}',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )
 

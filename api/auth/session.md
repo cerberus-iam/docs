@@ -22,10 +22,10 @@ it safe to call repeatedly.
 
 ## Headers
 
-| Header         | Required | Description                                      |
-| -------------- | -------- | ------------------------------------------------ |
-| `Cookie`       | Yes      | Must include session cookie (`cerberus_session`) |
-| `X-Org-Domain` | No       | Optional tenant context if applicable            |
+| Header         | Required | Description                              |
+| -------------- | -------- | ---------------------------------------- |
+| `Cookie`       | Yes      | Must include session cookie (`cerb_sid`) |
+| `X-Org-Domain` | No       | Optional tenant context if applicable    |
 
 ## Request Body
 
@@ -40,7 +40,7 @@ it safe to call repeatedly.
 **Headers:**
 
 ```http
-Set-Cookie: cerberus_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: cerb_sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 Set-Cookie: cerb_csrf=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 ```
 

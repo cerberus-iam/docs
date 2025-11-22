@@ -23,10 +23,10 @@ GET /v1/admin/permissions
 
 ### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
 
 ### Query Parameters
 
@@ -135,7 +135,7 @@ None
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/permissions \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -168,7 +168,7 @@ import requests
 
 response = requests.get(
     'https://api.cerberus-iam.dev/v1/admin/permissions',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )
 

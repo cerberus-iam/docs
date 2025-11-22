@@ -35,11 +35,11 @@ POST /v1/admin/users/:id/roles
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Path Parameters
 
@@ -111,7 +111,7 @@ POST /v1/admin/users/:id/roles
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -149,7 +149,7 @@ role_id = 'rol_01h2xz9k3m4n5p6q7r8s9t0v1y'
 
 response = requests.post(
     f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}/roles',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
         'Content-Type': 'application/json'
@@ -188,11 +188,11 @@ DELETE /v1/admin/users/:id/roles
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Path Parameters
 
@@ -264,7 +264,7 @@ DELETE /v1/admin/users/:id/roles
 
 ```bash
 curl -X DELETE https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w/roles \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -302,7 +302,7 @@ role_id = 'rol_01h2xz9k3m4n5p6q7r8s9t0v1y'
 
 response = requests.delete(
     f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}/roles',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
         'Content-Type': 'application/json'

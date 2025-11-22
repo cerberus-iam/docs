@@ -28,7 +28,7 @@ POST /v1/admin/roles/:roleId/permissions
 | Header         | Required | Description                         |
 | -------------- | -------- | ----------------------------------- |
 | `Content-Type` | Yes      | Must be `application/json`          |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
 | `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
 | `X-CSRF-Token` | Yes      | CSRF token for request validation   |
 
@@ -134,7 +134,7 @@ None
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/roles/role_01h2xz9k3m4n5p6q7r8s9t0v1w/permissions \
   -H "Content-Type: application/json" \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..." \
   -d '{

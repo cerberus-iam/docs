@@ -69,7 +69,7 @@ GET /v1/admin/organisation
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/organisation \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -152,7 +152,7 @@ Returns the updated organisation object.
 
 ```bash
 curl -X PATCH https://api.cerberus-iam.dev/v1/admin/organisation \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"name":"Acme Corporation Inc.","requireMfa":true}'
@@ -198,7 +198,7 @@ Empty response on success.
 
 ```bash
 curl -X DELETE https://api.cerberus-iam.dev/v1/admin/organisation \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 

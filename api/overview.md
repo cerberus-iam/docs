@@ -22,7 +22,7 @@ Authentication endpoints are versioned:
 
 Used for web applications and admin interfaces.
 
-**Cookie Name:** `cerberus_session` (configurable via `SESSION_COOKIE_NAME`)
+**Cookie Name:** `cerb_sid` (configurable via `SESSION_COOKIE_NAME`)
 
 **How to authenticate:**
 

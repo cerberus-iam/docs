@@ -53,7 +53,7 @@ GET /v1/admin/api-keys
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/api-keys \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -82,7 +82,7 @@ Returns a single API key object (same structure as list items).
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/api-keys/key_01h2xz9k3m4n5p6q7r8s9t0v2f \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -143,7 +143,7 @@ POST /v1/admin/api-keys
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/api-keys \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -182,7 +182,7 @@ POST /v1/admin/api-keys/:id/revoke
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/api-keys/key_01h2xz9k3m4n5p6q7r8s9t0v2g/revoke \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 

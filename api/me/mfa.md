@@ -37,11 +37,11 @@ POST /v1/me/mfa/enable
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Request Body
 
@@ -97,7 +97,7 @@ None
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/enable \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json"
 ```
@@ -146,11 +146,11 @@ POST /v1/me/mfa/verify
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Request Body
 
@@ -221,7 +221,7 @@ POST /v1/me/mfa/verify
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/verify \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"token": "123456"}'
@@ -266,11 +266,11 @@ POST /v1/me/mfa/check
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Request Body
 
@@ -294,7 +294,7 @@ POST /v1/me/mfa/check
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/check \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"token": "123456"}'
@@ -327,11 +327,11 @@ POST /v1/me/mfa/disable
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Request Body
 
@@ -373,7 +373,7 @@ POST /v1/me/mfa/disable
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/disable \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"token": "123456"}'
@@ -424,11 +424,11 @@ POST /v1/me/mfa/backup-codes
 
 #### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 #### Request Body
 
@@ -478,7 +478,7 @@ POST /v1/me/mfa/backup-codes
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/me/mfa/backup-codes \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"token": "123456"}'

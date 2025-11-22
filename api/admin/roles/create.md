@@ -73,7 +73,7 @@ POST /v1/admin/roles
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/roles \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"name":"Developer","slug":"developer"}'

@@ -24,9 +24,9 @@ GET /v1/me/export
 
 ### Headers
 
-| Header   | Required | Description                         |
-| -------- | -------- | ----------------------------------- |
-| `Cookie` | Yes      | Session cookie (`cerberus_session`) |
+| Header   | Required | Description                 |
+| -------- | -------- | --------------------------- |
+| `Cookie` | Yes      | Session cookie (`cerb_sid`) |
 
 ### Query Parameters
 
@@ -190,7 +190,7 @@ User account not found (rare edge case).
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/me/export \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -o user-data-export.json
 ```
 
@@ -222,7 +222,7 @@ from datetime import datetime
 
 response = requests.get(
     'https://api.cerberus-iam.dev/v1/me/export',
-    cookies={'cerberus_session': 'abc123...'}
+    cookies={'cerb_sid': 'abc123...'}
 )
 
 export_data = response.json()

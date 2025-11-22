@@ -24,11 +24,11 @@ POST /v1/admin/users
 
 ### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 ### Path Parameters
 
@@ -188,7 +188,7 @@ Email address is already registered.
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/users \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -237,7 +237,7 @@ import requests
 
 response = requests.post(
     'https://api.cerberus-iam.dev/v1/admin/users',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
         'Content-Type': 'application/json'

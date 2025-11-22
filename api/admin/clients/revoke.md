@@ -25,7 +25,7 @@ POST /v1/admin/clients/:id/revoke
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/clients/cli_01h2xz9k3m4n5p6q7r8s9t0v2e/revoke \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 

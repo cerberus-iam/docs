@@ -281,7 +281,7 @@ declare global {
 
 **Flow:**
 
-1. Extract session token from `cerberus_session` cookie
+1. Extract session token from `cerb_sid` cookie
 2. Verify session is valid and not expired
 3. Check idle timeout
 4. Load user with roles and permissions

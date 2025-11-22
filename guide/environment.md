@@ -340,11 +340,11 @@ LOG_REMOTE_FLUSH_INTERVAL_MS=5000
 #### `SESSION_COOKIE_NAME`
 
 - **Type:** `string`
-- **Default:** `'cerberus_session'`
+- **Default:** `'cerb_sid'`
 - **Description:** Session cookie name
 
 ```bash
-SESSION_COOKIE_NAME=cerberus_session
+SESSION_COOKIE_NAME=cerb_sid
 ```
 
 #### `SESSION_COOKIE_SECURE`
@@ -563,7 +563,7 @@ SECRET_ENCRYPTION_KEY=jcQ9C71Fqxj4E/n54rcu/87bXOQ4YN96lQu/LO449oY=
 
 LOG_LEVEL=debug
 
-SESSION_COOKIE_NAME=cerberus_session
+SESSION_COOKIE_NAME=cerb_sid
 SESSION_COOKIE_SECURE=false
 SESSION_COOKIE_DOMAIN=localhost
 
@@ -602,7 +602,7 @@ LOG_REMOTE_API_KEY=prod_log_api_key
 LOG_REMOTE_BATCH_SIZE=100
 LOG_REMOTE_FLUSH_INTERVAL_MS=10000
 
-SESSION_COOKIE_NAME=cerberus_session
+SESSION_COOKIE_NAME=cerb_sid
 SESSION_COOKIE_SECURE=true
 SESSION_COOKIE_DOMAIN=.acme.com
 

@@ -23,10 +23,10 @@ GET /v1/me/profile
 
 ### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
 
 ### Query Parameters
 
@@ -131,7 +131,7 @@ CSRF token is missing or invalid.
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/me/profile \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -157,7 +157,7 @@ import requests
 
 response = requests.get(
     'https://api.cerberus-iam.dev/v1/me/profile',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={'X-CSRF-Token': 'xyz789...'}
 )
 

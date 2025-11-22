@@ -27,7 +27,7 @@ DELETE /v1/admin/teams/:teamId/members
 | Header         | Required | Description                         |
 | -------------- | -------- | ----------------------------------- |
 | `Content-Type` | Yes      | Must be `application/json`          |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
 | `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
 | `X-CSRF-Token` | Yes      | CSRF token for request validation   |
 
@@ -122,7 +122,7 @@ None
 ```bash
 curl -X DELETE https://api.cerberus-iam.dev/v1/admin/teams/team_01h2xz9k3m4n5p6q7r8s9t0v1w/members \
   -H "Content-Type: application/json" \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..." \
   -d '{

@@ -88,7 +88,7 @@ origin: (origin, callback) => {
 
 **Implementation:** Cookie with HTTP-only flag
 
-**Cookie Name:** `cerberus_session` (configurable)
+**Cookie Name:** `cerb_sid` (configurable)
 
 **Security Features:**
 
@@ -109,7 +109,7 @@ sequenceDiagram
     API->>DB: Verify credentials
     DB-->>API: User data
     API->>DB: Create session (hashed token)
-    API-->>Client: Set-Cookie: cerberus_session=<token>
+    API-->>Client: Set-Cookie: cerb_sid=<token>
 
     Client->>API: GET /v1/me/profile (with cookie)
     API->>DB: Lookup session by hash
@@ -699,7 +699,7 @@ const validated = userSchema.parse(req.body);
 ### 4. Set Secure Cookie Flags
 
 ```typescript
-res.cookie('cerberus_session', token, {
+res.cookie('cerb_sid', token, {
   httpOnly: true, // Prevent XSS
   secure: true, // HTTPS only
   sameSite: 'lax', // CSRF protection

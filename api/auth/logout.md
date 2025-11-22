@@ -26,10 +26,10 @@ route only invalidates the caller's own session.
 
 ## Headers
 
-| Header         | Required | Description                                      |
-| -------------- | -------- | ------------------------------------------------ |
-| `Content-Type` | Yes      | Must be `application/json`                       |
-| `Cookie`       | Yes      | Must include session cookie (`cerberus_session`) |
+| Header         | Required | Description                              |
+| -------------- | -------- | ---------------------------------------- |
+| `Content-Type` | Yes      | Must be `application/json`               |
+| `Cookie`       | Yes      | Must include session cookie (`cerb_sid`) |
 
 ## Request Body
 
@@ -44,7 +44,7 @@ route only invalidates the caller's own session.
 **Headers:**
 
 ```
-Set-Cookie: cerberus_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: cerb_sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 Set-Cookie: cerb_csrf=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 ```
 

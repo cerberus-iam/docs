@@ -32,10 +32,10 @@ GET /v1/admin/audit-logs/:id
 
 ### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
 
 ### Query Parameters
 
@@ -152,10 +152,10 @@ GET /v1/admin/audit-logs?eventCategory=auth&action=login&startDate=2025-10-01T00
 
 ### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
 
 ### URL Parameters
 
@@ -309,7 +309,7 @@ Invalid query parameters.
 
 ```bash
 curl -X GET "https://api.cerberus-iam.dev/v1/admin/audit-logs?eventCategory=auth&success=true&limit=20" \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -454,7 +454,7 @@ class AuditLogClient:
         response = requests.get(
             f'{self.base_url}/v1/admin/audit-logs',
             params=params,
-            cookies={'cerberus_session': self.session_cookie},
+            cookies={'cerb_sid': self.session_cookie},
             headers={'X-CSRF-Token': self.csrf_token}
         )
 
@@ -465,7 +465,7 @@ class AuditLogClient:
         """Get a single audit log by ID."""
         response = requests.get(
             f'{self.base_url}/v1/admin/audit-logs/{log_id}',
-            cookies={'cerberus_session': self.session_cookie},
+            cookies={'cerb_sid': self.session_cookie},
             headers={'X-CSRF-Token': self.csrf_token}
         )
 

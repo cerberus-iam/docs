@@ -29,7 +29,7 @@ router.get('/me/profile', authenticateSession, async (req, res) => {
 
 **How it Works:**
 
-1. Extracts session cookie (`cerberus_session` by default)
+1. Extracts session cookie (`cerb_sid` by default)
 2. Validates session token (SHA-256 hash lookup)
 3. Checks expiration and idle timeout
 4. Loads user with roles and permissions

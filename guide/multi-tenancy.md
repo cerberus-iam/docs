@@ -430,7 +430,7 @@ const user = await prisma.user.findFirst({
 GET /v1/admin/users HTTP/1.1
 Host: api.cerberus.local
 X-Org-Domain: acme
-Cookie: cerberus_session=...
+Cookie: cerb_sid=...
 ```
 
 **Headers:**

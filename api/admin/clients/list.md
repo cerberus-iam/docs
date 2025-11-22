@@ -19,7 +19,7 @@ GET /v1/admin/clients
 
 | Header         | Required | Description                         |
 | -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)         |
 | `X-Org-Domain` | Yes      | Organisation slug for tenancy scope |
 | `X-CSRF-Token` | Yes      | CSRF token                          |
 
@@ -63,7 +63,7 @@ GET /v1/admin/clients
 
 ```bash
 curl -X GET https://api.cerberus-iam.dev/v1/admin/clients \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-Org-Domain: acme-corp" \
   -H "X-CSRF-Token: xyz789..."
 ```

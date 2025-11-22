@@ -63,7 +63,7 @@ PATCH /v1/admin/roles/:id
 
 ```bash
 curl -X PATCH https://api.cerberus-iam.dev/v1/admin/roles/rol_01h2xz9k3m4n5p6q7r8s9t0v2y \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"name":"Senior Developer"}'

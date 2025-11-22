@@ -40,7 +40,7 @@ Returns the updated client object (without `clientSecret`).
 
 ```bash
 curl -X PATCH https://api.cerberus-iam.dev/v1/admin/clients/cli_01h2xz9k3m4n5p6q7r8s9t0v2e \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{"name":"Updated Dashboard"}'

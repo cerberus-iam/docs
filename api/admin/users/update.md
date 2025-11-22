@@ -23,11 +23,11 @@ PATCH /v1/admin/users/:id
 
 ### Headers
 
-| Header         | Required | Description                         |
-| -------------- | -------- | ----------------------------------- |
-| `Cookie`       | Yes      | Session cookie (`cerberus_session`) |
-| `X-CSRF-Token` | Yes      | CSRF token for request validation   |
-| `Content-Type` | Yes      | Must be `application/json`          |
+| Header         | Required | Description                       |
+| -------------- | -------- | --------------------------------- |
+| `Cookie`       | Yes      | Session cookie (`cerb_sid`)       |
+| `X-CSRF-Token` | Yes      | CSRF token for request validation |
+| `Content-Type` | Yes      | Must be `application/json`        |
 
 ### Path Parameters
 
@@ -165,7 +165,7 @@ User does not exist or does not belong to the same organisation.
 ```bash
 # Update user's name
 curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -175,7 +175,7 @@ curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r
 
 # Block a user
 curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -185,7 +185,7 @@ curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r
 
 # Unblock a user
 curl -X PATCH https://api.cerberus-iam.dev/v1/admin/users/usr_01h2xz9k3m4n5p6q7r8s9t0v1w \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -241,7 +241,7 @@ user_id = 'usr_01h2xz9k3m4n5p6q7r8s9t0v1w'
 # Update user's name
 response = requests.patch(
     f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
         'Content-Type': 'application/json'
@@ -258,7 +258,7 @@ print(f"User updated: {user['name']}")
 # Block a user
 block_response = requests.patch(
     f'https://api.cerberus-iam.dev/v1/admin/users/{user_id}',
-    cookies={'cerberus_session': 'abc123...'},
+    cookies={'cerb_sid': 'abc123...'},
     headers={
         'X-CSRF-Token': 'xyz789...',
         'Content-Type': 'application/json'

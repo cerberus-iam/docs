@@ -119,7 +119,7 @@ POST /v1/admin/invitations
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/invitations \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -169,7 +169,7 @@ POST /v1/admin/invitations/:id/resend
 
 ```bash
 curl -X POST https://api.cerberus-iam.dev/v1/admin/invitations/inv_01h2xz9k3m4n5p6q7r8s9t0v2l/resend \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
@@ -204,7 +204,7 @@ Empty response on success.
 
 ```bash
 curl -X DELETE https://api.cerberus-iam.dev/v1/admin/invitations/inv_01h2xz9k3m4n5p6q7r8s9t0v2l \
-  -H "Cookie: cerberus_session=abc123..." \
+  -H "Cookie: cerb_sid=abc123..." \
   -H "X-CSRF-Token: xyz789..."
 ```
 
