@@ -74,6 +74,7 @@ export default defineConfig({
           text: 'Deployment',
           items: [
             { text: 'Docker Deployment', link: '/guide/docker' },
+            { text: 'Railway Postgres SSL', link: '/railway-postgres-ssl' },
             { text: 'Production Checklist', link: '/guide/production' },
             { text: 'Monitoring & Logging', link: '/guide/monitoring' },
           ],
