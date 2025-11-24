@@ -1,56 +1,155 @@
-# Accept Invitation
+# Invitations
 
-Accept an invitation to join an organisation.
+Accept invitations to join an organisation.
 
-## Endpoint
+## Overview
+
+The invitation acceptance flow allows users to join an organization when invited by an administrator. Cerberus provides public endpoints for:
+
+1. **Validating** an invitation token (to pre-fill forms)
+2. **Accepting** an invitation by providing credentials
+
+These endpoints are unauthenticated (public) since the user doesn't have an account yet.
+
+---
+
+## Get Invitation Details
 
 ```
-POST /v1/auth/invitations/accept
+GET /v1/public/invitations/:token
 ```
 
-## Description
+### Description
 
-Accepts an invitation to join an organisation as a team member. The endpoint:
+Retrieve invitation details by token. This allows the UI to display the invited email address and organization name before the user submits their registration form.
+
+### Authentication
+
+**Required:** No (public endpoint)
+
+### URL Parameters
+
+| Parameter | Type   | Required | Description                         |
+| --------- | ------ | -------- | ----------------------------------- |
+| `token`   | string | Yes      | The invitation token from the email |
+
+### Example Request
+
+```bash
+curl -X GET https://api.example.com/v1/public/invitations/inv_a1b2c3d4e5f6g7h8
+```
+
+### Success Response
+
+**Status:** `200 OK`
+
+```json
+{
+  "email": "newuser@example.com",
+  "organisationName": "Acme Corporation",
+  "expiresAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+### Error Responses
+
+**404 Not Found** - Invitation not found, expired, or already used
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/not-found",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Invitation not found or has expired"
+}
+```
+
+**429 Too Many Requests** - Rate limit exceeded
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/rate-limit",
+  "title": "Too Many Requests",
+  "status": 429,
+  "detail": "Rate limit exceeded. Try again later."
+}
+```
+
+### Security
+
+- **Rate Limited**: 10 requests per 15 minutes per IP
+- **No Authentication Required**: Public endpoint
+
+---
+
+## Accept Invitation
+
+```
+POST /v1/public/invitations/:token/accept
+```
+
+### Description
+
+Accept an invitation to join an organisation as a team member. The endpoint:
 
 1. Validates the invitation token
 2. Verifies the invitation hasn't expired
-3. Creates a user account with the provided details
-4. Associates the user with the specified role and teams
-5. Marks the invitation as accepted
+3. **Validates the email matches the invitation**
+4. Creates a user account with the provided details
+5. Associates the user with the specified role and teams
+6. Marks the invitation as accepted
 
-This is similar to registration, but the user is joining an existing organisation rather than creating a new one.
+::: warning Email Must Match
+The `email` field in the request body **must exactly match** the email address the invitation was sent to. This prevents unauthorized users from accepting invitations intended for others.
+:::
 
-## Authentication
+### Authentication
 
-**Required:** No (uses invitation token)
+**Required:** No (public endpoint, uses invitation token)
 
-## Headers
+### Headers
 
 | Header         | Required | Description                |
 | -------------- | -------- | -------------------------- |
 | `Content-Type` | Yes      | Must be `application/json` |
 
-## Request Body
+### URL Parameters
 
-| Field       | Type   | Required | Description                            | Constraints                                           |
-| ----------- | ------ | -------- | -------------------------------------- | ----------------------------------------------------- |
-| `token`     | string | Yes      | Invitation token from invitation email | Minimum 1 character                                   |
-| `firstName` | string | Yes      | User's first name                      | Minimum 1 character                                   |
-| `lastName`  | string | Yes      | User's last name                       | Minimum 1 character                                   |
-| `password`  | string | Yes      | User's password                        | Minimum 8 characters, must meet strength requirements |
+| Parameter | Type   | Required | Description                         |
+| --------- | ------ | -------- | ----------------------------------- |
+| `token`   | string | Yes      | The invitation token from the email |
+
+### Request Body
+
+| Field       | Type   | Required | Description       | Constraints                                           |
+| ----------- | ------ | -------- | ----------------- | ----------------------------------------------------- |
+| `email`     | string | Yes      | User's email      | Must match invitation email exactly                   |
+| `firstName` | string | Yes      | User's first name | Minimum 1 character                                   |
+| `lastName`  | string | Yes      | User's last name  | Minimum 1 character                                   |
+| `password`  | string | Yes      | User's password   | Minimum 8 characters, must meet strength requirements |
+
+### Password Requirements
+
+The password must meet **all** of the following criteria:
+
+- Minimum 8 characters
+- At least one uppercase letter (A-Z)
+- At least one lowercase letter (a-z)
+- At least one number (0-9)
+- At least one special character (!@#$%^&\*(),.?":{}|<>)
 
 ### Example Request
 
-```json
-{
-  "token": "inv_a1b2c3d4e5f6g7h8",
-  "firstName": "Jane",
-  "lastName": "Smith",
-  "password": "SecurePass123!"
-}
+```bash
+curl -X POST https://api.example.com/v1/public/invitations/inv_a1b2c3d4e5f6g7h8/accept \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "password": "SecurePass123!"
+  }'
 ```
-
-## Response
 
 ### Success Response
 
@@ -91,6 +190,17 @@ This is similar to registration, but the user is joining an existing organisatio
 }
 ```
 
+**Email mismatch:**
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/bad-request",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "Email does not match invitation"
+}
+```
+
 **Password too weak:**
 
 ```json
@@ -102,7 +212,8 @@ This is similar to registration, but the user is joining an existing organisatio
   "errors": [
     "Password must be at least 8 characters",
     "Password must contain at least one uppercase letter",
-    "Password must contain at least one number"
+    "Password must contain at least one number",
+    "Password must contain at least one special character"
   ]
 }
 ```
@@ -137,6 +248,17 @@ This is similar to registration, but the user is joining an existing organisatio
   "title": "Bad Request",
   "status": 400,
   "detail": "Invitation has been cancelled"
+}
+```
+
+#### 404 Not Found
+
+```json
+{
+  "type": "https://api.cerberus-iam.com/errors/not-found",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Invitation not found or has expired"
 }
 ```
 
@@ -195,21 +317,27 @@ On successful invitation acceptance:
 
 ## Password Strength Requirements
 
+The password must meet **all** of the following criteria:
+
 - Minimum 8 characters
-- At least one uppercase letter
-- At least one lowercase letter
-- At least one number
-- At least one special character (recommended)
+- At least one uppercase letter (A-Z)
+- At least one lowercase letter (a-z)
+- At least one number (0-9)
+- At least one special character (!@#$%^&\*(),.?":{}|<>)
 
 ## Code Examples
 
 ### cURL
 
 ```bash
-curl -X POST http://localhost:4000/v1/auth/invitations/accept \
+# First, get invitation details
+curl -X GET http://localhost:4000/v1/public/invitations/inv_a1b2c3d4e5f6g7h8
+
+# Then accept the invitation
+curl -X POST http://localhost:4000/v1/public/invitations/inv_a1b2c3d4e5f6g7h8/accept \
   -H "Content-Type: application/json" \
   -d '{
-    "token": "inv_a1b2c3d4e5f6g7h8",
+    "email": "jane.smith@acme.com",
     "firstName": "Jane",
     "lastName": "Smith",
     "password": "SecurePass123!"
@@ -219,16 +347,24 @@ curl -X POST http://localhost:4000/v1/auth/invitations/accept \
 ### JavaScript (fetch)
 
 ```javascript
+async function getInvitationDetails(token) {
+  const response = await fetch(`http://localhost:4000/v1/public/invitations/${token}`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail);
+  }
+
+  return response.json();
+}
+
 async function acceptInvitation(token, userData) {
-  const response = await fetch('http://localhost:4000/v1/auth/invitations/accept', {
+  const response = await fetch(`http://localhost:4000/v1/public/invitations/${token}/accept`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      token,
-      ...userData,
-    }),
+    body: JSON.stringify(userData),
   });
 
   if (!response.ok) {
@@ -241,7 +377,13 @@ async function acceptInvitation(token, userData) {
 
 // Usage
 try {
+  // Get invitation details to pre-fill email
+  const invitation = await getInvitationDetails('inv_a1b2c3d4e5f6g7h8');
+  console.log('Invited email:', invitation.email);
+
+  // Accept the invitation
   const result = await acceptInvitation('inv_a1b2c3d4e5f6g7h8', {
+    email: invitation.email,
     firstName: 'Jane',
     lastName: 'Smith',
     password: 'SecurePass123!',
@@ -251,21 +393,20 @@ try {
   // Redirect to login
   window.location.href = '/login?invited=1';
 } catch (error) {
-  console.error('Failed to accept invitation:', error.message);
+  console.error('Failed:', error.message);
 }
 ```
 
 ### TypeScript (React Component)
 
 ```typescript
-import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-interface AcceptInvitationRequest {
-  token: string;
-  firstName: string;
-  lastName: string;
-  password: string;
+interface InvitationDetails {
+  email: string;
+  organisationName: string;
+  expiresAt: string;
 }
 
 interface AcceptInvitationResponse {
@@ -278,18 +419,37 @@ interface AcceptInvitationResponse {
 }
 
 export function AcceptInvitationPage() {
-  const [searchParams] = useSearchParams();
+  const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
+  const [invitation, setInvitation] = useState<InvitationDetails | null>(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const token = searchParams.get('token');
+  // Fetch invitation details on mount
+  useEffect(() => {
+    async function fetchInvitation() {
+      if (!token) return;
+      try {
+        const response = await fetch(`http://localhost:4000/v1/public/invitations/${token}`);
+        if (!response.ok) {
+          throw new Error('Invalid or expired invitation');
+        }
+        const data = await response.json();
+        setInvitation(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load invitation');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchInvitation();
+  }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -301,7 +461,7 @@ export function AcceptInvitationPage() {
       return;
     }
 
-    if (!token) {
+    if (!token || !invitation) {
       setError('Invalid invitation link');
       return;
     }
@@ -309,17 +469,17 @@ export function AcceptInvitationPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/v1/auth/invitations/accept', {
+      const response = await fetch(`http://localhost:4000/v1/public/invitations/${token}/accept`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          token,
+          email: invitation.email, // Must match invitation email
           firstName: formData.firstName,
           lastName: formData.lastName,
-          password: formData.password
-        })
+          password: formData.password,
+        }),
       });
 
       if (!response.ok) {
@@ -327,9 +487,7 @@ export function AcceptInvitationPage() {
 
         // Handle specific errors
         if (problem.errors) {
-          const errorMessages = Array.isArray(problem.errors)
-            ? problem.errors.join(', ')
-            : 'Validation failed';
+          const errorMessages = Array.isArray(problem.errors) ? problem.errors.join(', ') : 'Validation failed';
           throw new Error(errorMessages);
         }
 
@@ -348,7 +506,11 @@ export function AcceptInvitationPage() {
     }
   };
 
-  if (!token) {
+  if (loading) {
+    return <div>Loading invitation...</div>;
+  }
+
+  if (!token || !invitation) {
     return (
       <div className="error-page">
         <h2>Invalid Invitation</h2>
@@ -360,7 +522,12 @@ export function AcceptInvitationPage() {
   return (
     <div className="accept-invitation-page">
       <h2>Accept Invitation</h2>
-      <p>Complete your profile to join the organisation.</p>
+      <p>
+        You've been invited to join <strong>{invitation.organisationName}</strong>.
+      </p>
+      <p>
+        Email: <strong>{invitation.email}</strong>
+      </p>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -410,29 +577,35 @@ export function AcceptInvitationPage() {
 
 ## Invitation Flow
 
-```
+```text
 1. Admin creates invitation via POST /v1/admin/invitations
    ↓
 2. Server sends invitation email with token link
    ↓
 3. Invitee receives email and clicks invitation link
    ↓
-4. Client extracts token from URL, shows acceptance form
+4. Client extracts token from URL path (e.g., /invite/:token)
    ↓
-5. Invitee enters their name and password
+5. Client calls GET /v1/public/invitations/:token to get details
    ↓
-6. Client calls POST /v1/auth/invitations/accept
+6. Client displays form with pre-filled email (read-only)
    ↓
-7. Server validates token, creates user account
+7. Invitee enters their name and password
    ↓
-8. Server assigns role and teams to user
+8. Client calls POST /v1/public/invitations/:token/accept
    ↓
-9. Server marks invitation as accepted
+9. Server validates token and email match, creates user account
    ↓
-10. Client redirects to login page
+10. Server assigns role and teams to user
+   ↓
+11. Server marks invitation as accepted
+   ↓
+12. Client redirects to login page
 ```
 
 ## Email Template Example
+
+The invitation email should link to your frontend application's invite page:
 
 ```html
 <!DOCTYPE html>
@@ -452,7 +625,7 @@ export function AcceptInvitationPage() {
     <p>Click the button below to accept the invitation and create your account:</p>
 
     <a
-      href="https://app.cerberus.local/invitations/accept?token={{token}}"
+      href="{{WEB_BASE_URL}}/invite/{{token}}"
       style="display: inline-block; padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;"
     >
       Accept Invitation
@@ -460,9 +633,7 @@ export function AcceptInvitationPage() {
 
     <p>Or copy and paste this link into your browser:</p>
     <p>
-      <a href="https://app.cerberus.local/invitations/accept?token={{token}}"
-        >https://app.cerberus.local/invitations/accept?token={{token}}</a
-      >
+      <a href="{{WEB_BASE_URL}}/invite/{{token}}">{{WEB_BASE_URL}}/invite/{{token}}</a>
     </p>
 
     <p>This invitation will expire on {{expiresAt}}.</p>
@@ -472,15 +643,21 @@ export function AcceptInvitationPage() {
 </html>
 ```
 
+::: tip URL Format
+The `WEB_BASE_URL` environment variable should point to your frontend application (e.g., `https://app.yourcompany.com`). The frontend then uses the token to call the public invitation API endpoints.
+:::
+
 ## Security Considerations
 
 1. **Token Validation:** Tokens are validated for expiry and acceptance status
 2. **One-Time Use:** Tokens can only be accepted once
-3. **Password Hashing:** Passwords are hashed with Argon2id
-4. **Rate Limiting:** Endpoint is rate-limited to prevent abuse
-5. **Organisation Context:** User is automatically placed in the correct organisation
-6. **Role Assignment:** User receives only the role specified in invitation
-7. **HTTPS Required:** Invitation links should use HTTPS in production
+3. **Email Verification:** The email in the request must match the invitation email
+4. **Password Hashing:** Passwords are hashed with Argon2id
+5. **Rate Limiting:** Both endpoints are rate-limited (10 req/15min for GET, 30 req/60s for POST)
+6. **CSRF Exempt:** Public invitation endpoints are exempt from CSRF protection by design (unauthenticated endpoints)
+7. **Organisation Context:** User is automatically placed in the correct organisation
+8. **Role Assignment:** User receives only the role specified in invitation
+9. **HTTPS Required:** Invitation links should use HTTPS in production
 
 ## Common Issues
 
@@ -517,5 +694,5 @@ After successful invitation acceptance:
 ## Related Endpoints
 
 - [POST /v1/auth/login](./login.md) - Login after accepting invitation
-- POST /v1/admin/invitations - Create invitation (admin only)
-- GET /v1/admin/invitations - List invitations (admin only)
+- [POST /v1/admin/invitations](../admin/invitations.md) - Create invitation (admin only)
+- [GET /v1/admin/invitations](../admin/invitations.md) - List invitations (admin only)

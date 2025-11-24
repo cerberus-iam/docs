@@ -43,11 +43,13 @@ The onboarding endpoint creates a new tenant and an owner account in a single tr
 
 ### Password Strength Requirements
 
+The password must meet **all** of the following criteria:
+
 - Minimum 8 characters
-- At least one uppercase letter
-- At least one lowercase letter
-- At least one number
-- At least one special character (recommended but may not be enforced)
+- At least one uppercase letter (A-Z)
+- At least one lowercase letter (a-z)
+- At least one number (0-9)
+- At least one special character (!@#$%^&\*(),.?":{}|<>)
 
 ### Example Request
 
@@ -149,7 +151,8 @@ The onboarding endpoint creates a new tenant and an owner account in a single tr
   "errors": [
     "Password must be at least 8 characters",
     "Password must contain at least one uppercase letter",
-    "Password must contain at least one number"
+    "Password must contain at least one number",
+    "Password must contain at least one special character"
   ]
 }
 ```

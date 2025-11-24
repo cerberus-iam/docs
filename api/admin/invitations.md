@@ -216,44 +216,52 @@ curl -X DELETE https://api.cerberus-iam.dev/v1/admin/invitations/inv_01h2xz9k3m4
 
 ## Invitation Acceptance Flow
 
-Users accept invitations via one of two public endpoints (no authentication required):
+Users accept invitations via the public invitation endpoints (no authentication required):
 
-**Option 1: Direct invitation acceptance endpoint**
+### 1. Get Invitation Details
 
-```
-POST /v1/auth/invitations/accept
-```
-
-**Option 2: Registration endpoint (recommended for UI flows)**
-
-```
-POST /v1/auth/register
+```http
+GET /v1/public/invitations/:token
 ```
 
-Both endpoints accept the same request format and require an invitation token.
+Returns the invitation email and organisation name so the UI can pre-fill the form.
+
+**Response:**
+
+```json
+{
+  "email": "new.hire@example.com",
+  "organisationName": "Acme Corporation",
+  "expiresAt": "2025-11-02T12:00:00.000Z"
+}
+```
+
+### 2. Accept Invitation
+
+```http
+POST /v1/public/invitations/:token/accept
+```
 
 **Request Body:**
 
 ```json
 {
-  "token": "inv_token_abc123...",
   "email": "new.hire@example.com",
   "firstName": "Jane",
   "lastName": "Doe",
-  "password": "SecureP@ssw0rd123"
+  "password": "SecureP@ssw0rd123!"
 }
 ```
+
+::: warning Email Must Match
+The `email` field must exactly match the invitation email address. This prevents unauthorized users from accepting invitations intended for others.
+:::
 
 **Response (201 Created):**
 
 ```json
 {
-  "message": "Account created successfully",
-  "organisation": {
-    "id": "org_01h2xz9k3m4n5p6q7r8s9t0v1w",
-    "slug": "acme-corp",
-    "name": "Acme Corporation"
-  },
+  "message": "Invitation accepted successfully",
   "user": {
     "id": "usr_01h2xz9k3m4n5p6q7r8s9t0v3y",
     "email": "new.hire@example.com",
@@ -262,17 +270,21 @@ Both endpoints accept the same request format and require an invitation token.
 }
 ```
 
+See [Accept Invitation](../auth/invitations.md) for complete documentation.
+
 ## Invitation Email Template
 
 The invitation email includes:
 
 - Organisation name
 - Inviter's name
-- Link to accept invitation: `{ISSUER_URL}/auth/accept-invitation?token={token}`
+- Link to accept invitation: `{{WEB_BASE_URL}}/invite/{{token}}`
 - Expiration date
 - Instructions for account setup
 
-**Note:** The frontend at `/auth/accept-invitation` should submit to either `/v1/auth/register` or `/v1/auth/invitations/accept` with the invitation token and user details.
+::: tip URL Format
+The `WEB_BASE_URL` environment variable should point to your frontend application (e.g., `https://app.yourcompany.com`). The frontend extracts the token from the URL path and calls the public invitation API endpoints.
+:::
 
 ## Notes
 
