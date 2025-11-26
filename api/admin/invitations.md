@@ -278,12 +278,12 @@ The invitation email includes:
 
 - Organisation name
 - Inviter's name
-- Link to accept invitation: `{{WEB_BASE_URL}}/invite/{{token}}`
+- Link to accept invitation: `{{ADMIN_WEB_ORIGIN}}/invite/{{token}}`
 - Expiration date
 - Instructions for account setup
 
 ::: tip URL Format
-The `WEB_BASE_URL` environment variable should point to your frontend application (e.g., `https://app.yourcompany.com`). The frontend extracts the token from the URL path and calls the public invitation API endpoints.
+The `ADMIN_WEB_ORIGIN` environment variable should point to your frontend application (e.g., `https://app.yourcompany.com`). The frontend extracts the token from the URL path and calls the public invitation API endpoints.
 :::
 
 ## Notes

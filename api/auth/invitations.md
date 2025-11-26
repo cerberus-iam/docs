@@ -625,7 +625,7 @@ The invitation email should link to your frontend application's invite page:
     <p>Click the button below to accept the invitation and create your account:</p>
 
     <a
-      href="{{WEB_BASE_URL}}/invite/{{token}}"
+      href="{{ADMIN_WEB_ORIGIN}}/invite/{{token}}"
       style="display: inline-block; padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;"
     >
       Accept Invitation
@@ -633,7 +633,7 @@ The invitation email should link to your frontend application's invite page:
 
     <p>Or copy and paste this link into your browser:</p>
     <p>
-      <a href="{{WEB_BASE_URL}}/invite/{{token}}">{{WEB_BASE_URL}}/invite/{{token}}</a>
+      <a href="{{ADMIN_WEB_ORIGIN}}/invite/{{token}}">{{ADMIN_WEB_ORIGIN}}/invite/{{token}}</a>
     </p>
 
     <p>This invitation will expire on {{expiresAt}}.</p>
@@ -644,7 +644,7 @@ The invitation email should link to your frontend application's invite page:
 ```
 
 ::: tip URL Format
-The `WEB_BASE_URL` environment variable should point to your frontend application (e.g., `https://app.yourcompany.com`). The frontend then uses the token to call the public invitation API endpoints.
+The `ADMIN_WEB_ORIGIN` environment variable should point to your frontend application (e.g., `https://app.yourcompany.com`). The frontend then uses the token to call the public invitation API endpoints.
 :::
 
 ## Security Considerations
